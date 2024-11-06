@@ -11,13 +11,13 @@ import lombok.Data;
 //Pojo class
 @Data
 @EntityScan
-@Table(name = "socios")
-public class Socio {
+@Table(name = "members")
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long numberSocio;
+    private Long numberMember;
     private Long numberFamily;
     private String name;
     private String lastName1;
