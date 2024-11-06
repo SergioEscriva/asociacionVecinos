@@ -1,4 +1,4 @@
-package com.asociacion.asociacion.model;
+package com.asociacion.asociacion.models;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
