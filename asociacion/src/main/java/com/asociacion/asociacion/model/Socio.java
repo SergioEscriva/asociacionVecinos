@@ -18,9 +18,19 @@ public class Socio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long numberSocio;
+    private Long numberFamily;
     private String name;
     private String lastName1;
     private String lastName2;
     private String address;
+    private Long addressNumber;
+    private Long addressDoor;
+    private String addressStaircase;
+    private String location;
+    private Long phone;
+    private Long dni;
+    private String gender;
+    private Boolean active;
+
 
 }
