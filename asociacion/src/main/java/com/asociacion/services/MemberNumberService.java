@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 
 import com.asociacion.repositories.MemberRepository;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
+
 @Service
 public class MemberNumberService {
 
