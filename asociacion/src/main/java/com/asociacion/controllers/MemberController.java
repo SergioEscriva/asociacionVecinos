@@ -18,6 +18,8 @@ import com.asociacion.services.MemberService;
 
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -34,6 +36,12 @@ public class MemberController {
 
         return memberService.getMembers();
     }
+
+    @GetMapping("/{id}")
+    public Optional<Member> getMemberById(@PathVariable Long id){
+        return memberService.findById(id);
+    }
+    
     
     @PostMapping
     public ResponseEntity<Member> createMember(@RequestBody Member member) {

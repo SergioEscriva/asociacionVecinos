@@ -86,6 +86,7 @@ input[type="submit"]:hover {
 }
 
 input[type="text"] {
+    font-size: 18px;
     width:300px; /* Ancho de 200 píxeles */
     height: 30px; /* Alto de 30 píxeles */
     padding: 10px;
@@ -95,7 +96,8 @@ input[type="text"] {
 }
 
 input[type="number"] {
-    width: 50px; /* Ancho de 200 píxeles */
+    font-size: 18px;
+    width: 70px; /* Ancho de 200 píxeles */
     height: 30px; /* Alto de 30 píxeles */
     padding: 10px;
     border: 1px solid #ccc;
@@ -105,6 +107,7 @@ input[type="number"] {
 }
 
 input[type="email"]{
+    font-size: 18px;
     width: 400px;
     height: 30px;
     padding: 10px;
@@ -114,6 +117,7 @@ input[type="email"]{
 }
 
 input[type="address"]{
+    font-size: 18px;
     width: 100%; /* Ancho de 200 píxeles */
     height: 30px; /* Alto de 30 píxeles */
     padding: 10px;
@@ -123,6 +127,7 @@ input[type="address"]{
 }
 
 input[type="phone"]{
+    font-size: 18px;
     width: 200px; /* Ancho de 200 píxeles */
     height: 30px; /* Alto de 30 píxeles */
     padding: 10px;
