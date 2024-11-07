@@ -1,0 +1,39 @@
+package com.asociacion.asociacion.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.asociacion.asociacion.models.Member;
+import com.asociacion.asociacion.repositories.MemberRepository;
+
+
+import javax.transaction.Transactional;
+import java.util.Optional;
+
+@Service
+public class MemberService {
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private MemberNumberService memberNumberService;
+
+    @Transactional
+    public Member saveMember(Member member) {
+        if (member.getMemberNumber() == null) {
+            member.setMemberNumber(memberNumberService.generateNextMemberNumber());
+        }
+        return memberRepository.save(member);
+    }
+
+    public Optional<Member> findById(Long id) {
+        return memberRepository.findById(id);
+    }
+}
+
+
+
+
+
+

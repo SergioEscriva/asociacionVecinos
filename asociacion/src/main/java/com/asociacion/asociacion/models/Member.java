@@ -1,10 +1,16 @@
 package com.asociacion.asociacion.models;
 
+import java.util.Objects;
+
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
+import com.asociacion.asociacion.services.MemberService;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -17,8 +23,11 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long numberMember;
-    private Long numberFamily;
+    
+    @Column(unique = true)
+    private Long memberNumber;
+
+    private Long IdFamily;
     private String name;
     private String lastName1;
     private String lastName2;
@@ -28,9 +37,10 @@ public class Member {
     private String addressStaircase;
     private String location;
     private Long phone;
+    private String email;
     private Long dni;
     private String gender;
     private Boolean active;
 
-
 }
+
