@@ -3,76 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Socio Data Entry</title>
+    <title>Asociación de Vecinos</title>
     <link rel="stylesheet" href="css/styles.css">
-    <script src="js/buscarMiembros.js"></script>
-    
 </head>
 <body>
     <div class="container">
+        
         <img src="img/mislata.png" alt="Valencia Street" class="background-image">
+       
         <form method="post">
             <h2>Ficha Socio</h2>
 
-        <div class="input-group">
-            <label for="memberNumber">Member Number:</label>
-            <input type="number" id="memberNumber" name="memberNumber" required>
-
-            <label for="IdFamily">ID Familia:</label>
-            <input type="number" id="IdFamily" name="IdFamily" required>
-        </div>
-        <div class="input-group">
-            <label for="name">Nombre:</label>
-            <input type="text" id="name" name="name" required>
-
-            <label for="lastName1">Apellido 1:</label>
-            <input type="text" id="lastName1" name="lastName1" required>
-
-            <label for="lastName2">Apellido 2:</label>
-            <input type="text" id="lastName2" name="lastName2" required>
-        </div>
-        <div class="input-group">
             <div class="input-group">
-            <hr />
-            </div>    
-            <label for="address">Dirección:</label>
-            <input type="address" id="address" name="address" required>
-        </div>
-        <div class="input-group">
-            <label for="addressNumber">Número:</label>
-            <input type="number" id="addressNumber" name="addressNumber" required>
+                <label for="memberNumber">Member Number:</label>
+                <input type="number" id="memberNumber" name="memberNumber" required>
 
-            <label for="addressDoor">Puerta:</label>
-            <input type="number" id="addressDoor" name="addressDoor" required>
+                <label for="IdFamily">ID Familia:</label>
+                <input type="number" id="IdFamily" name="IdFamily" >
+            </div>
+            <div class="input-group">
+                <label for="name">Nombre:</label>
+                <input type="text" id="name" name="name" >
 
-            <label for="addressStaircase">Escalera:</label>
-            <input type="number" id="addressStaircase" name="addressStaircase" required>
+                <label for="lastName1">Apellido 1:</label>
+                <input type="text" id="lastName1" name="lastName1" >
 
-            <label for="location">Localidad:</label>
-            <input type="text" id="location" name="location" required>
-        </div>
-        <div class="input-group">
-            <label for="phone">Teléfono:</label>
-            <input type="phone" id="phone" name="phone" required>
+                <label for="lastName2">Apellido 2:</label>
+                <input type="text" id="lastName2" name="lastName2" >
+            </div>
+            <div class="input-group">
+                <label for="address">Dirección:</label>
+                <input type="address" id="address" name="address" >
+            </div>
+            <div class="input-group">
+                <label for="addressNumber">Número:</label>
+                <input type="number" id="addressNumber" name="addressNumber" >
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+                <label for="addressDoor">Puerta:</label>
+                <input type="number" id="addressDoor" name="addressDoor" >
 
-            <label for="dni">DNI:</label>
-            <input type="text" id="dni" name="dni" required>
-        </div>
-        <div class="input-group">
-            <label for="gender">Género:</label>
-            <input type="number" id="gender" name="gender" required>
-            <label for="active">Activo:</label>
-            <input type="checkbox" id="active" name="active">
-        </div>
+                <label for="addressStaircase">Escalera:</label>
+                <input type="number" id="addressStaircase" name="addressStaircase" >
 
-     
+                <label for="location">Localidad:</label>
+                <input type="text" id="location" name="location" >
+            </div>
+            <div class="input-group">
+                <label for="phone">Teléfono:</label>
+                <input type="phone" id="phone" name="phone" >
 
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" >
+
+                <label for="dni">DNI:</label>
+                <input type="text" id="dni" name="dni" >
+            </div>
+            <div class="input-group">
+                <label for="gender">Género:</label>
+                <input type="number" id="gender" name="gender" >
+             <label for="active">Activo:</label>
+             <input type="checkbox" id="active" name="active">
+            </div>
+            <input type="number" id="memberIdInput" placeholder="D">
+            <button id="buscarMiembro" type="button" onclick="getElementByIdSelected()">Buscar Miembro</button>
         </form>
-
     </div>
-</body>
-
-</html>
+    <script src="js/buscarMiembros.js"></script>
+   </body>
+   </html>
+   

@@ -1,5 +1,5 @@
 window.onload = function() {
-    getMemberById(1); // Replace 123 with the desired member ID
+    getMemberById(1); 
   };
 
 function getMemberById(memberId) {
@@ -21,9 +21,15 @@ function getMemberById(memberId) {
         document.getElementById('dni').value = member.dni;
         document.getElementById('gender').value = member.gender;
         document.getElementById('active').value = member.active;
+
         
       })
       .catch(error => {
         console.error('Error:', error);
       });
+  }
+
+  function getElementByIdSelected(){
+    const memberId = document.getElementById('memberIdInput').value;
+    getMemberById(memberId)
   }
