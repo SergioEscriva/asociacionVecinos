@@ -1,7 +1,8 @@
 package com.asociacion.models;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
+
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -10,7 +11,7 @@ import lombok.Data;
 
 //Pojo class
 @Data
-@EntityScan
+@Entity
 @Table(name = "families")
 public class Family {
 
