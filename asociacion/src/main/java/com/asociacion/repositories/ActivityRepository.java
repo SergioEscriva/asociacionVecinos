@@ -1,4 +1,4 @@
-package com.asociacion.asociacion.repositories;
+package com.asociacion.repositories;
 
 import java.lang.reflect.Member;
 
@@ -7,9 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.asociacion.asociacion.models.Family;
+import com.asociacion.models.Activity;
 
 @Repository
-public interface FamilyRepository extends JpaRepository<Family, Long> {
+public interface ActivityRepository extends JpaRepository<Activity, Long> {
+
 
 }

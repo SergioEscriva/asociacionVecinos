@@ -1,10 +1,10 @@
-package com.asociacion.asociacion.models;
+package com.asociacion.models;
 
 import java.util.Objects;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
-import com.asociacion.asociacion.services.MemberService;
+import com.asociacion.services.MemberService;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;

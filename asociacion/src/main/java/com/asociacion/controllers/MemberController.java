@@ -1,4 +1,4 @@
-package com.asociacion.asociacion.controllers;
+package com.asociacion.controllers;
 
 import java.util.Optional;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.asociacion.asociacion.models.Member;
-import com.asociacion.asociacion.services.MemberService;
+import com.asociacion.models.Member;
+import com.asociacion.services.MemberService;
 
 @RestController
 @RequestMapping("/members")

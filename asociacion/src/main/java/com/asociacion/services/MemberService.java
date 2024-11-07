@@ -1,10 +1,10 @@
-package com.asociacion.asociacion.services;
+package com.asociacion.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.asociacion.asociacion.models.Member;
-import com.asociacion.asociacion.repositories.MemberRepository;
+import com.asociacion.models.Member;
+import com.asociacion.repositories.MemberRepository;
 
 
 import javax.transaction.Transactional;

@@ -1,15 +1,15 @@
-package com.asociacion.asociacion.repositories;
+package com.asociacion.repositories;
 
 import java.lang.reflect.Member;
-import java.rmi.registry.Registry;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface ReistryRepository extends JpaRepository<Registry, Long> {
+import com.asociacion.models.Family;
 
+@Repository
+public interface FamilyRepository extends JpaRepository<Family, Long> {
 
 }

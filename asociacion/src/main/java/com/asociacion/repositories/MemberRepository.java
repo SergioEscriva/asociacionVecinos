@@ -1,4 +1,4 @@
-package com.asociacion.asociacion.repositories;
+package com.asociacion.repositories;
 
 
 
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import org.springframework.stereotype.Repository;
 
-import com.asociacion.asociacion.models.Member;
+import com.asociacion.models.Member;
 
 
 @Repository
