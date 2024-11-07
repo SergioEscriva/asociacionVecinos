@@ -35,7 +35,7 @@ public class Member {
     private String location;
     private Long phone;
     private String email;
-    private Long dni;
+    private String dni;
     private String gender;
     private Boolean active;
 

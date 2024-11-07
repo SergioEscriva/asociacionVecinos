@@ -8,6 +8,8 @@ import com.asociacion.repositories.MemberRepository;
 
 
 import javax.transaction.Transactional;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,6 +32,12 @@ public class MemberService {
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
     }
+
+    public List<Member> getMembers() {
+       
+        return memberRepository.findAll();
+    }
+
 }
 
 

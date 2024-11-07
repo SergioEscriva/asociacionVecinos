@@ -1,5 +1,6 @@
 package com.asociacion.controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,25 @@ import org.springframework.web.bind.annotation.RestController;
 import com.asociacion.models.Member;
 import com.asociacion.services.MemberService;
 
+
+import org.springframework.web.bind.annotation.GetMapping;
+
+
+
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 public class MemberController {
 
     @Autowired
     private MemberService memberService;
 
+    
+    @GetMapping()
+    public List<Member> getClientes() {
+
+        return memberService.getMembers();
+    }
+    
     @PostMapping
     public ResponseEntity<Member> createMember(@RequestBody Member member) {
         Member savedMember = memberService.saveMember(member);
