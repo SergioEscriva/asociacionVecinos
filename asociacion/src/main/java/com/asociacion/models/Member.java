@@ -24,7 +24,7 @@ public class Member {
     @Column(unique = true)
     private Long memberNumber;
 
-    private Long IdFamily;
+    private Long idFamily;
     private String name;
     private String lastName1;
     private String lastName2;

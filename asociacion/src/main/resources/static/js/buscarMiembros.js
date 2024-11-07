@@ -7,7 +7,7 @@ function getMemberById(memberId) {
       .then(response => response.json())
       .then(member => {
         document.getElementById('memberNumber').value = member.memberNumber;
-        document.getElementById('IdFamily').value = member.IdFamily;
+        document.getElementById('idFamily').value = member.idFamily;
         document.getElementById('name').value = member.name;
         document.getElementById('lastName1').value = member.lastName1;
         document.getElementById('lastName2').value = member.lastName2;
