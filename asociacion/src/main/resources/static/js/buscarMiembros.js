@@ -20,7 +20,7 @@ function getMemberById(memberId) {
         document.getElementById('email').value = member.email;
         document.getElementById('dni').value = member.dni;
         document.getElementById('gender').value = member.gender;
-        document.getElementById('active').value = member.active;
+        document.getElementById('active').value = getActivo(member.active);
 
         
       })
@@ -32,4 +32,12 @@ function getMemberById(memberId) {
   function getElementByIdSelected(){
     const memberId = document.getElementById('memberIdInput').value;
     getMemberById(memberId)
+  }
+
+  function getActivo(active){
+      var checkbox = document.getElementById('active');
+      checkbox.checked = false
+    if (active == 1)
+        checkbox.checked = true
+
   }
