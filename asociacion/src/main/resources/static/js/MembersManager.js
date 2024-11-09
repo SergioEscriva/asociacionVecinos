@@ -58,12 +58,14 @@ async function updateMember(){
   const email = document.getElementById('email').value 
   const dni = document.getElementById('dni').value 
   const gender = document.getElementById('gender').value
-  const active = document.getElementById('active').value
+  const checkbox = document.getElementById('active')
+  const isActive = checkbox.checked
 
   var activate = 0
-  if (active == true){
+  if (isActive){
     activate = 1
   }
+  console.log(phone, ' phone ',checkbox, ' holi ',isActive, ' Hola ', activate)
 
   const memberUpdate = {
     memberNumber: memberNumber,
