@@ -15,6 +15,9 @@
             <h2>Ficha Socio</h2>
 
             <div class="input-group">
+                <label for="memberId">Member Id:</label>
+                <input type="number" id="memberId" name="memberId" >
+
                 <label for="memberNumber">Member Number:</label>
                 <input type="number" id="memberNumber" name="memberNumber" >
 
@@ -67,11 +70,21 @@
                 <label for="active">Miembro Actualmente Activo:</label>
                 <input type="checkbox" id="active" name="active">
             </div>
+    
             <input type="number" id="memberIdInput" placeholder="D">
-            <button id="buscarMiembro" type="button" onclick="getElementByIdSelected()">Buscar Miembro</button>
+            <button id="buscarMiembro" type="buttonClick" onclick="getElementByIdSelected()">Buscar Miembro</button>
+            
+      
+            
         </form>
     </div>
-    <script src="js/buscarMiembros.js"></script>
+    <div class="input-group">
+    <tr>
+    <button id="modificarMiembro" type="buttonClick" onclick="updateMember()">Modificar Miembro</button>
+    </tr>
+    </div>
+    <script src="js/MembersManager.js"></script>
+   
    </body>
    </html>
    
