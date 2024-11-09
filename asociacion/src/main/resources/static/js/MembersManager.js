@@ -24,6 +24,7 @@ function getMemberById(memberId) {
         document.getElementById('dni').value = member.dni;
         document.getElementById('gender').value = member.gender;
         document.getElementById('active').value = getActivo(member.active);
+        document.getElementById('notes').value = member.notes;
       })
       .catch(error => {
         console.error('Error:', error);
@@ -60,6 +61,8 @@ async function updateMember(){
   const gender = document.getElementById('gender').value
   const checkbox = document.getElementById('active')
   const isActive = checkbox.checked
+  const inputNotes = document.getElementById("notes");
+  const notes = inputNotes.value;
 
   var activate = 0
   if (isActive){
@@ -82,7 +85,8 @@ async function updateMember(){
     email: email,
     dni: dni,
     gender: gender,
-    active: activate
+    active: activate,
+    notes:notes
     }
      
   const request = await editMember(memberId, memberUpdate);

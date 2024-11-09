@@ -38,6 +38,7 @@ public class Member {
     private String dni;
     private String gender;
     private Boolean active;
+    private String notes;
 
 }
 

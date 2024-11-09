@@ -143,6 +143,16 @@ input[type="phone"]{
     background-color: rgba(48, 119, 226, 0.199); /* Semi-transparent background */
 }
 
+input[type="notes"]{
+    font-size: 18px;
+    width: 900px; /* Ancho de 200 píxeles */
+    height: 30px; /* Alto de 30 píxeles */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: rgba(48, 119, 226, 0.199); /* Semi-transparent background */
+}
+
 input[type="checkbox"]{
     width: 200px; /* Ancho de 200 píxeles */
     height: 30px; /* Alto de 30 píxeles */
