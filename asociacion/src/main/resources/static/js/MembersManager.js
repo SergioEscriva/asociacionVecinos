@@ -107,7 +107,8 @@ async function editMember(memberId, memberUpdate) {
           'Content-Type': 'application/json'
         }
       };
-      return await _putRequest(`/api/members/${memberId}`, response); // Devuelve la respuesta en formato JSON
+      // Devuelve la respuesta en formato JSON
+      return await _putRequest(`/api/members/${memberId}`, response);
   } catch (error) {
       console.error('Error en la solicitud PUT:', error);
       throw error;
@@ -119,6 +120,7 @@ async function _putRequest(url, data) {
 try {
   const response = await fetch(url, data);
   const jsonMessage = await response.json();
+  alert("Cambios Guardados")
   return jsonMessage;
 } catch (error) {
   console.log(error);
