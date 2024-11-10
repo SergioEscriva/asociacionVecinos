@@ -11,11 +11,11 @@ body {
 
 .container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 20px;
+    grid-template-columns: repeat(1, 1fr); 
+    gap: 30px;
     width: 80%;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
     border-radius: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 
@@ -26,12 +26,12 @@ body {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    /*padding: 10px;*/
     margin-bottom: 10px;
   }
   
   .input-group label {
-    flex: 1; /*Para que el label ocupe el espacio necesario */
+    flex:1; /*Para que el label ocupe el espacio necesario */
     text-align: right;
     
   }
@@ -62,8 +62,8 @@ form {
 
 label {
     display: block;
-    margin-bottom: 0px;
-    padding: 10px;
+    margin-bottom: 3px;
+    padding: 5px;
     
    
 }
@@ -83,7 +83,7 @@ input[type="submit"]:hover {
 
 input[type="text"] {
     font-size: 18px;
-    width:300px; /* Ancho de 200 píxeles */
+    width:200px; /* Ancho de 200 píxeles */
     height: 30px; /* Alto de 30 píxeles */
     padding: 10px;
     border: 1px solid #ccc;
@@ -104,7 +104,7 @@ input[type="number"] {
 
 input[type="textPeque"] {
     font-size: 18px;
-    width: 30px; /* Ancho de 200 píxeles */
+    width: 40px; /* Ancho de 200 píxeles */
     height: 30px; /* Alto de 30 píxeles */
     padding: 10px;
     border: 1px solid #ccc;
@@ -125,7 +125,7 @@ input[type="email"]{
 
 input[type="address"]{
     font-size: 18px;
-    width: 100%; /* Ancho de 200 píxeles */
+    width: 90%; /* Ancho de 200 píxeles */
     height: 30px; /* Alto de 30 píxeles */
     padding: 10px;
     border: 1px solid #ccc;
