@@ -1,7 +1,6 @@
 package com.asociacion.models;
 
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,13 +11,14 @@ import lombok.Data;
 //Pojo class
 @Data
 @Entity
-@Table(name = "families")
-public class Family {
+@Table(name = "registries")
+public class Fee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long idFamily;
     private Long idMember;
-
+    private Long data;
+    private Long year;
+   
 }

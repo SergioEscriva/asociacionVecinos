@@ -21,7 +21,5 @@ public class Registry {
     private Long startData;
     private Long endData;
     private String reasonEnd; //en código "Fallecido", "Personal" etc
-    private Boolean active;
-
-
+    
 }
