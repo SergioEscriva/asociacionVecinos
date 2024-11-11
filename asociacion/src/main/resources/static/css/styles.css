@@ -198,12 +198,33 @@ button {
     border-radius: 4px;
     margin-left: 50px;
     
+    
+  }
+
+  .buttonActivity {
+    background-color: #053cf1;
+    color: white;
+    width: 110px; /* Ancho de 200 píxeles */
+    height: 40px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    margin-left: 50px;
+    margin-top: 10px;
+    
   }
 
 
 .list-group {
     display: flex;
     font-size: 18px;
+    width: "125px";
+    height: "45px";
     flex-direction: row;
     justify-content: space-between;
     align-items: right;
@@ -214,3 +235,15 @@ button {
     border-radius: 5px;
     background-color: rgba(48, 119, 226, 0.199); /* Semi-transparent background */
   }
+
+  .activity-select {
+    font-size: 20px;
+    width: 450px; 
+    color: blue; 
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+
+    
+}

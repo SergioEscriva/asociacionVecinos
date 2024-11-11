@@ -101,18 +101,19 @@
                     <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar Actividad..."
-                                aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button" onclick="getElementByIdSelected()">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                                <button class="btn btn-primary" type="button" >
-                                   
-                                </button>
-                                <button class="btn btn-primary" type="button" onclick="updateActivity()">
+                                <button class="buttonActivity" type="button" onclick="updateActivity()">
                                     <i class="fas fa-download"></i>
                                 </button>
+                                <div class="activity-select">
+                                    <select>
+                                        <option selected>Selecciona Actividad</option>
+                                        <option value="valor1">Actividad</option>
+                                        <option value="valor2">Cena Navidad 24</option>
+                                        <option value="valor3">Opción 3</option>
+                                      </select>   
+                                              
+                                </div>
                            
                             </div>
                         </div>
@@ -167,16 +168,15 @@
                     <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" width="50px" class="form-control bg-light border-0 small" placeholder="Buscar Socio..."
-                                aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput">
+                            <h2>Añadir Socio</h2>
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button" onclick="getElementByIdSelected()">
+                            <input type="text" class="textPeque" placeholder="Buscar Socio..."
+                                aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput">
+                                <button class="buttonFee" type="button" onclick="getElementByIdSelected()">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
-                                <button class="btn btn-primary" type="button" >
-                                   
                                 </button>
-                                <button class="btn btn-primary" type="button" onclick="updateActivity()">
+                                <button class="buttonFee" type="button" onclick="updateActivity()">
                                     <i class="fas fa-download"></i>
                                 </button>
                            
@@ -197,13 +197,14 @@
                 </div>
 
                 <div class="container">
+                    <h2>Lista Socios</h2>
                     <div class="list-group">
-                        <label for="activities"><b>Lista Socios:</b></label>
-                        <ul id="activities" >
-                            <li>Manolo</li>
-                            <li>Paco</li>
-                            <li>Marta</li>
-                            </ul>             
+                        <select>
+                            <option value="valor1">Actividad</option>
+                            <option value="valor2">Opción 2</option>
+                            <option value="valor3">Opción 3</option>
+                          </select>   
+                                  
                     </div>
 
                 </div>
