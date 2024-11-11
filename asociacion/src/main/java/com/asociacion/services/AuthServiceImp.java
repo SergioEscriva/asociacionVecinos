@@ -23,7 +23,7 @@ public class AuthServiceImp implements AuthService{
                 .hashString(password + System.getenv("Palabra_Secreta"), StandardCharsets.UTF_8)
                 .toString();
 
-        List<Admin> result = adminRepository.findByEmailAndPassword(email,hashPassword);
+        List<Admin> result = adminRepository.findByUserAndPassword(email,hashPassword);
         if(result.isEmpty()){
             return null;
             //no encontró nada
