@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Asociación de Vecinos - Fichas</title>
+    <title>Asociación de Vecinos - Actividades</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -59,7 +59,7 @@
                     <span>Listados</span></a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="activityIndex.html">
+                <a class="nav-link" href="index.html">
                     <i class="fas fa-chess-board"></i>
                     <span>Actividades</span></a>
             </li>
@@ -101,7 +101,7 @@
                     <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar Socio..."
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar Actividad..."
                                 aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="button" onclick="getElementByIdSelected()">
@@ -110,7 +110,7 @@
                                 <button class="btn btn-primary" type="button" >
                                    
                                 </button>
-                                <button class="btn btn-primary" type="button" onclick="updateMember()">
+                                <button class="btn btn-primary" type="button" onclick="updateActivity()">
                                     <i class="fas fa-download"></i>
                                 </button>
                            
@@ -139,63 +139,19 @@
                     <img src="img/mislata.png" alt="Valencia Street" class="background-image">
                    
                     <form method="post">
-                        <h2>Ficha Socio</h2>
+                        <h2>Ficha Actividad <input type="number" id="activityId" name="activityId" ></h2>
             
                         <div class="input-group">
-                            <label for="active">Miembro Actualmente Activo:</label>
-                            <input type="checkbox" id="active" name="active">
+                            <label for="active">Actividad Actualmente Activa:</label>
+                            <input type="checkbox" id="activityActive" name="active">
+            
+                            <label for="memberNumber">Nombre Actividad:</label>
+                            <input type="text" id="activityName" name="activityName" >
                             
-                            <button class="buttonFee" onclick="updateFee()">Pagos al día
-                              </button> <input type="checkbox" id="fee" name="active">
-            
-                            <label for="memberId">Member Id:</label>
-                            <input type="number" id="memberId" name="memberId" >
-            
-                            <label for="memberNumber">Número Socio:</label>
-                            <input type="number" id="memberNumber" name="memberNumber" >
-            
-                            <label for="idFamily">ID Familia:</label>
-                            <input type="number" id="idFamily" name="idFamily" >
+                            <label for="name">Encargado:</label>
+                            <input type="text" id="managerName" name="managerName" >
                         </div>
-                        <div class="input-group">
-                            <label for="name">Nombre:</label>
-                            <input type="text" id="name" name="name" >
-            
-                            <label for="lastName1">Apellido 1:</label>
-                            <input type="text" id="lastName1" name="lastName1" >
-            
-                            <label for="lastName2">Apellido 2:</label>
-                            <input type="text" id="lastName2" name="lastName2" >
-                        </div>
-                        <div class="input-group">
-                            <label for="phone">Teléfono:</label>
-                            <input type="phone" id="phone" name="phone" >
-            
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" >
-            
-                            <label for="dni">DNI:</label>
-                            <input type="text" id="dni" name="dni" >
-                        </div>
-                        <div class="input-group">
-                            <label for="address">Dirección:</label>
-                            <input type="address" id="address" name="address" >
-                        </div>
-            
-                        <div class="input-group">
-                            <label for="addressNumber">Número:</label>
-                            <input type="number" id="addressNumber" name="addressNumber" >
-            
-                            <label for="addressDoor">Puerta:</label>
-                            <input type="number" id="addressDoor" name="addressDoor" >
-            
-                            <label for="addressStaircase">Escalera:</label>
-                            <input type="textPeque" id="addressStaircase" name="addressStaircase" >
-            
-                            <label for="location">Localidad:</label>
-                            <input type="text" id="location" name="location" >
-                        </div>
-              
+             
                         <div class="input-group">
                             <label for="notes">Notas:</label>
                             <input type="notes" id="notes" name="notes" placeholder="Ingrese sus notas aquí">
@@ -206,15 +162,50 @@
             
                         </div>
                 </div>
+
+                <div class="container">
+                    <form
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" width="50px" class="form-control bg-light border-0 small" placeholder="Buscar Socio..."
+                                aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" onclick="getElementByIdSelected()">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                                <button class="btn btn-primary" type="button" >
+                                   
+                                </button>
+                                <button class="btn btn-primary" type="button" onclick="updateActivity()">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                           
+                            </div>
+                            <div class="input-group">
+                                <label for="name">Nombre:</label>
+                                <input type="text" id="name" name="name" >
+                
+                                <label for="lastName1">Apellido 1:</label>
+                                <input type="text" id="lastName1" name="lastName1" >
+                
+                                <label for="lastName2">Apellido 2:</label>
+                                <input type="text" id="lastName2" name="lastName2" >
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+
                 <div class="container">
                     <div class="list-group">
-                        <label for="activities"><b>Actividades:</b></label>
+                        <label for="activities"><b>Lista Socios:</b></label>
                         <ul id="activities" >
-                            <li>Parchís</li>
-                            <li>Cena Navidad</li>
-                            <li>Maratón Popular</li>
+                            <li>Manolo</li>
+                            <li>Paco</li>
+                            <li>Marta</li>
                             </ul>             
                     </div>
+
                 </div>
                 
             <!-- End of Main Content -->
