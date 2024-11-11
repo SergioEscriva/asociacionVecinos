@@ -154,8 +154,8 @@ input[type="notes"]{
 }
 
 input[type="checkbox"]{
-    width: 200px; /* Ancho de 200 píxeles */
-    height: 30px; /* Alto de 30 píxeles */
+    width: 50px; /* Ancho de 200 píxeles */
+    height: 40px; /* Alto de 30 píxeles */
 }
 
 button {
@@ -168,12 +168,27 @@ button {
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-  
     border: none;
     border-radius: 
    4px;
   }
 
+  .buttonFee {
+    background-color: #053cf1;
+    color: white;
+    width: 110px; /* Ancho de 200 píxeles */
+    height: 40px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    margin-left: 50px;
+    
+  }
 
 
 .list-group {
