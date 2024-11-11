@@ -56,6 +56,16 @@ body {
     opacity: 0.1; /* Adjust opacity as needed */
 }
 
+.image {
+    position: absolute;
+    top: 75px;
+    left: 275px;
+    width: 80%;
+    height: 80%;
+    object-fit: cover;
+ 
+}
+
 form {
     margin-top: 20px;
 }
