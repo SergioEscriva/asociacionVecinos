@@ -105,13 +105,13 @@
                                 placeholder="Buscar Socio..." aria-label="Search" aria-describedby="basic-addon2"
                                 id="memberIdInput">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button" onclick="getElementByIdSelected()">
+                                <button class="btn btn-primary" type="button" id="getElementByIdSelected">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                                 <button class="btn btn-primary" type="button">
 
                                 </button>
-                                <button class="btn btn-primary" type="button" onclick="updateMember()">
+                                <button class="btn btn-primary" type="button" id="updateMember">
                                     <i class="fas fa-download"></i>
                                 </button>
 
@@ -275,7 +275,9 @@
         <script src="vendor/chart.js/Chart.min.js"></script>
 
         <!-- Page level custom scripts -->
-        <script src="js/MembersManager.js"></script>
+        <script type="module" src="js/MembersManager.js"></script>
+        <script src="js/RequestPost.js"></script>
+        <script src="js/RequestPut.js"></script>
         <script src="js/demo/chart-area-demo.js"></script>
         <script src="js/demo/chart-pie-demo.js"></script>
 

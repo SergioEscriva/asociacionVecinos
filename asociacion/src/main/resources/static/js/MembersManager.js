@@ -1,9 +1,14 @@
-//import { RequestPut } from './RequestPut.js';
-//import { RequestPost } from './RequestPost.js';
+import { RequestPut } from './RequestPut.js';
+import { RequestPost } from './RequestPost.js';
 
 window.onload = function () {
+
   getMemberById(1);
 };
+
+document.getElementById("getElementByIdSelected").addEventListener("click", getElementByIdSelected);
+document.getElementById("updateMember").addEventListener("click", updateMember);
+
 
 function getFamilyById(memberId) {
   fetch(`api/family/member/${memberId}`)
@@ -49,7 +54,7 @@ function getMemberById(memberId) {
     });
 }
 
-function getElementByIdSelected() {
+export function getElementByIdSelected() {
   const memberId = document.getElementById('memberIdInput').value;
   getMemberById(memberId)
 }
@@ -61,59 +66,62 @@ function getActivo(active) {
     checkbox.checked = true
 }
 
-async function updateMember() {
-  const memberId = document.getElementById('memberId').value
-  const memberNumber = document.getElementById('memberNumber').value
-  const name = document.getElementById('name').value
-  const lastName1 = document.getElementById('lastName1').value
-  const lastName2 = document.getElementById('lastName2').value
-  const address = document.getElementById('address').value
-  const addressNumber = document.getElementById('addressNumber').value
-  const addressDoor = document.getElementById('addressDoor').value
-  const addressStaircase = document.getElementById('addressStaircase').value
-  const location = document.getElementById('location').value
-  const phone = document.getElementById('phone').value
-  const email = document.getElementById('email').value
-  const dni = document.getElementById('dni').value
-  const gender = document.getElementById('gender').value
-  const checkbox = document.getElementById('active')
-  const isActive = checkbox.checked
-  const inputNotes = document.getElementById("notes");
-  const notes = inputNotes.value;
+export async function updateMember() {
+  try {
+    const memberId = document.getElementById('memberId').value
+    const memberNumber = document.getElementById('memberNumber').value
+    const name = document.getElementById('name').value
+    const lastName1 = document.getElementById('lastName1').value
+    const lastName2 = document.getElementById('lastName2').value
+    const address = document.getElementById('address').value
+    const addressNumber = document.getElementById('addressNumber').value
+    const addressDoor = document.getElementById('addressDoor').value
+    const addressStaircase = document.getElementById('addressStaircase').value
+    const location = document.getElementById('location').value
+    const phone = document.getElementById('phone').value
+    const email = document.getElementById('email').value
+    const dni = document.getElementById('dni').value
+    const gender = document.getElementById('gender').value
+    const checkbox = document.getElementById('active')
+    const isActive = checkbox.checked
+    const inputNotes = document.getElementById("notes");
+    const notes = inputNotes.value;
 
-  var activate = 0
-  if (isActive) {
-    activate = 1
-  }
+    var activate = 0
+    if (isActive) {
+      activate = 1
+    }
 
-  const memberUpdate = {
-    memberNumber: memberNumber,
-    name: name,
-    lastName1: lastName1,
-    lastName2: lastName2,
-    address: address,
-    addressNumber: addressNumber,
-    addressDoor: addressDoor,
-    addressStaircase: addressStaircase,
-    location: location,
-    phone: phone,
-    email: email,
-    dni: dni,
-    gender: gender,
-    active: activate,
-    notes: notes
-  }
+    const memberUpdate = {
+      memberNumber: memberNumber,
+      name: name,
+      lastName1: lastName1,
+      lastName2: lastName2,
+      address: address,
+      addressNumber: addressNumber,
+      addressDoor: addressDoor,
+      addressStaircase: addressStaircase,
+      location: location,
+      phone: phone,
+      email: email,
+      dni: dni,
+      gender: gender,
+      active: activate,
+      notes: notes
+    }
 
-
-  if (!memberId) {
-    const request = await newMember(memberUpdate);
-    await createFamily(request.id)
+    let request;
+    if (!memberId) {
+      request = await RequestPost.newMember(memberUpdate);
+      await createFamily(request.id)
+    } else {
+      request = await RequestPut.editMember(memberId, memberUpdate);
+      await updateFamily(memberId)
+    }
     return request;
-  }
-  else {
-    const request = await editMember(memberId, memberUpdate);
-    await updateFamily(memberId)
-    return request;
+
+  } catch (error) {
+    console.error("Error al actualizar el socio: ", error)
   }
 }
 
@@ -127,7 +135,7 @@ async function updateFamily(memberId) {
     familyMemberId: familyMemberId,
     idMember: memberId
   }
-  await editFamily(familyTypeId, familyUpdate)
+  await RequestPut.editFamily(familyTypeId, familyUpdate)
 }
 
 async function createFamily(memberId) {
@@ -142,7 +150,7 @@ async function createFamily(memberId) {
     familyMemberId: familyMemberId,
     idMember: memberId
   }
-  await newFamily(familyUpdate)
+  await RequestPost.newFamily(familyUpdate)
 
 }
 
@@ -158,117 +166,4 @@ async function oneFamilyCheck(memberId, familyMemberId) {
       const idMember = family.idMember
     })
 
-}
-
-
-
-
-/// Debería estar en el archivo Request???.js pero da error al importarlo
-
-
-async function editFamily(familyTypeId, familyUpdate) {
-
-  try {
-    const response = {
-      method: "PUT",
-      body: JSON.stringify(familyUpdate),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-    // Devuelve la respuesta en formato JSON
-    return await _putRequest(`/api/family/${familyTypeId}`, response);
-  } catch (error) {
-    console.error('Error en la solicitud PUT:', error);
-    throw error;
-  }
-}
-
-async function newFamily(familyUpdate) {
-  try {
-    const response = {
-      method: "POST",
-      body: JSON.stringify(familyUpdate),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-    // Devuelve la respuesta en formato JSON
-    return await _putRequest(`/api/family`, response);
-  } catch (error) {
-    console.error('Error en la solicitud PUT:', error);
-    throw error;
-  }
-}
-
-
-
-
-
-
-async function editMember(memberId, memberUpdate) {
-
-  try {
-    const response = {
-      method: "PUT",
-      body: JSON.stringify(memberUpdate),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-    // Devuelve la respuesta en formato JSON
-    alert("Cambios Guardados")
-    return await _putRequest(`/api/members/${memberId}`, response);
-  } catch (error) {
-    console.error('Error en la solicitud PUT:', error);
-    throw error;
-  }
-}
-
-
-async function newMember(memberUpdate) {
-
-  try {
-    const response = {
-      method: "POST",
-      body: JSON.stringify(memberUpdate),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-    // Devuelve la respuesta en formato JSON
-    alert("Añadido")
-    return await _postRequest(`/api/members`, response);
-  } catch (error) {
-    console.error('Error en la solicitud POST:', error);
-    throw error;
-  }
-}
-
-
-
-
-
-//REQUEST
-
-async function _putRequest(url, data) {
-  try {
-    const response = await fetch(url, data);
-    const jsonMessage = await response.json();
-    return jsonMessage;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-}
-
-async function _postRequest(url, data) {
-  try {
-    const response = await fetch(url, data);
-    const jsonMessage = await response.json();
-    return jsonMessage;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
 }
