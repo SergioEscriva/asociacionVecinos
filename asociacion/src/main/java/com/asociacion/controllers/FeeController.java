@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.asociacion.models.Fee;
 import com.asociacion.services.FeeService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -38,6 +40,11 @@ public class FeeController {
     public ResponseEntity<Fee>createFee(@RequestBody Fee fee) {
         Fee savedFee = feeService.saveFee(fee);
         return new ResponseEntity<>(savedFee, HttpStatus.CREATED);
+    }
+
+        @DeleteMapping("/{id}")
+    public void delFeeById(@PathVariable Long id){
+        feeService.delFeeById(id);
     }
 
     @PutMapping("/{id}")

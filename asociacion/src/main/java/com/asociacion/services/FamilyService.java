@@ -23,8 +23,20 @@ public class FamilyService {
         return familyRepository.findById(id);
     }
 
+    public Family findByMemberId(Long memberId) {
+        List<Family> familys = familyRepository.findAll();
+
+        for (Family family : familys) {
+            if (family.getIdMember() == memberId) {
+                return family;
+            }
+        }
+
+        return null;
+    }
+
     public List<Family> getFamilys() {
-       
+
         return familyRepository.findAll();
     }
 
@@ -34,9 +46,3 @@ public class FamilyService {
     }
 
 }
-
-
-
-
-
-

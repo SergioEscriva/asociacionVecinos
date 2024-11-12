@@ -24,14 +24,13 @@ public class FeeService {
     }
 
     public List<Fee> getFees() {
-       
+
         return feeRepository.findAll();
     }
 
+    public void delFeeById(Long id) {
+        feeRepository.deleteById(id);
+
+    }
+
 }
-
-
-
-
-
-

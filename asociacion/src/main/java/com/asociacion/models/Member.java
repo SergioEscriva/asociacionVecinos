@@ -1,7 +1,5 @@
 package com.asociacion.models;
 
-
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,11 +18,9 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(unique = true)
     private Long memberNumber;
-
-    private Long idFamily;
     private String name;
     private String lastName1;
     private String lastName2;
@@ -41,4 +37,3 @@ public class Member {
     private String notes;
 
 }
-
