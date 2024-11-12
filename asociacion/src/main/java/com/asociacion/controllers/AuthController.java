@@ -18,9 +18,9 @@ public class AuthController {
 
     @PostMapping("/auth/login")
     public String login(@RequestBody RequestLogin request){
-        String email = request.getEmail();
+        String user = request.getUser();
         String password = request.getPassword();
-        Admin admin = service.login(email,password);
+        Admin admin = service.login(user,password);
         return JwtUtil.generateToken(admin);
     }
 
