@@ -20,4 +20,5 @@ public class Activity {
     private Long id;
     private String name;
     private String managerId;
+    private String notes;
 }

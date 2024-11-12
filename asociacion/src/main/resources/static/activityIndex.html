@@ -136,78 +136,98 @@
 
                 <!-- Begin Page Content -->
                 <div class="container">
-        
                     <img src="img/mislata.png" alt="Valencia Street" class="background-image">
-                   
+                    <h2>Ficha Actividad</h2>
                     <form method="post">
-                        <h2>Ficha Actividad <input type="number" id="activityId" name="activityId" ></h2>
-            
                         <div class="input-group">
-                            <label for="active">Actividad Actualmente Activa:</label>
+                            <input type="number" id="activityId" name="activityId">    
+                            <label for="active">Actividad Activa:</label>
                             <input type="checkbox" id="activityActive" name="active">
-            
                             <label for="memberNumber">Nombre Actividad:</label>
                             <input type="text" id="activityName" name="activityName" >
-                            
                             <label for="name">Encargado:</label>
                             <input type="text" id="managerName" name="managerName" >
                         </div>
-             
                         <div class="input-group">
                             <label for="notes">Notas:</label>
                             <input type="notes" id="notes" name="notes" placeholder="Ingrese sus notas aquí">
-            
-                            <label for="gender">Género:</label>
-                            <input type="textPeque" id="gender" name="gender" >
-            
-            
                         </div>
+                    </form>
                 </div>
-
                 <div class="container">
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <h2>Añadir Socio</h2>
-                            <div class="input-group-append">
-                            <input type="text" class="textPeque" placeholder="Buscar Socio..."
-                                aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput">
-                                <button class="buttonFee" type="button" onclick="getElementByIdSelected()">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                                </button>
-                                <button class="buttonFee" type="button" onclick="updateActivity()">
-                                    <i class="fas fa-download"></i>
-                                </button>
-                           
-                            </div>
-                            <div class="input-group">
-                                <label for="name">Nombre:</label>
-                                <input type="text" id="name" name="name" >
-                
-                                <label for="lastName1">Apellido 1:</label>
-                                <input type="text" id="lastName1" name="lastName1" >
-                
-                                <label for="lastName2">Apellido 2:</label>
-                                <input type="text" id="lastName2" name="lastName2" >
-                            </div>
+                    <h2>Añadir Socio
+                    <form method="post">
+                        <input type="text" class="textPeque" placeholder="Buscar Socio..."
+                        aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput">
+                        <button class="button-add-member" type="button" onclick="getElementByIdSelected()">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
+                        <button class="button-add-member" type="button" onclick="updateActivity()">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </h2>
+                        <div class="input-group-append">
+                            <label for="name">Nombre:</label>
+                            <input type="text" id="name" name="name" >
+            
+                            <label for="lastName1">Apellido 1:</label>
+                            <input type="text" id="lastName1" name="lastName1" >
+            
+                            <label for="lastName2">Apellido 2:</label>
+                            <input type="text" id="lastName2" name="lastName2" >
                         </div>
                     </form>
                     
                 </div>
 
-                <div class="container">
+                <div class="container-activity">
                     <h2>Lista Socios</h2>
                     <div class="list-group">
-                        <select>
-                            <option value="valor1">Actividad</option>
-                            <option value="valor2">Opción 2</option>
-                            <option value="valor3">Opción 3</option>
-                          </select>   
-                                  
+                      <ul class="list-horizontal">
+                        <li>
+                            <button class="delete-button"><i class="fas fa-trash"></i></button>
+                            <label class= "text-activity" for="option1">Manolo</label>
+                        </li>
+                        <li>
+                            <button class="delete-button"><i class="fas fa-trash"></i></button>
+                            <label class= "text-activity" for="option1">Manolo</label>
+                        </li>
+                        <li>
+                            <button class="delete-button"><i class="fas fa-trash"></i></button>
+                            <label class= "text-activity" for="option1">Manolo</label>
+                        </li>
+                        <li>
+                            <button class="delete-button"><i class="fas fa-trash"></i></button>
+                            <label class= "text-activity" for="option1">Manolo</label>
+                        </li>
+                        <li>
+                            <button class="delete-button"><i class="fas fa-trash"></i></button>
+                            <label class= "text-activity" for="option1">Manolo</label>
+                        </li>
+                        <li>
+                            <button class="delete-button"><i class="fas fa-trash"></i></button>
+                            <label class= "text-activity" for="option1">Manolo</label>
+                        </li>
+                        <li>
+                            <button class="delete-button"><i class="fas fa-trash"></i></button>
+                            <label class= "text-activity" for="option1">Manolo</label>
+                        </li>
+                        <li>
+                            <button class="delete-button"><i class="fas fa-trash"></i></button>
+                            <label class= "text-activity" for="option1">Manolo</label>
+                        </li>
+                        <li>
+                            <button class="delete-button"><i class="fas fa-trash"></i></button>
+                            <label class= "text-activity" for="option1">Manolo</label>
+                        </li>
+                        <li>
+                            <button class="delete-button"><i class="fas fa-trash"></i></button>
+                            <label class= "text-activity" for="option1">Manolo García</label>
+                        </li>
+                        
+                        </ul>
                     </div>
-
-                </div>
+                  </div>
                 
             <!-- End of Main Content -->
 
@@ -265,8 +285,9 @@
     <!-- Page level plugins -->
     <script src="vendor/chart.js/Chart.min.js"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="js/MembersManager.js"></script>
+    <!-- Page level custom scripts 
+    <script src="js/MembersManager.js"></script>-->
+    <script src="js/ActivityManager.js"></script>
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
 
