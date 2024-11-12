@@ -12,7 +12,7 @@ export class RequestPost {
         }
       };
       // Devuelve la respuesta en formato JSON
-      return await _putRequest(`/api/family`, response);
+      return await RequestPost._postRequest(`/api/family`, response);
     } catch (error) {
       console.error('Error en la solicitud PUT:', error);
       throw error;
@@ -31,7 +31,7 @@ export class RequestPost {
       };
       // Devuelve la respuesta en formato JSON
       alert("Añadido")
-      return await _postRequest(`/api/members`, response);
+      return await RequestPost._postRequest(`/api/members`, response);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
       throw error;

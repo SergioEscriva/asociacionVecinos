@@ -12,7 +12,7 @@ export class RequestPut {
         }
       };
       // Devuelve la respuesta en formato JSON
-      return await _putRequest(`/api/family/${familyTypeId}`, response);
+      return await RequestPut._putRequest(`/api/family/${familyTypeId}`, response);
     } catch (error) {
       console.error('Error en la solicitud PUT:', error);
       throw error;
@@ -31,7 +31,7 @@ export class RequestPut {
       };
       // Devuelve la respuesta en formato JSON
       alert("Cambios Guardados")
-      return await _putRequest(`/api/members/${memberId}`, response);
+      return await RequestPut._putRequest(`/api/members/${memberId}`, response);
     } catch (error) {
       console.error('Error en la solicitud PUT:', error);
       throw error;
