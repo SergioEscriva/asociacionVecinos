@@ -35,6 +35,18 @@ public class FamilyService {
         return null;
     }
 
+    public Family checkFamilyMemberId(Long memberId, Long familyMemberId) {
+        List<Family> familys = familyRepository.findAll();
+
+        for (Family family : familys) {
+            if (family.getIdMember() == memberId) {
+                return family;
+            }
+        }
+
+        return null;
+    }
+
     public List<Family> getFamilys() {
 
         return familyRepository.findAll();

@@ -9,7 +9,13 @@ function getFamilyById(memberId) {
   fetch(`api/family/member/${memberId}`)
     .then(response => response.json())
     .then(family => {
-      document.getElementById('idFamily').value = family.idFamily;
+
+      let inputElement = document.getElementById("familyMemberId");
+      inputElement.dataset.familyType = family.id; // se añade o cambia el valor al item
+      inputElement.value = family.familyMemberId
+
+      document.getElementById('familyMemberId').value = family.familyMemberId;
+
     })
     .catch(error => {
       console.error('Error:', error);
@@ -58,7 +64,6 @@ function getActivo(active) {
 async function updateMember() {
   const memberId = document.getElementById('memberId').value
   const memberNumber = document.getElementById('memberNumber').value
-  const idFamily = document.getElementById('idFamily').value
   const name = document.getElementById('name').value
   const lastName1 = document.getElementById('lastName1').value
   const lastName2 = document.getElementById('lastName2').value
@@ -80,11 +85,9 @@ async function updateMember() {
   if (isActive) {
     activate = 1
   }
-  console.log(phone, ' phone ', checkbox, ' holi ', isActive, ' Hola ', activate)
 
   const memberUpdate = {
     memberNumber: memberNumber,
-    idFamily: idFamily,
     name: name,
     lastName1: lastName1,
     lastName2: lastName2,
@@ -101,17 +104,105 @@ async function updateMember() {
     notes: notes
   }
 
+
   if (!memberId) {
-    const request = await newMember(memberId, memberUpdate);
+    const request = await newMember(memberUpdate);
+    await createFamily(request.id)
+    return request;
   }
   else {
     const request = await editMember(memberId, memberUpdate);
+    await updateFamily(memberId)
+    return request;
+  }
+}
+
+async function updateFamily(memberId) {
+
+  let inputElement = document.getElementById("familyMemberId");
+  const familyMemberId = inputElement.value
+  let familyTypeId = inputElement.dataset.familyType;
+
+  const familyUpdate = {
+    familyMemberId: familyMemberId,
+    idMember: memberId
+  }
+  await editFamily(familyTypeId, familyUpdate)
+}
+
+async function createFamily(memberId) {
+
+  let familyMemberId = document.getElementById("familyMemberId").value;
+
+  if (!familyMemberId) {
+    familyMemberId = 0;
   }
 
-
-  return request;
+  const familyUpdate = {
+    familyMemberId: familyMemberId,
+    idMember: memberId
+  }
+  await newFamily(familyUpdate)
 
 }
+
+async function oneFamilyCheck(memberId, familyMemberId) {
+  if (!familyMemberId || memberId == familyMemberId) {
+    familyMemberId = 0;
+  }
+
+  fetch(`api/family/check/${memberId}/${familyMemberId}`)
+    .then(response => response.json())
+    .then(family => {
+      const familyMemberId = family.familyMemberId
+      const idMember = family.idMember
+    })
+
+}
+
+
+
+
+/// Debería estar en el archivo Request???.js pero da error al importarlo
+
+
+async function editFamily(familyTypeId, familyUpdate) {
+
+  try {
+    const response = {
+      method: "PUT",
+      body: JSON.stringify(familyUpdate),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    // Devuelve la respuesta en formato JSON
+    return await _putRequest(`/api/family/${familyTypeId}`, response);
+  } catch (error) {
+    console.error('Error en la solicitud PUT:', error);
+    throw error;
+  }
+}
+
+async function newFamily(familyUpdate) {
+  try {
+    const response = {
+      method: "POST",
+      body: JSON.stringify(familyUpdate),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    // Devuelve la respuesta en formato JSON
+    return await _putRequest(`/api/family`, response);
+  } catch (error) {
+    console.error('Error en la solicitud PUT:', error);
+    throw error;
+  }
+}
+
+
+
 
 
 
@@ -126,6 +217,7 @@ async function editMember(memberId, memberUpdate) {
       }
     };
     // Devuelve la respuesta en formato JSON
+    alert("Cambios Guardados")
     return await _putRequest(`/api/members/${memberId}`, response);
   } catch (error) {
     console.error('Error en la solicitud PUT:', error);
@@ -134,7 +226,7 @@ async function editMember(memberId, memberUpdate) {
 }
 
 
-async function newMember(memberId, memberUpdate) {
+async function newMember(memberUpdate) {
 
   try {
     const response = {
@@ -145,6 +237,7 @@ async function newMember(memberId, memberUpdate) {
       }
     };
     // Devuelve la respuesta en formato JSON
+    alert("Añadido")
     return await _postRequest(`/api/members`, response);
   } catch (error) {
     console.error('Error en la solicitud POST:', error);
@@ -162,7 +255,6 @@ async function _putRequest(url, data) {
   try {
     const response = await fetch(url, data);
     const jsonMessage = await response.json();
-    alert("Cambios Guardados")
     return jsonMessage;
   } catch (error) {
     console.log(error);
@@ -174,7 +266,6 @@ async function _postRequest(url, data) {
   try {
     const response = await fetch(url, data);
     const jsonMessage = await response.json();
-    alert("Añadido")
     return jsonMessage;
   } catch (error) {
     console.log(error);

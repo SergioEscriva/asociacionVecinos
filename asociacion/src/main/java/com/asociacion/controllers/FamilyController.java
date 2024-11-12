@@ -39,6 +39,11 @@ public class FamilyController {
         return familyService.findByMemberId(memberId);
     }
 
+    @GetMapping("/check/{memberId}/{familyMemberId}")
+    public Family getCheckFamilyMemberId(@PathVariable Long memberId, @PathVariable Long familyMemberId) {
+        return familyService.checkFamilyMemberId(memberId, familyMemberId);
+    }
+
     @DeleteMapping("/{id}")
     public void delFamilyById(@PathVariable Long id) {
         familyService.delFamilyById(id);
