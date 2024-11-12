@@ -25,7 +25,7 @@ public class MemberController {
 
     
     @GetMapping()
-    public List<Member> getClientes() {
+    public List<Member> getMembers() {
 
         return memberService.getMembers();
     }
@@ -37,13 +37,13 @@ public class MemberController {
     
     
     @PostMapping
-    public ResponseEntity<Member> createMember(@RequestBody Member member) {
+    public ResponseEntity<Member>createMember(@RequestBody Member member) {
         Member savedMember = memberService.saveMember(member);
         return new ResponseEntity<>(savedMember, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Member> updateMember(@PathVariable Long id, @RequestBody Member member) {
+    public ResponseEntity<Member>updateMember(@PathVariable Long id, @RequestBody Member member) {
         Optional<Member> existingMember = memberService.findById(id);
         if (existingMember.isPresent()) {
             member.setId(id);
