@@ -17,9 +17,9 @@ public class Family {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long familyMemberId;
+    private Long familyMasterNumber;
 
     @Column(unique = true)
-    private Long idMember;
+    private Long memberNumber;
 
 }

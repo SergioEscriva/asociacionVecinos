@@ -2,7 +2,6 @@ import { RequestPut } from './RequestPut.js';
 import { RequestPost } from './RequestPost.js';
 
 window.onload = function () {
-
   getMemberById(1);
 };
 
@@ -14,7 +13,6 @@ function getFamilyById(memberId) {
   fetch(`api/family/member/${memberId}`)
     .then(response => response.json())
     .then(family => {
-
       let inputElement = document.getElementById("familyMemberId");
       inputElement.dataset.familyType = family.id; // se añade o cambia el valor al item
       inputElement.value = family.familyMemberId
