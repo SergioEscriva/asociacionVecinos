@@ -40,11 +40,12 @@ public class CustomAccessFilter implements Filter {
         String currentUrl = request.getRequestURI();
         String[] availableUrl = new String[] {
                 "/api/auth/login",
-                "/api/auth/register"
+                "/api/auth/register",
+                "/api/*"
         };
 
         boolean authorized = Arrays.asList(availableUrl).contains(currentUrl);
-        boolean isAnApiResource = currentUrl.startsWith("/api/");
+        boolean isAnApiResource = currentUrl.startsWith("/home/"); //Cambiar a api
         if(authorized || !isAnApiResource){
             return true;
         }
