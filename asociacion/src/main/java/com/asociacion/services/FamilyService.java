@@ -17,13 +17,10 @@ public class FamilyService {
     private FamilyRepository familyRepository;
 
     public Family saveFamily(Family family) {
-
-        System.out.println(family.getFamilyMasterNumber());
-
         Long familyMasterNumber = family.getFamilyMasterNumber();
-
         boolean coulBeMaster = true;
         Family memberMaster = family;
+
         if (familyMasterNumber > 0) {
             Optional<Family> memberMasterOpt = getFamilyByMemberNumber(familyMasterNumber);
             memberMaster = new Family();
@@ -31,15 +28,23 @@ public class FamilyService {
             coulBeMaster = memberCouldBeMaster(family);
         }
 
+        // Si puede ser Master de la Familia y tiene un 0 como familyNumber, se añade su
+        // Master.
+        // Si no, se añade un 0 como que no se puede.
         if (coulBeMaster) {
             if (memberMaster.getFamilyMasterNumber() == 0) {
                 memberMaster.setFamilyMasterNumber(familyMasterNumber);
+            } else {
+                familyRepository.save(memberMaster);
             }
-            familyRepository.save(memberMaster);
-            return familyRepository.save(family);
+        } else {
+            family.setFamilyMasterNumber(0L);
         }
-        family.setFamilyMasterNumber(0L);
-        return familyRepository.save(family);
+        Family familySave = familyRepository.save(family);
+
+        // Comprueba si se ha modificado el Master y no tiene Familia, que se ponga a 0
+        memberMasterNotMaster();
+        return familySave;
     }
 
     public Optional<Family> findById(Long id) {
@@ -74,6 +79,39 @@ public class FamilyService {
 
     public boolean searchInTable(Long familyMasterNumber) {
         return familyRepository.findByFamilyMasterNumber(familyMasterNumber).isPresent();
+    }
+
+    public int searchAllFamilyMaster(Long familyMasterNumber) {
+        return familyRepository.findAllByFamilyMasterNumber(familyMasterNumber).size();
+    }
+
+    public void memberMasterNotMaster() {
+        /// Long familyMasterNumber = family.getFamilyMasterNumber();
+        // Optional<Family> familyMasterOpt =
+        /// getFamilyByMemberNumber(familyMasterNumber);
+        // Family familyMaster = familyMasterOpt.get();
+        // int allFamilies = searchAllFamilyMaster(familyMasterNumber);
+
+        /*
+         * System.out.print(familyMasterNumber + " AAAAAAAAAAA " + allFamilies);
+         * 
+         * Long familyNumberMaster = familyMaster.getFamilyMasterNumber();
+         * Long memberNumberMaster = familyMaster.getMemberNumber();
+         */
+
+        List<Family> families = familyRepository.findAll();
+
+        for (Family family : families) {
+            Long familyNumber = family.getFamilyMasterNumber();
+            int sizeFamilyMaster = searchAllFamilyMaster(familyNumber);
+            System.out.println(sizeFamilyMaster);
+            if (sizeFamilyMaster == 1) {
+                family.setFamilyMasterNumber(0L);
+                familyRepository.save(family);
+            }
+
+        }
+
     }
 
     public boolean memberCouldBeMaster(Family family) {
