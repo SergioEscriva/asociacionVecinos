@@ -86,30 +86,20 @@ public class FamilyService {
     }
 
     public void memberMasterNotMaster() {
-        /// Long familyMasterNumber = family.getFamilyMasterNumber();
-        // Optional<Family> familyMasterOpt =
-        /// getFamilyByMemberNumber(familyMasterNumber);
-        // Family familyMaster = familyMasterOpt.get();
-        // int allFamilies = searchAllFamilyMaster(familyMasterNumber);
-
-        /*
-         * System.out.print(familyMasterNumber + " AAAAAAAAAAA " + allFamilies);
-         * 
-         * Long familyNumberMaster = familyMaster.getFamilyMasterNumber();
-         * Long memberNumberMaster = familyMaster.getMemberNumber();
-         */
-
         List<Family> families = familyRepository.findAll();
 
         for (Family family : families) {
             Long familyNumber = family.getFamilyMasterNumber();
             int sizeFamilyMaster = searchAllFamilyMaster(familyNumber);
-            System.out.println(sizeFamilyMaster);
+
             if (sizeFamilyMaster == 1) {
                 family.setFamilyMasterNumber(0L);
                 familyRepository.save(family);
-            }
+            } else if (sizeFamilyMaster >= 2) {
+                family.setFamilyMasterNumber(familyNumber);
+                familyRepository.save(family);
 
+            }
         }
 
     }
