@@ -18,12 +18,12 @@ public class AuthServiceImp implements AuthService{
 
 
     @Override
-    public Admin login(String email, String password) {
+    public Admin login(String user, String password) {
         String hashPassword = Hashing.sha256()
                 .hashString(password + System.getenv("Palabra_Secreta"), StandardCharsets.UTF_8)
                 .toString();
 
-        List<Admin> result = adminRepository.findByUserAndPassword(email,hashPassword);
+        List<Admin> result = adminRepository.findByUserAndPassword(user,hashPassword);
         if(result.isEmpty()){
             return null;
             //no encontró nada
