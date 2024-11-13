@@ -27,9 +27,7 @@ public class FamilyService {
         if (familyMasterNumber > 0) {
             Optional<Family> memberMasterOpt = getFamilyByMemberNumber(familyMasterNumber);
             memberMaster = new Family();
-
             memberMaster = memberMasterOpt.get();
-
             coulBeMaster = memberCouldBeMaster(family);
         }
 
@@ -79,13 +77,13 @@ public class FamilyService {
     }
 
     public boolean memberCouldBeMaster(Family family) {
-
         Long familyNumber = family.getFamilyMasterNumber();
-
         Optional<Family> familyMasterOpt = getFamilyByMemberNumber(familyNumber);
         Family familyMaster = familyMasterOpt.get();
+        Long familyNumberMaster = familyMaster.getFamilyMasterNumber();
+        Long memberNumberMaster = familyMaster.getMemberNumber();
 
-        if (familyMaster.getFamilyMasterNumber() == 0) {
+        if (familyNumberMaster == 0 || familyNumberMaster.equals(memberNumberMaster)) {
             return true;
         }
         return false;
