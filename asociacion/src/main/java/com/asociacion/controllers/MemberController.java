@@ -1,19 +1,17 @@
 package com.asociacion.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.asociacion.models.Activity;
+import com.asociacion.services.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.asociacion.models.Member;
 import com.asociacion.services.MemberService;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api/members")
@@ -22,10 +20,27 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private ActivityService activityService;
+
     @GetMapping()
     public List<Member> getMembers() {
 
         return memberService.getMembers();
+    }
+
+    @GetMapping("/activitySearch")
+    public List<Member> getMembersByActivity(@RequestParam(name="name") String name){
+        List<Activity> activities = activityService.findActivityByName(name);
+        List<Member> members = new ArrayList<>();
+        for (int i = 0; i< activities.size(); i++){
+            Long memberId = activities.get(i).getManagerId();
+            Optional<Member> member= getMemberById(memberId);
+            if (member.isPresent()) {
+                members.add(member.get());
+            }
+        }
+        return members;
     }
 
     @GetMapping("/actives")

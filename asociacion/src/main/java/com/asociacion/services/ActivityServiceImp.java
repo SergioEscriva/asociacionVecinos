@@ -23,9 +23,16 @@ public class ActivityServiceImp implements ActivityService {
         return activityRepository.findById(id);
     }
 
-    public List<Activity> getActivitys() {
+    public List<Activity> getActivities() {
 
         return activityRepository.findAll();
     }
+
+    @Override
+    public List<Activity> findActivityByName(String name) {
+        return activityRepository.findActivityByName(name);
+    }
+
+
 
 }

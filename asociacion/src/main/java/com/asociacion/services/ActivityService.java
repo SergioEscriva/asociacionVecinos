@@ -10,6 +10,9 @@ public interface ActivityService {
 
     public Optional<Activity> findById(Long id);
 
-    public List<Activity> getActivitys();
+    public List<Activity> getActivities();
+
+     List<Activity> findActivityByName(String name);
+
 
 }
