@@ -3,16 +3,27 @@ import { RequestPost } from './RequestPost.js';
 
 export class FamilyManager {
 
-    static async getFamilyById(memberNumber) {
-        fetch(`api/family/memberNumber/${memberNumber}`)
+    static async getFamilyById(id) {
+        fetch(`api/family/${id}`)
             .then(response => response.json())
             .then(family => {
                 let inputElement = document.getElementById("familyMasterNumber");
                 inputElement.dataset.familyType = family.id; // se añade o cambia el valor al item
+                //inputElement.value = family.id
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    static async getFamilyByMemberNumber(memberNumber) {
+        fetch(`api/family/memberNumber/${memberNumber}`)
+            .then(response => response.json())
+            .then(family => {
+                console.log(family)
+                let inputElement = document.getElementById("familyMasterNumber");
+                inputElement.dataset.familyType = family.id; // se añade o cambia el valor al item
                 inputElement.value = family.familyMasterNumber
-
-                document.getElementById('familyMasterNumber').value = family.familyMasterNumber;
-
             })
             .catch(error => {
                 console.error('Error:', error);

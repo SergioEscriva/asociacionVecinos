@@ -31,7 +31,7 @@ export class MembersManager {
       .then(member => {
         document.getElementById('memberId').value = member.id;
         document.getElementById('memberNumber').value = memberNumber;
-        FamilyManager.getFamilyById(memberNumber);
+        FamilyManager.getFamilyByMemberNumber(memberNumber);
         document.getElementById('name').value = member.name;
         document.getElementById('lastName1').value = member.lastName1;
         document.getElementById('lastName2').value = member.lastName2;
@@ -112,7 +112,7 @@ export class MembersManager {
       let request;
       if (!memberNumber) {
         request = await RequestPost.newMember(memberUpdate);
-        await FamilyManager.createFamily(request.id)
+        await FamilyManager.createFamily(request.memberNumber)
       } else {
         request = await RequestPut.editMember(memberId, memberUpdate);
         await FamilyManager.updateFamily(memberNumber)
