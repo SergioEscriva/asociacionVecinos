@@ -38,6 +38,15 @@ public class MemberServiceImp implements MemberService {
         return memberRepository.findAll();
     }
 
+    public List<Member> getActives() {
+        return memberRepository.findActives();
+    }
+
+    public List<Member> getInactives() {
+        return memberRepository.findInactives();
+    }
+
+
     public Optional<Member> findByMemberNumber(Long memberNumber) {
         return memberRepository.findByMemberNumber(memberNumber);
     }

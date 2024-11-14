@@ -28,6 +28,18 @@ public class MemberController {
         return memberService.getMembers();
     }
 
+    @GetMapping("/actives")
+    public List<Member> getActives() {
+
+        return memberService.getActives();
+    }
+
+    @GetMapping("/inactives")
+    public List<Member> getInactives() {
+
+        return memberService.getInactives();
+    }
+
     @GetMapping("/number/{number}")
     public Optional<Member> getMemberByNumber(@PathVariable Long number) {
         return memberService.findByMemberNumber(number);

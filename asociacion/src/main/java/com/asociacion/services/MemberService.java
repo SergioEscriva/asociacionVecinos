@@ -14,4 +14,8 @@ public interface MemberService {
 
     public Optional<Member> findByMemberNumber(Long memberNumber);
 
+    public List<Member> getActives();
+
+    public List<Member> getInactives();
+
 }
