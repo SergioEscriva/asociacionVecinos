@@ -5,13 +5,15 @@ import { FamilyManager } from './FamilyManager.js';
 
 export class MembersManager {
   constructor() {
-    MembersManager.domElements = {};
+
   }
 
   async init() {
     MembersManager.getMemberByNumber(10002);
-    document.getElementById("getElementByIdSelected").addEventListener("click", getElementByIdSelected);
-    document.getElementById("updateMember").addEventListener("click", updateMember);
+
+    document.getElementById("getElementByIdSelected").addEventListener("click", function () { MembersManager.getElementByIdSelected(); });
+
+    document.getElementById("updateMember").addEventListener("click", function () { MembersManager.updateMember(); });
 
   }
 
@@ -23,6 +25,7 @@ export class MembersManager {
 
 
   static async getMemberByNumber(memberNumber) {
+
     fetch(`api/members/number/${memberNumber}`)
       .then(response => response.json())
       .then(member => {
@@ -49,8 +52,8 @@ export class MembersManager {
       });
   }
 
-  async getElementByIdSelected() {
-    const memberNumber = document.getElementById('memberNumberInput').value;
+  static async getElementByIdSelected() {
+    const memberNumber = document.getElementById('memberIdInput').value;
     this.getMemberByNumber(memberNumber)
   }
 
@@ -61,7 +64,7 @@ export class MembersManager {
       checkbox.checked = true
   }
 
-  async updateMember() {
+  static async updateMember() {
     try {
       const memberId = document.getElementById('memberId').value
       const memberNumber = document.getElementById('memberNumber').value
@@ -88,6 +91,7 @@ export class MembersManager {
       }
 
       const memberUpdate = {
+
         memberNumber: memberNumber,
         name: name,
         lastName1: lastName1,
@@ -110,7 +114,7 @@ export class MembersManager {
         request = await RequestPost.newMember(memberUpdate);
         await FamilyManager.createFamily(request.id)
       } else {
-        request = await RequestPut.editMember(memberNumber, memberUpdate);
+        request = await RequestPut.editMember(memberId, memberUpdate);
         await FamilyManager.updateFamily(memberNumber)
       }
       return request;

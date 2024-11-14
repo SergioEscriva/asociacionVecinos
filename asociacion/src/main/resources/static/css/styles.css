@@ -137,7 +137,7 @@ input[type="number"] {
 
 input[type="textPeque"] {
     font-size: 18px;
-    width: 40px;
+    width: 50px;
     height: 30px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -178,7 +178,7 @@ input[type="phone"] {
 
 input[type="notes"] {
     font-size: 18px;
-    width: 900px;
+    width: 850px;
     height: 30px;
     padding: 10px;
     border: 1px solid #ccc;

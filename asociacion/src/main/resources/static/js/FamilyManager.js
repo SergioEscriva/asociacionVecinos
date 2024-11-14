@@ -20,7 +20,7 @@ export class FamilyManager {
     }
 
 
-    async updateFamily(memberNumber) {
+    static async updateFamily(memberNumber) {
 
         let inputElement = document.getElementById("familyMasterNumber");
         const familyMasterNumber = inputElement.value
