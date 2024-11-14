@@ -26,8 +26,10 @@ public class ActivityController {
     
     @GetMapping()
     public List<Activity> getActivitys() {
-        return activityService.getActivitys();
+        return activityService.getActivities();
     }
+
+
 
     @GetMapping("/{id}")
     public Optional<Activity> getActivityById(@PathVariable Long id){
