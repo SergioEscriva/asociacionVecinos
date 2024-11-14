@@ -4,14 +4,14 @@ import { RequestPost } from './RequestPost.js';
 export class FamilyManager {
 
     static async getFamilyById(memberNumber) {
-        fetch(`api/family/member/${memberNumber}`)
+        fetch(`api/family/memberNumber/${memberNumber}`)
             .then(response => response.json())
             .then(family => {
-                let inputElement = document.getElementById("familyMemberNumber");
+                let inputElement = document.getElementById("familyMasterNumber");
                 inputElement.dataset.familyType = family.id; // se añade o cambia el valor al item
-                inputElement.value = family.familyMemberNumber
+                inputElement.value = family.familyMasterNumber
 
-                document.getElementById('familyMemberNumber').value = family.familyMemberNumber;
+                document.getElementById('familyMasterNumber').value = family.familyMasterNumber;
 
             })
             .catch(error => {
@@ -22,43 +22,43 @@ export class FamilyManager {
 
     async updateFamily(memberNumber) {
 
-        let inputElement = document.getElementById("familyMemberNumber");
-        const familyMemberNumber = inputElement.value
+        let inputElement = document.getElementById("familyMasterNumber");
+        const familyMasterNumber = inputElement.value
         let familyTypeId = inputElement.dataset.familyType;
 
         const familyUpdate = {
-            familyMemberNumber: familyMemberNumber,
-            idMember: memberNumber
+            familyMasterNumber: familyMasterNumber,
+            memberNumber: memberNumber
         }
         await RequestPut.editFamily(familyTypeId, familyUpdate)
     }
 
     async createFamily(memberNumber) {
 
-        let familyMemberNumber = document.getElementById("familyMemberNumber").value;
+        let familyMasterNumber = document.getElementById("familyMasterNumber").value;
 
-        if (!familyMemberNumber) {
-            familyMemberNumber = 0;
+        if (!familyMasterNumber) {
+            familyMasterNumber = 0;
         }
 
         const familyUpdate = {
-            familyMemberNumber: familyMemberNumber,
+            familyMasterNumber: familyMasterNumber,
             idMember: memberNumber
         }
         await RequestPost.newFamily(familyUpdate)
 
     }
 
-    async oneFamilyCheck(memberNumber, familyMemberNumber) {
-        if (!familyMemberNumber || memberNumber == familyMemberNumber) {
-            familyMemberNumber = 0;
+    async oneFamilyCheck(memberNumber, familyMasterNumber) {
+        if (!familyMasterNumber || memberNumber == familyMasterNumber) {
+            familyMasterNumber = 0;
         }
 
-        fetch(`api/family/check/${memberNumber}/${familyMemberNumber}`)
+        fetch(`api/family/check/${memberNumber}/${familyMasterNumber}`)
             .then(response => response.json())
             .then(family => {
-                const familyMemberNumber = family.familyMemberNumber
-                const idMember = family.idMember
+                const familyMasterNumber = family.familyMasterNumber
+                const memberNumber = family.memberNumber
             })
 
     }

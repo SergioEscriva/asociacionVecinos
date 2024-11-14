@@ -9,7 +9,7 @@ export class MembersManager {
   }
 
   async init() {
-    MembersManager.getMemberById(1);
+    MembersManager.getMemberByNumber(10002);
     document.getElementById("getElementByIdSelected").addEventListener("click", getElementByIdSelected);
     document.getElementById("updateMember").addEventListener("click", updateMember);
 
@@ -17,18 +17,18 @@ export class MembersManager {
 
   /*  
   window.onload = function () {
-    getMemberById(1);
+    getMemberByNumber(1);
   };
   */
 
 
-  static async getMemberById(memberId) {
-    fetch(`api/members/${memberId}`)
+  static async getMemberByNumber(memberNumber) {
+    fetch(`api/members/number/${memberNumber}`)
       .then(response => response.json())
       .then(member => {
-        document.getElementById('memberId').value = memberId;
-        document.getElementById('memberNumber').value = member.memberNumber;
-        FamilyManager.getFamilyById(memberId);
+        document.getElementById('memberId').value = member.id;
+        document.getElementById('memberNumber').value = memberNumber;
+        FamilyManager.getFamilyById(memberNumber);
         document.getElementById('name').value = member.name;
         document.getElementById('lastName1').value = member.lastName1;
         document.getElementById('lastName2').value = member.lastName2;
@@ -41,7 +41,7 @@ export class MembersManager {
         document.getElementById('email').value = member.email;
         document.getElementById('dni').value = member.dni;
         document.getElementById('gender').value = member.gender;
-        document.getElementById('active').value = getActivo(member.active);
+        document.getElementById('active').value = MembersManager.getActivo(member.active);
         document.getElementById('notes').value = member.notes;
       })
       .catch(error => {
@@ -50,11 +50,11 @@ export class MembersManager {
   }
 
   async getElementByIdSelected() {
-    const memberId = document.getElementById('memberIdInput').value;
-    this.getMemberById(memberId)
+    const memberNumber = document.getElementById('memberNumberInput').value;
+    this.getMemberByNumber(memberNumber)
   }
 
-  async getActivo(active) {
+  static async getActivo(active) {
     var checkbox = document.getElementById('active');
     checkbox.checked = false
     if (active == 1)
@@ -106,12 +106,12 @@ export class MembersManager {
       }
 
       let request;
-      if (!memberId) {
+      if (!memberNumber) {
         request = await RequestPost.newMember(memberUpdate);
         await FamilyManager.createFamily(request.id)
       } else {
-        request = await RequestPut.editMember(memberId, memberUpdate);
-        await FamilyManager.updateFamily(memberId)
+        request = await RequestPut.editMember(memberNumber, memberUpdate);
+        await FamilyManager.updateFamily(memberNumber)
       }
       return request;
 

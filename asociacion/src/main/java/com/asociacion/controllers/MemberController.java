@@ -1,4 +1,5 @@
 package com.asociacion.controllers;
+
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,6 @@ import com.asociacion.models.Member;
 import com.asociacion.services.MemberService;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
-
 @RestController
 @RequestMapping("/api/members")
 public class MemberController {
@@ -23,27 +22,31 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    
     @GetMapping()
     public List<Member> getMembers() {
 
         return memberService.getMembers();
     }
 
+    @GetMapping("/number/{number}")
+    public Optional<Member> getMemberByNumber(@PathVariable Long number) {
+        return memberService.findByMemberNumber(number);
+    }
+
     @GetMapping("/{id}")
-    public Optional<Member> getMemberById(@PathVariable Long id){
+
+    public Optional<Member> getMemberById(@PathVariable Long id) {
         return memberService.findById(id);
     }
-    
-    
+
     @PostMapping
-    public ResponseEntity<Member>createMember(@RequestBody Member member) {
+    public ResponseEntity<Member> createMember(@RequestBody Member member) {
         Member savedMember = memberService.saveMember(member);
         return new ResponseEntity<>(savedMember, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Member>updateMember(@PathVariable Long id, @RequestBody Member member) {
+    public ResponseEntity<Member> updateMember(@PathVariable Long id, @RequestBody Member member) {
         Optional<Member> existingMember = memberService.findById(id);
         if (existingMember.isPresent()) {
             member.setId(id);
@@ -54,7 +57,3 @@ public class MemberController {
         }
     }
 }
-
-
-
-

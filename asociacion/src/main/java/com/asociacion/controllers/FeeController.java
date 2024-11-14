@@ -1,4 +1,5 @@
 package com.asociacion.controllers;
+
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,44 +12,41 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.asociacion.models.Fee;
-import com.asociacion.services.FeeService;
+import com.asociacion.services.FeeServiceImp;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-
-
 
 @RestController
 @RequestMapping("/api/fee")
 public class FeeController {
 
     @Autowired
-    private FeeService feeService;
+    private FeeServiceImp feeService;
 
-    
     @GetMapping()
     public List<Fee> getFees() {
         return feeService.getFees();
     }
 
     @GetMapping("/{id}")
-    public Optional<Fee> getFeeById(@PathVariable Long id){
+    public Optional<Fee> getFeeById(@PathVariable Long id) {
         return feeService.findById(id);
     }
-    
+
     @PostMapping
-    public ResponseEntity<Fee>createFee(@RequestBody Fee fee) {
+    public ResponseEntity<Fee> createFee(@RequestBody Fee fee) {
         Fee savedFee = feeService.saveFee(fee);
         return new ResponseEntity<>(savedFee, HttpStatus.CREATED);
     }
 
-        @DeleteMapping("/{id}")
-    public void delFeeById(@PathVariable Long id){
+    @DeleteMapping("/{id}")
+    public void delFeeById(@PathVariable Long id) {
         feeService.delFeeById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Fee>updateFee(@PathVariable Long id, @RequestBody Fee fee) {
+    public ResponseEntity<Fee> updateFee(@PathVariable Long id, @RequestBody Fee fee) {
         Optional<Fee> existingFee = feeService.findById(id);
         if (existingFee.isPresent()) {
             fee.setId(id);
@@ -59,7 +57,3 @@ public class FeeController {
         }
     }
 }
-
-
-
-

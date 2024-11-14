@@ -12,7 +12,8 @@ public interface FamilyRepository extends JpaRepository<Family, Long> {
 
     Optional<Family> findByFamilyMasterNumber(Long familyMasterNumber);
 
+    Optional<Family> findByMemberNumber(Long memberNumber);
+
     List<Family> findAllByFamilyMasterNumber(Long familyMasterNumber);
 
-    Optional<Family> findByMemberNumber(Long memberNumber);
 }

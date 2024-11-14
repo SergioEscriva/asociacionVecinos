@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.asociacion.models.Family;
-import com.asociacion.services.FamilyService;
+import com.asociacion.services.FamilyServiceImp;
+import com.asociacion.services.MemberServiceImp;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class FamilyController {
 
     @Autowired
-    private FamilyService familyService;
+    private FamilyServiceImp familyService;
 
     @GetMapping()
     public List<Family> getFamilys() {
@@ -34,9 +35,9 @@ public class FamilyController {
         return familyService.findById(id);
     }
 
-    @GetMapping("/member/{memberId}")
+    @GetMapping("/memberNumber/{memberNumber}")
     public Optional<Family> getFamilyByMemberNumber(@PathVariable Long memberNumber) {
-        return familyService.getFamilyByMemberNumber(memberNumber);
+        return familyService.findByMemberNumber(memberNumber);
     }
 
     @GetMapping("/exist/{familyMasterNumber}")
