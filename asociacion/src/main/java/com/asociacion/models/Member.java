@@ -25,8 +25,8 @@ public class Member {
     private String lastName1;
     private String lastName2;
     private String address;
-    private Long addressNumber;
-    private Long addressDoor;
+    private String addressNumber;
+    private String addressDoor;
     private String addressStaircase;
     private String location;
     private Long phone;
