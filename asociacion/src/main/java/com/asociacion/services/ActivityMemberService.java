@@ -3,18 +3,21 @@ package com.asociacion.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.asociacion.dto.ActivityMemberDTO;
 import com.asociacion.models.ActivityMember;
 
 public interface ActivityMemberService {
 
-    public ActivityMember saveActivityMember(ActivityMember activitymember);
+    ActivityMember saveActivityMember(ActivityMember activitymember);
 
     List<ActivityMember> findByActivityId(Long activityId);
 
     List<ActivityMember> findByMemberId(Long memberId);
 
-    public void delActivityMemberById(Long id);
+    void delActivityMemberById(Long id);
 
-    public Optional<ActivityMember> findById(Long id);
+    Optional<ActivityMember> findById(Long id);
+
+    List<ActivityMemberProjection> getActivityMemberDetailsByMemberId(Long memberId);
 
 }

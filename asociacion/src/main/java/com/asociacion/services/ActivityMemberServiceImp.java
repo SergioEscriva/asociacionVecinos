@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.asociacion.dto.ActivityMemberDTO;
 import com.asociacion.models.ActivityMember;
 import com.asociacion.repositories.ActivityMemberRepository;
 
@@ -14,6 +15,11 @@ public class ActivityMemberServiceImp implements ActivityMemberService {
 
     @Autowired
     private ActivityMemberRepository activityMemberRepository;
+
+    @Override
+    public List<ActivityMemberProjection> getActivityMemberDetailsByMemberId(Long memberId) {
+        return activityMemberRepository.findActivityMemberDetailsByMemberId(memberId);
+    }
 
     @Override
     public ActivityMember saveActivityMember(ActivityMember activitymember) {
@@ -30,11 +36,13 @@ public class ActivityMemberServiceImp implements ActivityMemberService {
         return activityMemberRepository.findByMemberId(memberId);
     }
 
+    @Override
     public void delActivityMemberById(Long id) {
         activityMemberRepository.deleteById(id);
 
     }
 
+    @Override
     public Optional<ActivityMember> findById(Long id) {
         return activityMemberRepository.findById(id);
     }

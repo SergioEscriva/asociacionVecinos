@@ -1,10 +1,11 @@
-import { RequestPut } from './RequestPut.js';
 import { RequestPost } from './RequestPost.js';
+import { RequestPut } from './RequestPut.js';
 
-export class FamilyManager {
+export class ActivityMemberManager {
 
-    static async getFamilyById(id) {
-        fetch(`api/family/${id}`)
+    static async getActivityById(id) {
+        fetch(`api/activitymember/activity/${id}`)
+        /*
             .then(response => response.json())
             .then(family => {
                 let inputElement = document.getElementById("familyMasterNumber");
@@ -14,15 +15,27 @@ export class FamilyManager {
             .catch(error => {
                 console.error('Error:', error);
             });
+            */
     }
 
-    static async getFamilyByMemberNumber(memberNumber) {
-        fetch(`api/family/memberNumber/${memberNumber}`)
+    static async getActivitiesByMemberId(memberId) {
+
+        let memberNumber = document.getElementById("memberNumber").value;
+        const activitySel = document.getElementById("ul-activity-member");
+        activitySel.innerHTML = "";
+        console.log(memberId)
+        fetch(`api/activitymember/member/${memberId}`)
             .then(response => response.json())
-            .then(family => {
-                let inputElement = document.getElementById("familyMasterNumber");
-                inputElement.dataset.familyType = family.id; // se añade o cambia el valor al item
-                inputElement.value = family.familyMasterNumber
+            .then(activities => {
+                console.log(activities)
+                activities.forEach((activity) => {
+                    console.log(activity)
+                    activitySel.innerHTML += `
+                        <li id="li-${activity.id}">
+                            <button class="delete-button" id="li-button-${activity.id}"><i class="fas fa-trash"></i></button>
+                            <label class="text-activity" for="option1" id="li-label-${activity.id}">${activity.activityName}</label>
+                        </li>`;
+                });
             })
             .catch(error => {
                 console.error('Error:', error);

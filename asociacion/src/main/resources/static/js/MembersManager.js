@@ -1,6 +1,7 @@
 import { RequestPut } from './RequestPut.js';
 import { RequestPost } from './RequestPost.js';
 import { FamilyManager } from './FamilyManager.js';
+import { ActivityMemberManager } from './ActivityMemberManager.js';
 
 
 export class MembersManager {
@@ -46,6 +47,7 @@ export class MembersManager {
         document.getElementById('gender').value = member.gender;
         document.getElementById('active').value = MembersManager.getActivo(member.active);
         document.getElementById('notes').value = member.notes;
+        ActivityMemberManager.getActivitiesByMemberId(member.id);
       })
       .catch(error => {
         console.error('Error:', error);
