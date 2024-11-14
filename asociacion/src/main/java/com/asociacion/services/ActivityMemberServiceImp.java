@@ -1,0 +1,42 @@
+package com.asociacion.services;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.asociacion.models.ActivityMember;
+import com.asociacion.repositories.ActivityMemberRepository;
+
+@Service
+public class ActivityMemberServiceImp implements ActivityMemberService {
+
+    @Autowired
+    private ActivityMemberRepository activityMemberRepository;
+
+    @Override
+    public ActivityMember saveActivityMember(ActivityMember activitymember) {
+        return activityMemberRepository.save(activitymember);
+    }
+
+    @Override
+    public List<ActivityMember> findByActivityId(Long activityId) {
+        return activityMemberRepository.findByActivityId(activityId);
+    }
+
+    @Override
+    public List<ActivityMember> findByMemberId(Long memberId) {
+        return activityMemberRepository.findByMemberId(memberId);
+    }
+
+    public void delActivityMemberById(Long id) {
+        activityMemberRepository.deleteById(id);
+
+    }
+
+    public Optional<ActivityMember> findById(Long id) {
+        return activityMemberRepository.findById(id);
+    }
+
+}
