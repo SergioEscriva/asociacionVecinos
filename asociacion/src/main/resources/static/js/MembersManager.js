@@ -18,14 +18,35 @@ export class MembersManager {
 
   }
 
-  /*  
-  window.onload = function () {
-    getMemberByNumber(1);
-  };
-  */
+
+  static async limpiaCampos() {
+    document.getElementById('memberId').value = "";
+    document.getElementById('memberNumber').value = "";
+    document.getElementById("familyMasterNumber").value = "";
+    document.getElementById('name').value = "";
+    document.getElementById('lastName1').value = "";
+    document.getElementById('lastName2').value = "";
+    document.getElementById('address').value = "";
+    document.getElementById('addressNumber').value = "";
+    document.getElementById('addressDoor').value = "";
+    document.getElementById('addressStaircase').value = "";
+    document.getElementById('location').value = "";
+    document.getElementById('phone').value = "";
+    document.getElementById('email').value = "";
+    document.getElementById('dni').value = "";
+    document.getElementById('gender').value = "";
+    document.getElementById('active').value = "";
+    document.getElementById('notes').value = "";
+    document.getElementById("memberNumber").value = "";
+    const activitySel = document.getElementById("ul-activity-member");
+    const oldListener = activitySel.onclick;
+    activitySel.removeEventListener('click', oldListener);
+    activitySel.innerHTML = "";
+  }
 
 
   static async getMemberByNumber(memberNumber) {
+    await MembersManager.limpiaCampos()
 
     fetch(`api/members/number/${memberNumber}`)
       .then(response => response.json())

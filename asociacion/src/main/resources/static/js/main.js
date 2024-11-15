@@ -1,6 +1,9 @@
 import { MembersManager } from './MembersManager.js'
+import { ActivityMemberManager } from './ActivityMemberManager.js';
 
-window.addEventListener('load', async () => {
+//window.addEventListener('load', async () => {
+document.addEventListener('DOMContentLoaded', function () {
     const membersManager = new MembersManager()
-    await membersManager.init()
+    ActivityMemberManager.setupActivityListeners();
+    membersManager.init()
 })
