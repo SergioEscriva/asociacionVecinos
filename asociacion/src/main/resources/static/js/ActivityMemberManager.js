@@ -29,7 +29,6 @@ export class ActivityMemberManager {
             .then(response => response.json())
             .then(activities => {
                 activities.forEach((activity) => {
-                    console.log(activity)
                     activitySel.innerHTML += `
                         <li id="li-activitys-member-${activity.idLong}">
                             <button class="delete-button" id="li-button-${activity.activityId}"><i class="fas fa-trash"></i></button>

@@ -30,6 +30,10 @@ export class MembersManager {
     fetch(`api/members/number/${memberNumber}`)
       .then(response => response.json())
       .then(member => {
+        if (!member) {
+          alert("El socio " + memberNumber + " no existe")
+          return
+        }
         document.getElementById('memberId').value = member.id;
         document.getElementById('memberNumber').value = memberNumber;
         FamilyManager.getFamilyByMemberNumber(memberNumber);
