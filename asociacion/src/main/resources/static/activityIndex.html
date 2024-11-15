@@ -74,11 +74,11 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                
+
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-            
+
 
         </ul>
         <!-- End of Sidebar -->
@@ -111,14 +111,14 @@
                                         <option value="valor1">Actividad</option>
                                         <option value="valor2">Cena Navidad 24</option>
                                         <option value="valor3">Opción 3</option>
-                                      </select>   
-                                              
+                                    </select>  
+
                                 </div>
-                           
+
                             </div>
                         </div>
                     </form>
-                     
+
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
@@ -129,7 +129,7 @@
                                 <i class="fas fa-search fa-fw"></i>
                             </a>
                             <!-- Dropdown - Messages -->
-                            
+
 
                 </nav>
                 <!-- End of Topbar -->
@@ -140,13 +140,13 @@
                     <h2>Ficha Actividad</h2>
                     <form method="post">
                         <div class="input-group">
-                            <input type="number" id="activityId" name="activityId">    
+                            <input type="number" id="activityId" name="activityId">
                             <label for="active">Actividad Activa:</label>
                             <input type="checkbox" id="activityActive" name="active">
                             <label for="memberNumber">Nombre Actividad:</label>
-                            <input type="text" id="activityName" name="activityName" >
+                            <input type="text" id="activityName" name="activityName">
                             <label for="name">Encargado:</label>
-                            <input type="text" id="managerName" name="managerName" >
+                            <input type="text" id="managerName" name="managerName">
                         </div>
                         <div class="input-group">
                             <label for="notes">Notas:</label>
@@ -156,140 +156,100 @@
                 </div>
                 <div class="container">
                     <h2>Añadir Socio
-                    <form method="post">
-                        <input type="text" class="textPeque" placeholder="Buscar Socio..."
-                        aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput">
-                        <button class="button-add-member" type="button" onclick="getElementByIdSelected()">
-                            <i class="fas fa-search fa-sm"></i>
-                        </button>
-                        <button class="button-add-member" type="button" onclick="updateActivity()">
-                            <i class="fas fa-download"></i>
-                        </button>
+                        <form method="post">
+                            <input type="text" class="textPeque" placeholder="Buscar Socio..." aria-label="Search"
+                                aria-describedby="basic-addon2" id="memberIdInput">
+                            <button class="button-add-member" type="button" onclick="getElementByIdSelected()">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                            <button class="button-add-member" type="button" onclick="updateActivity()">
+                                <i class="fas fa-download"></i>
+                            </button>
                     </h2>
-                        <div class="input-group-append">
-                            <label for="name">Nombre:</label>
-                            <input type="text" id="name" name="name" >
-            
-                            <label for="lastName1">Apellido 1:</label>
-                            <input type="text" id="lastName1" name="lastName1" >
-            
-                            <label for="lastName2">Apellido 2:</label>
-                            <input type="text" id="lastName2" name="lastName2" >
-                        </div>
+                    <div class="input-group-append">
+                        <label for="name">Nombre:</label>
+                        <input type="text" id="name" name="name">
+
+                        <label for="lastName1">Apellido 1:</label>
+                        <input type="text" id="lastName1" name="lastName1">
+
+                        <label for="lastName2">Apellido 2:</label>
+                        <input type="text" id="lastName2" name="lastName2">
+                    </div>
                     </form>
-                    
+
                 </div>
 
                 <div class="container-activity">
                     <h2>Lista Socios</h2>
                     <div class="list-group">
-                      <ul class="list-horizontal">
-                        <li>
-                            <button class="delete-button"><i class="fas fa-trash"></i></button>
-                            <label class= "text-activity" for="option1">Manolo</label>
-                        </li>
-                        <li>
-                            <button class="delete-button"><i class="fas fa-trash"></i></button>
-                            <label class= "text-activity" for="option1">Manolo</label>
-                        </li>
-                        <li>
-                            <button class="delete-button"><i class="fas fa-trash"></i></button>
-                            <label class= "text-activity" for="option1">Manolo</label>
-                        </li>
-                        <li>
-                            <button class="delete-button"><i class="fas fa-trash"></i></button>
-                            <label class= "text-activity" for="option1">Manolo</label>
-                        </li>
-                        <li>
-                            <button class="delete-button"><i class="fas fa-trash"></i></button>
-                            <label class= "text-activity" for="option1">Manolo</label>
-                        </li>
-                        <li>
-                            <button class="delete-button"><i class="fas fa-trash"></i></button>
-                            <label class= "text-activity" for="option1">Manolo</label>
-                        </li>
-                        <li>
-                            <button class="delete-button"><i class="fas fa-trash"></i></button>
-                            <label class= "text-activity" for="option1">Manolo</label>
-                        </li>
-                        <li>
-                            <button class="delete-button"><i class="fas fa-trash"></i></button>
-                            <label class= "text-activity" for="option1">Manolo</label>
-                        </li>
-                        <li>
-                            <button class="delete-button"><i class="fas fa-trash"></i></button>
-                            <label class= "text-activity" for="option1">Manolo</label>
-                        </li>
-                        <li>
-                            <button class="delete-button"><i class="fas fa-trash"></i></button>
-                            <label class= "text-activity" for="option1">Manolo García</label>
-                        </li>
-                        
+                        <ul id="ul-members-activity" class="list-horizontal">
+
+
                         </ul>
                     </div>
-                  </div>
-                
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; SergioS 2024</span>
-                    </div>
                 </div>
-            </footer>
-            <!-- End of Footer -->
+
+                <!-- End of Main Content -->
+
+                <!-- Footer -->
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Copyright &copy; SergioS 2024</span>
+                        </div>
+                    </div>
+                </footer>
+                <!-- End of Footer -->
+
+            </div>
+            <!-- End of Content Wrapper -->
 
         </div>
-        <!-- End of Content Wrapper -->
+        <!-- End of Page Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" href="login.html">Logout</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin-2.min.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
+        <!-- Page level plugins -->
+        <script src="vendor/chart.js/Chart.min.js"></script>
 
-    <!-- Page level custom scripts 
+        <!-- Page level custom scripts 
     <script src="js/MembersManager.js"></script>-->
-    <script src="js/ActivityManager.js"></script>
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
+        <script type="module" src="js/ActivityManager.js"></script>
+
 
 </body>
 
