@@ -1,7 +1,9 @@
 import { RequestPost } from './RequestPost.js';
 import { RequestPut } from './RequestPut.js';
+import { ActivityManager } from './ActivityManager.js';
 
 export class ActivityMemberManager {
+
 
     static async getActivityById(id) {
         fetch(`api/activitymember/activity/${id}`)
@@ -23,23 +25,36 @@ export class ActivityMemberManager {
         let memberNumber = document.getElementById("memberNumber").value;
         const activitySel = document.getElementById("ul-activity-member");
         activitySel.innerHTML = "";
-        console.log(memberId)
         fetch(`api/activitymember/member/${memberId}`)
             .then(response => response.json())
             .then(activities => {
-                console.log(activities)
                 activities.forEach((activity) => {
                     console.log(activity)
                     activitySel.innerHTML += `
-                        <li id="li-${activity.id}">
-                            <button class="delete-button" id="li-button-${activity.id}"><i class="fas fa-trash"></i></button>
-                            <label class="text-activity" for="option1" id="li-label-${activity.id}">${activity.activityName}</label>
+                        <li id="li-activitys-member-${activity.activityId}">
+                            <button class="delete-button" id="li-button-${activity.activityId}"><i class="fas fa-trash"></i></button>
+                            <label class="text-activity" for="option${activity.activityId}" id="li-label-${activity.activityId}">${activity.activityName}</label>
                         </li>`;
                 });
             })
             .catch(error => {
                 console.error('Error:', error);
             });
+
+        activitySel.addEventListener('click', (event) => {
+            if (event.target.tagName === 'BUTTON' || event.target.tagName === 'I') {
+                let li; if (event.target.tagName === 'BUTTON') {
+                    li = event.target.parentNode;
+                } else {
+                    li = event.target.parentNode.parentNode;
+                }
+                console.log(li.id);
+
+                const activityId = this.extraerUltimoNumero(li.id)
+
+                ActivityManager.delMemberOfActivity(memberId, activityId, li)
+            }
+        });
     }
 
 
@@ -84,5 +99,12 @@ export class ActivityMemberManager {
                 const memberNumber = family.memberNumber
             })
 
+    }
+
+
+    static extraerUltimoNumero(cadena) {
+        const regex = /\d+$/;
+        const match = cadena.match(regex);
+        return match ? parseInt(match[0]) : null;
     }
 }
