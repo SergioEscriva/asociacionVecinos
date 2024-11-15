@@ -19,14 +19,5 @@ export class ActivityManager {
     });
   }
 
-  static async delMemberOfActivity(memberId, activityId, li) {
-    if (confirm("¿Estás seguro de que quieres borrar este elemento?")) {
-      console.log(memberId, " --  ", activityId)
-      li.remove();
 
-    } else {
-      console.log(memberId, " --  ", activityId)
-
-    }
-  }
 }

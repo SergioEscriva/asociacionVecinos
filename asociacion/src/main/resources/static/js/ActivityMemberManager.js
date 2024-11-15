@@ -1,6 +1,6 @@
 import { RequestPost } from './RequestPost.js';
 import { RequestPut } from './RequestPut.js';
-import { ActivityManager } from './ActivityManager.js';
+import { RequestDel } from './RequestDel.js';
 
 export class ActivityMemberManager {
 
@@ -31,7 +31,7 @@ export class ActivityMemberManager {
                 activities.forEach((activity) => {
                     console.log(activity)
                     activitySel.innerHTML += `
-                        <li id="li-activitys-member-${activity.activityId}">
+                        <li id="li-activitys-member-${activity.idLong}">
                             <button class="delete-button" id="li-button-${activity.activityId}"><i class="fas fa-trash"></i></button>
                             <label class="text-activity" for="option${activity.activityId}" id="li-label-${activity.activityId}">${activity.activityName}</label>
                         </li>`;
@@ -52,7 +52,7 @@ export class ActivityMemberManager {
 
                 const activityId = this.extraerUltimoNumero(li.id)
 
-                ActivityManager.delMemberOfActivity(memberId, activityId, li)
+                ActivityMemberManager.delMemberOfActivity(memberId, activityId, li)
             }
         });
     }
@@ -99,6 +99,18 @@ export class ActivityMemberManager {
                 const memberNumber = family.memberNumber
             })
 
+    }
+
+    static async delMemberOfActivity(memberId, activityId, li) {
+        if (confirm("¿Estás seguro de que quieres borrar este elemento?")) {
+            console.log(memberId, " --  ", activityId)
+            RequestDel.delActivityMember(activityId)
+            li.remove();
+
+        } else {
+            console.log(memberId, " --  ", activityId)
+
+        }
     }
 
 
