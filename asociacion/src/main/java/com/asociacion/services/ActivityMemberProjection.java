@@ -8,4 +8,8 @@ public interface ActivityMemberProjection {
     Long getMemberId();
 
     String getActivityName();
+
+    String getMemberName();
+
+    String getMemberApellido();
 }
