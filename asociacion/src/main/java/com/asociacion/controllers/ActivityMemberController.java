@@ -27,7 +27,7 @@ public class ActivityMemberController {
     private ActivityMemberServiceImp activityMemberService;
 
     @GetMapping("/activityId/{id}")
-    public List<ActivityMember> getActivityIdMembers(@PathVariable Long id) {
+    public List<ActivityMemberProjection> getActivityIdMembers(@PathVariable Long id) {
         return activityMemberService.findByActivityId(id);
     }
 
