@@ -40,8 +40,7 @@ export class ActivityManager {
     activitySel.innerHTML = "";
 
     try {
-      const response = await fetch(`api/activitymember/activityId/${activityId}`);
-      const activities = await response.json();
+      const activities = await RequestGet.getMembersActivityId(activityId)
       activities.forEach((activity) => {
         activitySel.innerHTML += `
                 <li id="li-activitys-member-${activity.memberId}" data-activity-id="${activity.memberId}">
@@ -60,7 +59,7 @@ export class ActivityManager {
 
     const activitySel = document.getElementById("activity-select");
     activitySel.innerHTML = "";
-    activitySel.innerHTML = `<option selected>Selecciona Actividad</option>`
+    activitySel.innerHTML = `<option selected value="0">Selecciona Actividad</option>`
     try {
 
       const activities = await RequestGet.getActivitys()
@@ -78,7 +77,6 @@ export class ActivityManager {
     let selectedURL = ''
     const handleChange1 = (event) => {
       const { value } = event.target
-      console.log(value)
       this.getActivityById(value);
     }
     select1.addEventListener('change', handleChange1)

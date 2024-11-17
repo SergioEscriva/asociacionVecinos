@@ -49,7 +49,7 @@ export class MembersManager {
   static async getMemberByNumber(memberNumber) {
     await MembersManager.limpiaCampos()
 
-    const member = RequestGet.getActivitysByMemberNumber(memberNumber)
+    const member = await RequestGet.getActivitysByMemberNumber(memberNumber)
     if (!member) {
       alert("El socio " + memberNumber + " no existe")
       return
@@ -69,9 +69,9 @@ export class MembersManager {
     document.getElementById('email').value = member.email;
     document.getElementById('dni').value = member.dni;
     document.getElementById('gender').value = member.gender;
-    document.getElementById('active').value = MembersManager.getActivo(member.active);
+    document.getElementById('active').value = await MembersManager.getActivo(member.active);
     document.getElementById('notes').value = member.notes;
-    ActivityMemberManager.getActivitiesByMemberId(member.id);
+    await ActivityMemberManager.getActivitiesByMemberId(member.id);
   }
 
   static async getElementByIdSelected() {

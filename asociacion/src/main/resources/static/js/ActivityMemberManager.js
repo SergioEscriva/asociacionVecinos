@@ -1,32 +1,18 @@
 import { RequestPost } from './RequestPost.js';
 import { RequestPut } from './RequestPut.js';
 import { RequestDel } from './RequestDel.js';
+import { RequestGet } from './RequestGet.js';
 
 export class ActivityMemberManager {
 
-
-    static async getActivityById(id) {
-        fetch(`api/activitymember/activity/${id}`)
-        /*
-            .then(response => response.json())
-            .then(family => {
-                let inputElement = document.getElementById("familyMasterNumber");
-                inputElement.dataset.familyType = family.id; // se añade o cambia el valor al item
-                //inputElement.value = family.id
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-            */
-    }
 
     static async getActivitiesByMemberId(memberId) {
         const activitySel = document.getElementById("ul-activity-member");
         activitySel.innerHTML = "";
 
         try {
-            const response = await fetch(`api/activitymember/member/${memberId}`);
-            const activities = await response.json();
+
+            const activities = await RequestGet.getActivitiesByMemberId(memberId)
             activities.forEach((activity) => {
                 activitySel.innerHTML += `
                     <li id="li-activitys-member-${activity.idLong}" data-activity-id="${activity.activityId}">
@@ -40,64 +26,7 @@ export class ActivityMemberManager {
         }
     }
 
-    static async getActivitiesByMemberId1(memberId) {
 
-        const activitySel = document.getElementById("ul-activity-member");
-
-        activitySel.innerHTML = "";
-
-        fetch(`api/activitymember/member/${memberId}`)
-            .then(response => response.json())
-            .then(activities => {
-                activities.forEach((activity) => {
-                    activitySel.innerHTML += `
-                        <li id="li-activitys-member-${activity.idLong}">
-                            <button class="delete-button" id="li-button-${activity.activityId}"><i class="fas fa-trash"></i></button>
-                            <label class="text-activity" for="option${activity.activityId}" id="li-label-${activity.activityId}">${activity.activityName}</label>
-                        </li>`;
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-
-
-        activitySel.addEventListener('click', (event) => {
-            // limpiar eventos
-            event.stopPropagation();
-            event.preventDefault();
-
-            if (event.target.tagName === 'BUTTON' || event.target.tagName === 'I') {
-                console.log("li")
-                let li;
-                if (event.target.tagName === 'BUTTON') {
-                    li = event.target.parentNode;
-                } else {
-                    li = event.target.parentNode.parentNode;
-                }
-
-                if (!li) {
-                    console.error("Elemento 'li' no encontrado.");
-                    return;
-                }
-
-                const activityId = this.extraerUltimoNumero(li.id);
-
-                ActivityMemberManager.delMemberOfActivity(memberId, activityId, li);
-
-            } else if (event.target.tagName === 'LABEL') {
-                let li = event.target.parentNode;
-                const activityId = this.extraerUltimoNumero(li.id);
-
-                alert("Redirigirá a Actividades");
-
-                return;
-            } else {
-                console.warn("Elemento no manejado: ", event.target.tagName);
-
-            }
-        });
-    }
 
 
     static async updateFamily(memberNumber) {
@@ -126,20 +55,6 @@ export class ActivityMemberManager {
             idMember: memberNumber
         }
         await RequestPost.newFamily(familyUpdate)
-
-    }
-
-    async oneFamilyCheck(memberNumber, familyMasterNumber) {
-        if (!familyMasterNumber || memberNumber == familyMasterNumber) {
-            familyMasterNumber = 0;
-        }
-
-        fetch(`api/family/check/${memberNumber}/${familyMasterNumber}`)
-            .then(response => response.json())
-            .then(family => {
-                const familyMasterNumber = family.familyMasterNumber
-                const memberNumber = family.memberNumber
-            })
 
     }
 
