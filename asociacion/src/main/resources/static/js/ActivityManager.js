@@ -1,8 +1,16 @@
 import { RequestGet } from "./RequestGet.js";
 
 window.onload = function () {
-  ActivityManager.inyectOption()
-  ActivityManager.getActivityById(1)
+  ActivityManager.inyectOption(0)
+  // Obtener el parámetro activityId de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const activityId = urlParams.get('activityId');
+
+  if (activityId) {
+    ActivityManager.inyectOption(activityId)
+    ActivityManager.getActivityById(activityId);
+  }
+
 };
 
 export class ActivityManager {
@@ -21,7 +29,6 @@ export class ActivityManager {
 
   static async getActivityById(activityId) {
     await ActivityManager.limpiaCampos()
-
     const activity = await RequestGet.getActivity(activityId)
     if (!activity) {
       alert("La actividad " + activityId + " no existe")
@@ -52,20 +59,26 @@ export class ActivityManager {
       console.error('Error:', error);
       activitySel.innerHTML = '<p>Error al cargar las actividades.</p>';
     }
+
   }
 
 
-  static async inyectOption() {
+  static async inyectOption(activityId) {
 
     const activitySel = document.getElementById("activity-select");
     activitySel.innerHTML = "";
-    activitySel.innerHTML = `<option selected value="0">Selecciona Actividad</option>`
+
+    activitySel.innerHTML = `<option value="0">Selecciona Actividad</option>`
     try {
 
       const activities = await RequestGet.getActivitys()
       activities.forEach((activity) => {
-        activitySel.innerHTML += `
-              <option value="${activity.id}">${activity.name}</option>`;
+        console.log(activityId)
+        if (activity.id == activityId) {
+          activitySel.innerHTML += `<option selected value="${activity.id}">${activity.name}</option>`
+        } else {
+          activitySel.innerHTML += `<option value="${activity.id}">${activity.name}</option>`;
+        }
       });
     } catch (error) {
       console.error('Error:', error);
@@ -82,6 +95,7 @@ export class ActivityManager {
     select1.addEventListener('change', handleChange1)
 
   }
+
   static async getActivo(active) {
     var checkbox = document.getElementById('mamagerName');
     checkbox.checked = false
