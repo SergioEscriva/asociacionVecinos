@@ -92,7 +92,8 @@ export class ActivityMemberManager {
                 this.delMemberOfActivity(memberId, activityId, li);
             } else if (target.tagName === 'LABEL') {
                 console.log(activityId);
-                alert(`Redirigirá a Actividades ${activityId}`);
+                // alert(`Redirigirá a Actividades ${activityId}`);
+                window.location.href = `./activityIndex.html?activityId=${activityId}`;
             }
         });
     }
