@@ -12,7 +12,9 @@ body {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 30px;
-    width: 80%;
+    width: 95%;
+    max-width: 1200px;
+    padding: 10px;
     margin: 0 auto;
     padding: 15px;
     border-radius: 20px;
@@ -44,11 +46,11 @@ h2 {
     text-align: left;
     width: 100%;
     margin: 0;
-    /* Remueve cualquier margen por defecto */
+
     margin-bottom: -10px;
-    /* Añade un margen inferior para separación */
+
     padding: 0;
-    /* Remueve cualquier padding por defecto */
+
 }
 
 .input-group-activity {
@@ -56,17 +58,10 @@ h2 {
     display: flex;
     align-items: center;
     gap: 0px;
-    /* Ajusta este valor según necesites */
+
     padding: 10px;
 
 
-}
-
-@media (max-width: 768px) {
-    .container {
-        grid-template-columns: 1fr;
-        /* Una columna para pantallas pequeñas */
-    }
 }
 
 .background-image {
@@ -286,6 +281,7 @@ button {
 
 .delete-button {
     background-color: red;
+    width: 28px;
     height: 29px;
     color: white;
     border: none;
@@ -314,4 +310,79 @@ input[type="checkbox-small"] {
 .text-activity {
     font-size: 20px;
     margin-top: 10px;
+}
+
+
+/* Para pantallas pequeñas */
+
+
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 5px;
+
+    }
+}
+
+@media (max-width: 768px) {
+    .input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .input-group label {
+        text-align: left;
+        margin-bottom: 5px;
+    }
+
+    .input-group input {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+@media (max-width: 768px) {
+
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="address"],
+    input[type="phone"],
+    input[type="notes"] {
+        font-size: 16px;
+        width: 100%;
+        height: auto;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    .text-activity {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .list-horizontal {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+
+    button,
+    .buttonFee,
+    .buttonActivity,
+    .button-add-member {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .background-image {
+        opacity: 0.05;
+    }
 }
