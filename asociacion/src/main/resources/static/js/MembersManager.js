@@ -13,7 +13,8 @@ export class MembersManager {
   async init() {
     MembersManager.getMemberByNumber(10002);
 
-    document.getElementById("getElementByIdSelected").addEventListener("click", function () { MembersManager.getElementByIdSelected(); });
+    document.getElementById("getElementByIdSelected").addEventListener("click", function () { MembersManager.getElementByIdSelected("normal"); });
+    document.getElementById("getElementByIdSelectedXS").addEventListener("click", function () { MembersManager.getElementByIdSelected("xs"); });
 
     document.getElementById("updateMember").addEventListener("click", function () { MembersManager.updateMember(); });
 
@@ -74,8 +75,14 @@ export class MembersManager {
     await ActivityMemberManager.getActivitiesByMemberId(member.id);
   }
 
-  static async getElementByIdSelected() {
+  static async getElementByIdSelected(screen) {
     const memberNumber = document.getElementById('memberIdInput').value;
+    const memberNumberXS = document.getElementById('memberIdInputXS').value;
+    if (screen === "xs") {
+      this.getMemberByNumber(memberNumberXS)
+      return
+    }
+
     this.getMemberByNumber(memberNumber)
   }
 
