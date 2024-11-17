@@ -1,5 +1,6 @@
 import { RequestPut } from './RequestPut.js';
 import { RequestPost } from './RequestPost.js';
+import { RequestGet } from './RequestGet.js';
 import { FamilyManager } from './FamilyManager.js';
 import { ActivityMemberManager } from './ActivityMemberManager.js';
 
@@ -48,35 +49,29 @@ export class MembersManager {
   static async getMemberByNumber(memberNumber) {
     await MembersManager.limpiaCampos()
 
-    fetch(`api/members/number/${memberNumber}`)
-      .then(response => response.json())
-      .then(member => {
-        if (!member) {
-          alert("El socio " + memberNumber + " no existe")
-          return
-        }
-        document.getElementById('memberId').value = member.id;
-        document.getElementById('memberNumber').value = memberNumber;
-        FamilyManager.getFamilyByMemberNumber(memberNumber);
-        document.getElementById('name').value = member.name;
-        document.getElementById('lastName1').value = member.lastName1;
-        document.getElementById('lastName2').value = member.lastName2;
-        document.getElementById('address').value = member.address;
-        document.getElementById('addressNumber').value = member.addressNumber;
-        document.getElementById('addressDoor').value = member.addressDoor;
-        document.getElementById('addressStaircase').value = member.addressStaircase;
-        document.getElementById('location').value = member.location;
-        document.getElementById('phone').value = member.phone;
-        document.getElementById('email').value = member.email;
-        document.getElementById('dni').value = member.dni;
-        document.getElementById('gender').value = member.gender;
-        document.getElementById('active').value = MembersManager.getActivo(member.active);
-        document.getElementById('notes').value = member.notes;
-        ActivityMemberManager.getActivitiesByMemberId(member.id);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    const member = RequestGet.getActivitysByMemberNumber(memberNumber)
+    if (!member) {
+      alert("El socio " + memberNumber + " no existe")
+      return
+    }
+    document.getElementById('memberId').value = member.id;
+    document.getElementById('memberNumber').value = memberNumber;
+    FamilyManager.getFamilyByMemberNumber(memberNumber);
+    document.getElementById('name').value = member.name;
+    document.getElementById('lastName1').value = member.lastName1;
+    document.getElementById('lastName2').value = member.lastName2;
+    document.getElementById('address').value = member.address;
+    document.getElementById('addressNumber').value = member.addressNumber;
+    document.getElementById('addressDoor').value = member.addressDoor;
+    document.getElementById('addressStaircase').value = member.addressStaircase;
+    document.getElementById('location').value = member.location;
+    document.getElementById('phone').value = member.phone;
+    document.getElementById('email').value = member.email;
+    document.getElementById('dni').value = member.dni;
+    document.getElementById('gender').value = member.gender;
+    document.getElementById('active').value = MembersManager.getActivo(member.active);
+    document.getElementById('notes').value = member.notes;
+    ActivityMemberManager.getActivitiesByMemberId(member.id);
   }
 
   static async getElementByIdSelected() {
