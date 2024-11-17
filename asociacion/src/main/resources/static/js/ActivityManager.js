@@ -1,15 +1,17 @@
 import { RequestGet } from "./RequestGet.js";
 
 window.onload = function () {
-  ActivityManager.inyectOption(0)
-  // Obtener el parámetro activityId de la URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const activityId = urlParams.get('activityId');
 
-  if (activityId) {
-    ActivityManager.inyectOption(activityId)
-    ActivityManager.getActivityById(activityId);
+  //Obtener el parámetro activityId de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  let activityId = urlParams.get('activityId');
+
+  if (!activityId) {
+    console.log("IfInical")
+    activityId = 0
   }
+  ActivityManager.inyectOption(activityId)
+  ActivityManager.getActivityById(activityId);
 
 };
 
@@ -21,13 +23,15 @@ export class ActivityManager {
     document.getElementById('activityName').value = "";
     document.getElementById('managerName').value = "";
     document.getElementById('notes').value = "";
-    const activitySel = document.getElementById("ul-members-activity");
-    const oldListener = activitySel.onclick;
-    activitySel.removeEventListener('click', oldListener);
-    activitySel.innerHTML = "";
+    const ulMembersActivity = document.getElementById("ul-members-activity");
+    const oldListener = ulMembersActivity.onclick;
+    ulMembersActivity.removeEventListener('click', oldListener);
+    ulMembersActivity.innerHTML = "";
+
   }
 
   static async getActivityById(activityId) {
+
     await ActivityManager.limpiaCampos()
     const activity = await RequestGet.getActivity(activityId)
     if (!activity) {
@@ -67,17 +71,17 @@ export class ActivityManager {
 
     const activitySel = document.getElementById("activity-select");
     activitySel.innerHTML = "";
-
     activitySel.innerHTML = `<option value="0">Selecciona Actividad</option>`
     try {
 
       const activities = await RequestGet.getActivitys()
       activities.forEach((activity) => {
-        console.log(activityId)
         if (activity.id == activityId) {
           activitySel.innerHTML += `<option selected value="${activity.id}">${activity.name}</option>`
+          console.log("entraIf")
         } else {
           activitySel.innerHTML += `<option value="${activity.id}">${activity.name}</option>`;
+          console.log("entraElse")
         }
       });
     } catch (error) {
