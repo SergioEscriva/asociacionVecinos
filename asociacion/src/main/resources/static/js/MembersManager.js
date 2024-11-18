@@ -185,8 +185,6 @@ export class MembersManager {
       ActivityMemberManager.createActivityMember(value, memberId)
     }
     select1.addEventListener('change', handleChange1)
-
-
   }
 
 

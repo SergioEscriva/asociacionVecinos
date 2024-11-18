@@ -77,6 +77,7 @@ export class ActivityMemberManager {
             try {
                 await RequestDel.delActivityMember(activityIdLong);
                 li.remove();
+                this.getActivitiesByMemberId(memberId)
             } catch (error) {
                 console.error("Error al eliminar la actividad:", error);
                 alert("Error al eliminar la actividad. Por favor, intente de nuevo.");
