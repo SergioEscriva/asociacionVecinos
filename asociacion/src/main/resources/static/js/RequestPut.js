@@ -19,6 +19,24 @@ export class RequestPut {
     }
   }
 
+  static async editActivity(activityId, activityUpdate) {
+
+    try {
+      const response = {
+        method: "PUT",
+        body: JSON.stringify(activityUpdate),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      // Devuelve la respuesta en formato JSON
+      return await RequestPut._putRequest(`/api/activity/${activityId}`, response);
+    } catch (error) {
+      console.error('Error en la solicitud PUT:', error);
+      throw error;
+    }
+  }
+
   static async editMember(memberId, memberUpdate) {
 
     try {

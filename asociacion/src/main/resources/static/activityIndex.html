@@ -102,13 +102,12 @@
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <div class="input-group-append">
-                                <button class="buttonActivity" type="button" onclick="updateActivity()">
+                                <button class="btn btn-primary" type="button" id="updateActivity">
                                     <i class="fas fa-download"></i>
                                 </button>
                                 <div class="activity-select">
                                     <select id="activity-select">
                                     </select>  
-
                                 </div>
 
                             </div>
@@ -153,12 +152,8 @@
                 <div class="container">
                     <h2>Añadir Socio
                         <form method="post">
-                            <input type="text" class="textPeque" placeholder="Buscar Socio..." aria-label="Search"
-                                aria-describedby="basic-addon2" id="memberIdInput">
-                            <button class="button-add-member" type="button" onclick="getElementByIdSelected()">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                            <button class="button-add-member" type="button" onclick="updateActivity()">
+
+                            <button class="button-add-member" type="button" id="updateActivity">
                                 <i class="fas fa-download"></i>
                             </button>
                     </h2>

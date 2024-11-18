@@ -14,7 +14,44 @@ export class RequestPost {
       // Devuelve la respuesta en formato JSON
       return await RequestPost._postRequest(`/api/family`, response);
     } catch (error) {
-      console.error('Error en la solicitud PUT:', error);
+      console.error('Error en la solicitud POST:', error);
+      throw error;
+    }
+  }
+
+  static async newActivity(activityUpdate) {
+
+    try {
+      const response = {
+        method: "POST",
+        body: JSON.stringify(activityUpdate),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      // Devuelve la respuesta en formato JSON
+      return await RequestPost._postRequest(`/api/activity`, response);
+    } catch (error) {
+      console.error('Error en la solicitud POST:', error);
+      throw error;
+    }
+  }
+
+
+  static async newActivityMember(activityMemberUpdate) {
+
+    try {
+      const response = {
+        method: "POST",
+        body: JSON.stringify(activityMemberUpdate),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      // Devuelve la respuesta en formato JSON
+      return await RequestPost._postRequest(`/api/activitymember`, response);
+    } catch (error) {
+      console.error('Error en la solicitud POST:', error);
       throw error;
     }
   }

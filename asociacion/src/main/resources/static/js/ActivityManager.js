@@ -1,13 +1,16 @@
 import { RequestGet } from "./RequestGet.js";
+import { RequestPut } from "./RequestPut.js";
+import { RequestPost } from "./RequestPost.js";
 
 window.onload = function () {
 
   //Obtener el parámetro activityId de la URL
   const urlParams = new URLSearchParams(window.location.search);
   let activityId = urlParams.get('activityId');
+  document.getElementById("updateActivity").addEventListener("click", function () { ActivityManager.updateActivity(); });
+
 
   if (!activityId) {
-    console.log("IfInical")
     activityId = 0
   }
   ActivityManager.inyectOption(activityId)
@@ -34,16 +37,14 @@ export class ActivityManager {
 
     await ActivityManager.limpiaCampos()
     const activity = await RequestGet.getActivity(activityId)
-    if (!activity) {
-      alert("La actividad " + activityId + " no existe")
-      return
+    if (activity) {
+      document.getElementById('activityId').value = activityId;
+      //document.getElementById('activityActive').value = this.getActivo(activity.active);
+      document.getElementById('activityName').value = activity.name;
+      document.getElementById('managerName').value = activity.managerName;
+      document.getElementById('notes').value = activity.notes;
+      this.getMembersActivityId(activityId)
     }
-    document.getElementById('activityId').value = activityId;
-    //document.getElementById('activityActive').value = this.getActivo(activity.active);
-    document.getElementById('activityName').value = activity.name;
-    document.getElementById('managerName').value = activity.managerName;
-    document.getElementById('notes').value = activity.notes;
-    this.getMembersActivityId(activityId)
   }
 
   static async getMembersActivityId(activityId) {
@@ -66,6 +67,29 @@ export class ActivityManager {
 
   }
 
+  static async updateActivity() {
+    const activityId = document.getElementById('activityId').value
+    //const activityActive = document.getElementById('activityActive').value
+    const activityName = document.getElementById('activityName').value
+    const managerName = document.getElementById('managerName').value
+    const notes = document.getElementById('notes').value
+
+    const updateActivity = {
+      name: activityName,
+      managerName: managerName,
+      notes: notes
+    }
+
+    let request;
+    if (!activityId) {
+      request = await RequestPost.newActivity(updateActivity)
+    } else {
+      request = await RequestPut.editActivity(activityId, updateActivity)
+    }
+    return request;
+  }
+
+
 
   static async inyectOption(activityId) {
 
@@ -78,10 +102,8 @@ export class ActivityManager {
       activities.forEach((activity) => {
         if (activity.id == activityId) {
           activitySel.innerHTML += `<option selected value="${activity.id}">${activity.name}</option>`
-          console.log("entraIf")
         } else {
           activitySel.innerHTML += `<option value="${activity.id}">${activity.name}</option>`;
-          console.log("entraElse")
         }
       });
     } catch (error) {
