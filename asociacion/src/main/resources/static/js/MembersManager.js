@@ -6,6 +6,7 @@ import { ActivityMemberManager } from './ActivityMemberManager.js';
 
 
 
+
 export class MembersManager {
   constructor() {
 
@@ -41,12 +42,15 @@ export class MembersManager {
     document.getElementById('active').value = "";
     document.getElementById('notes').value = "";
     document.getElementById("memberNumber").value = "";
+    MembersManager.limpiaCamposActividad();
+  }
+
+  static async limpiaCamposActividad() {
     const activitySel = document.getElementById("ul-activity-member");
     const oldListener = activitySel.onclick;
     activitySel.removeEventListener('click', oldListener);
     activitySel.innerHTML = "";
   }
-
 
   static async getMemberByNumber(memberNumber) {
     await MembersManager.limpiaCampos()
@@ -73,7 +77,8 @@ export class MembersManager {
     document.getElementById('gender').value = member.gender;
     document.getElementById('active').value = await MembersManager.getActivo(member.active);
     document.getElementById('notes').value = member.notes;
-    await ActivityMemberManager.getActivitiesByMemberId(member.id);
+    MembersManager.inyectOption()
+    await ActivityMemberManager.getActivitiesByMemberId(member.id)
   }
 
   static async getElementByIdSelected(screen) {
@@ -153,4 +158,35 @@ export class MembersManager {
       console.error("Error al actualizar el socio: ", error)
     }
   }
+
+  static async inyectOption() {
+    const memberId = document.getElementById('memberId').value
+    const activitySel = document.getElementById("activity-select")
+    activitySel.innerHTML = "";
+    activitySel.innerHTML = `<option selected value="0">Lista de Actividades</option>`
+    try {
+
+      const activities = await RequestGet.getActivitys()
+      activities.forEach((activity) => {
+
+        activitySel.innerHTML += `<option value="${activity.id}">${activity.name}</option>`;
+
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      activitySel.innerHTML = '<p>Error al cargar las actividades.</p>';
+    }
+    // Listening desplegable Option
+    const select1 = document.getElementById('activity-select')
+    let selectedURL = ''
+    const handleChange1 = (event) => {
+      const { value } = event.target
+      ActivityMemberManager.createActivityMember(value, memberId)
+    }
+    select1.addEventListener('change', handleChange1)
+
+
+  }
+
+
 }

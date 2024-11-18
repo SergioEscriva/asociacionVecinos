@@ -29,20 +29,6 @@ public class MemberController {
         return memberService.getMembers();
     }
 
-    @GetMapping("/activitySearch")
-    public List<Member> getMembersByActivity(@RequestParam(name="name") String name){
-        List<Activity> activities = activityService.findActivityByName(name);
-        List<Member> members = new ArrayList<>();
-        for (int i = 0; i< activities.size(); i++){
-            Long memberId = activities.get(i).getManagerId();
-            Optional<Member> member= getMemberById(memberId);
-            if (member.isPresent()) {
-                members.add(member.get());
-            }
-        }
-        return members;
-    }
-
     @GetMapping("/actives")
     public List<Member> getActives() {
 

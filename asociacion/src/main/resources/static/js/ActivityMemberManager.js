@@ -3,6 +3,7 @@ import { RequestPut } from './RequestPut.js';
 import { RequestDel } from './RequestDel.js';
 import { RequestGet } from './RequestGet.js';
 
+
 export class ActivityMemberManager {
 
 
@@ -42,20 +43,27 @@ export class ActivityMemberManager {
         await RequestPut.editFamily(familyTypeId, familyUpdate)
     }
 
-    async createFamily(memberNumber) {
+    static async createActivityMember(activityId, memberId) {
+        const activity = await RequestGet.getActivity(activityId)
+        const activities = await RequestGet.getActivitiesByMemberId(memberId)
+        const activityExistInMember = activities.some(activityOne => activityOne.activityId == activityId)
 
-        let familyMasterNumber = document.getElementById("familyMasterNumber").value;
-
-        if (!familyMasterNumber) {
-            familyMasterNumber = 0;
+        if (activityExistInMember) {
+            alert("ERROR: Ya existe en la actividad: ", activity.activityName)
+        } else {
+            const request = {
+                activity: activity,
+                memberId: memberId
+            }
+            try {
+                await RequestPost.newActivityMember(request)
+                alert("Añadido a " + activity.name)
+            } catch (error) {
+                console.error("Error añadiendo ActivityMember:", error)
+                alert("Error al añadir socio a la actividad. Por favor, intente de nuevo.");
+            }
         }
-
-        const familyUpdate = {
-            familyMasterNumber: familyMasterNumber,
-            idMember: memberNumber
-        }
-        await RequestPost.newFamily(familyUpdate)
-
+        ActivityMemberManager.getActivitiesByMemberId(memberId)
     }
 
     static async delMemberOfActivity(memberId, activityId, li) {
@@ -86,13 +94,12 @@ export class ActivityMemberManager {
             if (!li) return;
 
             const activityId = li.dataset.activityId;
-            const memberId = document.getElementById('memberId').value; // Asumiendo que tienes un campo con el ID del miembro
+            const memberId = document.getElementById('memberId').value;
 
             if (target.classList.contains('delete-button') || target.closest('.delete-button')) {
                 this.delMemberOfActivity(memberId, activityId, li);
             } else if (target.tagName === 'LABEL') {
                 console.log(activityId);
-                // alert(`Redirigirá a Actividades ${activityId}`);
                 window.location.href = `./activityIndex.html?activityId=${activityId}`;
             }
         });

@@ -9,10 +9,10 @@ window.onload = function () {
   let activityId = urlParams.get('activityId');
   document.getElementById("updateActivity").addEventListener("click", function () { ActivityManager.updateActivity(); });
 
-
   if (!activityId) {
     activityId = 0
   }
+
   ActivityManager.inyectOption(activityId)
   ActivityManager.getActivityById(activityId);
 
