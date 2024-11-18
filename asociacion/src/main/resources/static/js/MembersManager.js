@@ -176,6 +176,7 @@ export class MembersManager {
       console.error('Error:', error);
       activitySel.innerHTML = '<p>Error al cargar las actividades.</p>';
     }
+
     // Listening desplegable Option
     const select1 = document.getElementById('activity-select')
     let selectedURL = ''

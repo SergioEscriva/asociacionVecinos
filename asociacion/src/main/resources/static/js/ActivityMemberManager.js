@@ -66,10 +66,16 @@ export class ActivityMemberManager {
         ActivityMemberManager.getActivitiesByMemberId(memberId)
     }
 
-    static async delMemberOfActivity(memberId, activityId, li) {
-        if (confirm("¿Estás seguro de que quieres borrar este elemento?")) {
+    static async delMemberOfActivity(memberId, activityIdLong, li) {
+        const memberName = document.getElementById('name').value;
+
+        const liElement = document.getElementById('li-activitys-member-' + activityIdLong);
+        const labelElement = liElement.querySelector('label.text-activity');
+        const activityName = labelElement.textContent;
+
+        if (confirm("¿Estás seguro de eleminar a " + memberName + " de la actividad " + activityName + "?")) {
             try {
-                await RequestDel.delActivityMember(activityId);
+                await RequestDel.delActivityMember(activityIdLong);
                 li.remove();
             } catch (error) {
                 console.error("Error al eliminar la actividad:", error);
@@ -88,16 +94,19 @@ export class ActivityMemberManager {
     static setupActivityListeners() {
         const activitySel = document.getElementById("ul-activity-member");
 
-        activitySel.addEventListener('click', (event) => {
+        activitySel.addEventListener('click', async (event) => {
             const target = event.target;
             const li = target.closest('li');
             if (!li) return;
 
             const activityId = li.dataset.activityId;
             const memberId = document.getElementById('memberId').value;
+            const activities = await RequestGet.getActivitiesByMemberId(memberId)
+            const activityInMember = activities.find(activityOne => activityOne.activityId == activityId)
+            const activityIdLong = activityInMember.idLong
 
             if (target.classList.contains('delete-button') || target.closest('.delete-button')) {
-                this.delMemberOfActivity(memberId, activityId, li);
+                this.delMemberOfActivity(memberId, activityIdLong, li);
             } else if (target.tagName === 'LABEL') {
                 console.log(activityId);
                 window.location.href = `./activityIndex.html?activityId=${activityId}`;
