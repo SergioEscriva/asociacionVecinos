@@ -23,12 +23,8 @@ export class ActivityMemberManager {
             });
         } catch (error) {
             console.error('Error:', error);
-            activitySel.innerHTML = '<p>Error al cargar las actividades.</p>';
         }
     }
-
-
-
 
     static async updateFamily(memberNumber) {
 
@@ -41,6 +37,16 @@ export class ActivityMemberManager {
             memberNumber: memberNumber
         }
         await RequestPut.editFamily(familyTypeId, familyUpdate)
+    }
+
+    static async createActivityMemberThis(activityId, memberId) {
+        await this.createActivityMember(activityId, memberId)
+        await this.getActivitiesByMemberId(memberId)
+
+    }
+
+    static async createActivityMemberInActivity(activityId, memberId) {
+        await this.createActivityMember(activityId, memberId)
     }
 
     static async createActivityMember(activityId, memberId) {
@@ -63,7 +69,7 @@ export class ActivityMemberManager {
                 alert("Error al añadir socio a la actividad. Por favor, intente de nuevo.");
             }
         }
-        ActivityMemberManager.getActivitiesByMemberId(memberId)
+
     }
 
     static async delMemberOfActivity(memberId, activityIdLong, li) {
@@ -77,12 +83,15 @@ export class ActivityMemberManager {
             try {
                 await RequestDel.delActivityMember(activityIdLong);
                 li.remove();
-                this.getActivitiesByMemberId(memberId)
+                //this.getActivitiesByMemberId(memberId)
             } catch (error) {
                 console.error("Error al eliminar la actividad:", error);
                 alert("Error al eliminar la actividad. Por favor, intente de nuevo.");
             }
         }
+        const activitySel = document.getElementById("ul-activity-member");
+        activitySel.innerHTML = "";
+        await ActivityMemberManager.getActivitiesByMemberId(memberId)
     }
 
 

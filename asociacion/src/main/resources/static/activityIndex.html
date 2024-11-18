@@ -150,16 +150,31 @@
                     </form>
                 </div>
                 <div class="container">
-                    <h2>Añadir Socio
+                    <h2>
                         <form method="post">
 
-                            <button class="button-add-member" type="button" id="updateActivity">
-                                <i class="fas fa-download"></i>
-                            </button>
+
+                            <form
+                                class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                                <div class="input-group-append">
+                                    <input type="text" class=border-0 small" placeholder="Añadir Socio..."
+                                        aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput">
+
+                                    <button class="btn btn-primary" type="button" id="getElementByIdSelected">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+
+                                    <button class="btn btn-primary" type="button" id="updateActivityMember">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+
+
+                                </div>
+                            </form>
                     </h2>
                     <div class="input-group-append">
                         <label for="name">Nombre:</label>
-                        <input type="text" id="name" name="name">
+                        <input type="text" id="name" name="name" data-activity-memberId="">
 
                         <label for="lastName1">Apellido 1:</label>
                         <input type="text" id="lastName1" name="lastName1">

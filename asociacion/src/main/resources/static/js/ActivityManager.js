@@ -1,6 +1,7 @@
 import { RequestGet } from "./RequestGet.js";
 import { RequestPut } from "./RequestPut.js";
 import { RequestPost } from "./RequestPost.js";
+import { ActivityMemberManager } from "./ActivityMemberManager.js";
 
 window.onload = function () {
 
@@ -8,10 +9,8 @@ window.onload = function () {
   const urlParams = new URLSearchParams(window.location.search);
   let activityId = urlParams.get('activityId');
   document.getElementById("updateActivity").addEventListener("click", function () { ActivityManager.updateActivity(); });
-
-  if (!activityId) {
-    activityId = 0
-  }
+  document.getElementById("getElementByIdSelected").addEventListener("click", function () { ActivityManager.getMemberByNumber(); });
+  document.getElementById("updateActivityMember").addEventListener("click", function () { ActivityManager.updateActivityMember(); });
 
   ActivityManager.inyectOption(activityId)
   ActivityManager.getActivityById(activityId);
@@ -34,9 +33,11 @@ export class ActivityManager {
   }
 
   static async getActivityById(activityId) {
-
+    let activity = "";
     await ActivityManager.limpiaCampos()
-    const activity = await RequestGet.getActivity(activityId)
+    if (activityId) {
+      activity = await RequestGet.getActivity(activityId)
+    }
     if (activity) {
       document.getElementById('activityId').value = activityId;
       //document.getElementById('activityActive').value = this.getActivo(activity.active);
@@ -111,6 +112,8 @@ export class ActivityManager {
       activitySel.innerHTML = '<p>Error al cargar las actividades.</p>';
     }
 
+
+
     // Listening desplegable Option
     const select1 = document.getElementById('activity-select')
     let selectedURL = ''
@@ -122,26 +125,32 @@ export class ActivityManager {
 
   }
 
-  static async getActivo(active) {
-    var checkbox = document.getElementById('mamagerName');
-    checkbox.checked = false
-    if (active == 1)
-      checkbox.checked = true
+  static async getMemberByNumber() {
+    const memberNumber = document.getElementById('memberIdInput').value
+    //ActivityManager.limpiaCampos()
+
+    const member = await RequestGet.getMemberByNumber(memberNumber)
+    if (!member) {
+      alert("El socio " + memberNumber + " no existe")
+      return
+    }
+
+    const memberHtml = document.getElementById('name')
+    memberHtml.value = member.name
+    memberHtml.dataset.familyType = member.id
+
+    document.getElementById('lastName1').value = member.lastName1
+    document.getElementById('lastName2').value = member.lastName2
   }
 
 
-  async algoTemporal() {
+  static async updateActivityMember() {
+    const activityId = document.getElementById('activityId').value
+    const memberHtml = document.getElementById('name')
+    const memberId = memberHtml.dataset.familyType
 
-    const deleteButtons = document.querySelectorAll('.delete-button');
-
-    deleteButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const
-          li = button.parentNode;
-        li.parentNode.removeChild(li);
-      });
-    });
+    await ActivityMemberManager.createActivityMemberInActivity(activityId, memberId)
+    this.getActivityById(activityId)
   }
-
 
 }

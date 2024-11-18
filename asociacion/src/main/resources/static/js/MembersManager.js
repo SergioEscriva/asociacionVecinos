@@ -182,7 +182,7 @@ export class MembersManager {
     let selectedURL = ''
     const handleChange1 = (event) => {
       const { value } = event.target
-      ActivityMemberManager.createActivityMember(value, memberId)
+      ActivityMemberManager.createActivityMemberThis(value, memberId)
     }
     select1.addEventListener('change', handleChange1)
   }
