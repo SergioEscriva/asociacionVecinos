@@ -12,30 +12,23 @@ window.onload = async function () {
     case '1':
       title.textContent = 'Listado de Miembros Completo'
       response = await RequestGet.getAllMembers()
-      console.log("Response")
       renderList(response)
       break;
     case '2':
       title.textContent = 'Listado de Miembros Activos'
-      //url = '/api/members/actives';
       response = await RequestGet.getListMembersActives()
-      console.log("Response")
       renderList(response)
       break;
     case '3':
       title.textContent = 'Listado de Miembros Inactivos'
-      //url = '/api/members/inactives';
       response = await RequestGet.getListMembersInactives()
-      console.log(response)
       renderList(response)
       break;
-
 
   }
 }
 
 async function renderList(members) {
-  //let members = await getList(reponse);
   let html = '';
   for (let member of members) {
     html += getHtmlRowMembers(member);
