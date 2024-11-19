@@ -34,29 +34,6 @@ window.onload = async function () {
   }
 }
 
-
-async function getList(url) {
-
-
-
-
-  let config = {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'/*,
-            'Authorization' : sessionStorage.token*/
-    }
-  }
-
-
-  let response = await fetch(url, config);
-  let json = await response.json();
-
-  return (json);
-
-
-}
-
 async function renderList(members) {
   //let members = await getList(reponse);
   let html = '';
