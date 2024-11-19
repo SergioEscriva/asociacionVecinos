@@ -1,14 +1,14 @@
 package com.asociacion.services;
 
-import com.asociacion.models.Fee;
 import java.util.List;
-import java.util.Optional;
+
+import com.asociacion.models.Fee;
 
 public interface FeeService {
 
     public Fee saveFee(Fee fee);
 
-    public Optional<Fee> findById(Long id);
+    public List<Fee> findByMemberId(Long id);
 
     public List<Fee> getFees();
 

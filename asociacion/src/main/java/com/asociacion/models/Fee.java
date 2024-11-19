@@ -1,6 +1,5 @@
 package com.asociacion.models;
 
-
 import java.util.Date;
 
 import jakarta.persistence.Entity;
@@ -20,10 +19,10 @@ public class Fee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long idMember;
+    private Long memberId;
 
     @Temporal(TemporalType.DATE)
-    private Date date;     //"2024-11-12"
+    private Date date; // "2024-11-12"
     private Long year;
-   
+
 }

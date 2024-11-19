@@ -30,7 +30,7 @@ public class FeeController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Fee> getFeeById(@PathVariable Long id) {
+    public List<Fee> getFeeById(@PathVariable Long id) {
         return feeService.findById(id);
     }
 

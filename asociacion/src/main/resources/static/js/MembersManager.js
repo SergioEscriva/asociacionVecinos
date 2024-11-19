@@ -26,6 +26,7 @@ export class MembersManager {
     document.getElementById("getElementByIdSelectedXS").addEventListener("click", function () { MembersManager.getElementByIdSelected("xs"); });
 
     document.getElementById("updateMember").addEventListener("click", function () { MembersManager.updateMember(); });
+    document.getElementById("updateFee").addEventListener("click", function () { MembersManager.updateFee(); });
 
   }
 
@@ -49,7 +50,7 @@ export class MembersManager {
     document.getElementById('active').value = "";
     document.getElementById('notes').value = "";
     document.getElementById("memberNumber").value = "";
-    MembersManager.limpiaCamposActividad();
+    this.limpiaCamposActividad();
   }
 
   static async limpiaCamposActividad() {
@@ -60,7 +61,7 @@ export class MembersManager {
   }
 
   static async getMemberByNumber(memberNumber) {
-    await MembersManager.limpiaCampos()
+    await this.limpiaCampos()
 
     const member = await RequestGet.getActivitysByMemberNumber(memberNumber)
     if (!member) {
@@ -82,9 +83,9 @@ export class MembersManager {
     document.getElementById('email').value = member.email;
     document.getElementById('dni').value = member.dni;
     document.getElementById('gender').value = member.gender;
-    document.getElementById('active').value = await MembersManager.getActivo(member.active);
+    document.getElementById('active').value = await this.getActivo(member.active);
     document.getElementById('notes').value = member.notes;
-    MembersManager.inyectOption()
+    this.inyectOption()
     await ActivityMemberManager.getActivitiesByMemberId(member.id)
   }
 
@@ -194,5 +195,9 @@ export class MembersManager {
     select1.addEventListener('change', handleChange1)
   }
 
+  static async updateFee() {
+    alert("Update Pago")
+    return
+  }
 
 }
