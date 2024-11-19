@@ -26,6 +26,24 @@ export class RequestGet {
 
     }
 
+    static async getListMembersActives() {
+        const url = "/api/members/actives"
+        return await RequestGet._getRequest(url)
+
+    }
+
+    static async getListMembersInactives() {
+        const url = "/api/members/inactives"
+        return await RequestGet._getRequest(url)
+
+    }
+
+    static async getAllMembers() {
+        const url = "/api/members"
+        return await RequestGet._getRequest(url)
+
+    }
+
 
 
     static async getActivity(activityId) {
@@ -64,6 +82,10 @@ export class RequestGet {
         return await RequestGet._getRequest(url)
 
     }
+
+
+
+
 
     //REQUEST
 
