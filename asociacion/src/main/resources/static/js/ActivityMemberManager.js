@@ -54,8 +54,11 @@ export class ActivityMemberManager {
         const activities = await RequestGet.getActivitiesByMemberId(memberId)
         const activityExistInMember = activities.some(activityOne => activityOne.activityId == activityId)
 
-        if (activityExistInMember) {
+        if (activityId == 0) {
+            return
+        } else if (activityExistInMember) {
             alert("ERROR: Ya existe en la actividad: ", activity.activityName)
+            return
         } else {
             const request = {
                 activity: activity,

@@ -13,7 +13,14 @@ export class MembersManager {
   }
 
   async init() {
-    MembersManager.getMemberByNumber(10002);
+    //Obtener el parámetro activityId de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    let memberId = urlParams.get('memberId');
+
+    if (!memberId) {
+      memberId = 10002
+    }
+    MembersManager.getMemberByNumber(memberId);
 
     document.getElementById("getElementByIdSelected").addEventListener("click", function () { MembersManager.getElementByIdSelected("normal"); });
     document.getElementById("getElementByIdSelectedXS").addEventListener("click", function () { MembersManager.getElementByIdSelected("xs"); });
