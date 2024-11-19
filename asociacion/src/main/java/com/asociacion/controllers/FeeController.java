@@ -31,7 +31,7 @@ public class FeeController {
 
     @GetMapping("/{id}")
     public List<Fee> getFeeById(@PathVariable Long id) {
-        return feeService.findById(id);
+        return feeService.findByMemberId(id);
     }
 
     @PostMapping
@@ -47,13 +47,6 @@ public class FeeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Fee> updateFee(@PathVariable Long id, @RequestBody Fee fee) {
-        Optional<Fee> existingFee = feeService.findById(id);
-        if (existingFee.isPresent()) {
-            fee.setId(id);
-            Fee updatedFee = feeService.saveFee(fee);
-            return new ResponseEntity<>(updatedFee, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return null;
     }
 }

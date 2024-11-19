@@ -3,6 +3,7 @@ import { RequestPost } from './RequestPost.js';
 import { RequestGet } from './RequestGet.js';
 import { FamilyManager } from './FamilyManager.js';
 import { ActivityMemberManager } from './ActivityMemberManager.js';
+import { FeeManager } from './FeeManager.js';
 
 
 
@@ -26,8 +27,9 @@ export class MembersManager {
     document.getElementById("getElementByIdSelectedXS").addEventListener("click", function () { MembersManager.getElementByIdSelected("xs"); });
 
     document.getElementById("updateMember").addEventListener("click", function () { MembersManager.updateMember(); });
-    document.getElementById("updateFee").addEventListener("click", function () { MembersManager.updateFee(); });
-
+    const buttonFee = document.getElementById("updateFee")
+    buttonFee.addEventListener("click", function () { MembersManager.updateFee(); });
+    buttonFee.textContent = "¿Deudas?"
   }
 
 
@@ -85,6 +87,7 @@ export class MembersManager {
     document.getElementById('gender').value = member.gender;
     document.getElementById('active').value = await this.getActivo(member.active);
     document.getElementById('notes').value = member.notes;
+    this.updateFee()
     this.inyectOption()
     await ActivityMemberManager.getActivitiesByMemberId(member.id)
   }
@@ -196,8 +199,7 @@ export class MembersManager {
   }
 
   static async updateFee() {
-    alert("Update Pago")
-    return
+    FeeManager.checkFee()
   }
 
 }

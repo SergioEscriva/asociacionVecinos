@@ -312,6 +312,14 @@ input[type="checkbox-small"] {
     margin-top: 10px;
 }
 
+.button-red {
+    background-color: red;
+}
+
+.button-green {
+    background-color: green;
+}
+
 
 /* Para pantallas pequeñas */
 
