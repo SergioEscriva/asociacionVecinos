@@ -9,7 +9,7 @@ export class ActivityMemberManager {
 
     static async getActivitiesByMemberId(memberId) {
         const activitySel = document.getElementById("ul-activity-member");
-        activitySel.innerHTML = "";
+        activitySel.innerHTML = ``;
 
         try {
 
@@ -72,7 +72,7 @@ export class ActivityMemberManager {
 
     }
 
-    static async delMemberOfActivity(memberId, activityIdLong, li) {
+    static async delMemberOfActivity1(memberId, activityIdLong, li) {
         const memberName = document.getElementById('name').value;
 
         const liElement = document.getElementById('li-activitys-member-' + activityIdLong);
@@ -101,7 +101,7 @@ export class ActivityMemberManager {
         return match ? parseInt(match[0]) : null;
     }
 
-    static setupActivityListeners() {
+    static setupActivityListeners2() {
         const activitySel = document.getElementById("ul-activity-member");
 
         activitySel.addEventListener('click', async (event) => {
@@ -118,7 +118,6 @@ export class ActivityMemberManager {
             if (target.classList.contains('delete-button') || target.closest('.delete-button')) {
                 this.delMemberOfActivity(memberId, activityIdLong, li);
             } else if (target.tagName === 'LABEL') {
-                console.log(activityId);
                 window.location.href = `./activityIndex.html?activityId=${activityId}`;
             }
         });

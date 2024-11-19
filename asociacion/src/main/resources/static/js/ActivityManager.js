@@ -2,6 +2,7 @@ import { RequestGet } from "./RequestGet.js";
 import { RequestPut } from "./RequestPut.js";
 import { RequestPost } from "./RequestPost.js";
 import { ActivityMemberManager } from "./ActivityMemberManager.js";
+import { Listeners } from "./Listeners.js";
 
 window.onload = function () {
 
@@ -12,6 +13,7 @@ window.onload = function () {
   document.getElementById("getElementByIdSelected").addEventListener("click", function () { ActivityManager.getMemberByNumber(); });
   document.getElementById("updateActivityMember").addEventListener("click", function () { ActivityManager.updateActivityMember(); });
 
+  Listeners.setupActivityListeners();
   ActivityManager.inyectOption(activityId)
   ActivityManager.getActivityById(activityId);
 
@@ -29,7 +31,6 @@ export class ActivityManager {
     const oldListener = ulMembersActivity.onclick;
     ulMembersActivity.removeEventListener('click', oldListener);
     ulMembersActivity.innerHTML = "";
-
   }
 
   static async getActivityById(activityId) {
@@ -152,5 +153,4 @@ export class ActivityManager {
     await ActivityMemberManager.createActivityMemberInActivity(activityId, memberId)
     this.getActivityById(activityId)
   }
-
 }
