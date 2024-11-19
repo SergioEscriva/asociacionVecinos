@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Asociación de Vecinos - Actividades</title>
+    <title>Asociación de Vecinos - Listados</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -89,112 +89,43 @@
             <!-- Main Content -->
             <div id="content">
 
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button" id="updateActivity">
-                                    <i class="fas fa-download"></i>
-                                </button>
-                                <div class="activity-select">
-                                    <select id="activity-select">
-                                    </select>  
-                                </div>
-
-                            </div>
-                        </div>
-                    </form>
-
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-
-
-                </nav>
-                <!-- End of Topbar -->
+        
 
                 <!-- Begin Page Content -->
                 <div class="container">
                     <img src="img/mislata.png" alt="Valencia Street" class="background-image">
-                    <h2>Ficha Actividad</h2>
-                    <form method="post">
-                        <div class="input-group">
-                            <input type="number" id="activityId" name="activityId">
-                            <label for="active">Actividad Activa:</label>
-                            <input type="checkbox" id="activityActive" name="active">
-                            <label for="activityName">Nombre Actividad:</label>
-                            <input type="text" id="activityName" name="activityName">
-                            <label for="managerName>Encargado:</label>
-                            <input type=" text" id="managerName" name="managerName">
-                        </div>
-                        <div class="input-group">
-                            <label for="notes">Notas:</label>
-                            <input type="notes" id="notes" name="notes" placeholder="Ingrese sus notas aquí">
-                        </div>
-                    </form>
-                </div>
-                <div class="container">
-                    <h2>
-                        <form method="post">
 
+                    <div class="text-center mb-3">
+                        <h1 style="color: blue">Listado de Actividades</h1>
+                    </div>    
+                   
+                    <div class="mt-2">
+                        <input type="hidden" name="id" id="txtId">
+                        <table class= "table table-hover">
+                            <thead>
+                            <tr>
+                                <th>NOMBRE</th>
+                                <th>Nº PERSONAS REGISTRADAS</th>
+                                
+                            </tr>
+                    
+                            </thead>
+                    
+                            <tbody id="tbody-usuario">
+                                <tr>
+                                    <td>  </td>
+                                    <td>  </td>
 
-                            <form
-                                class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                                <div class="input-group-append">
-                                    <input type="text" class=border-0 small" placeholder="Añadir Socio..."
-                                        aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput">
-
-                                    <button class="btn btn-primary" type="button" id="getElementByIdSelected">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-
-                                    <button class="btn btn-primary" type="button" id="updateActivityMember">
-                                        <i class="fas fa-download"></i>
-                                    </button>
-
-
-                                </div>
-                            </form>
-                    </h2>
-                    <div class="input-group-append">
-                        <label for="name">Nombre:</label>
-                        <input type="text" id="name" name="name" data-activity-memberId="">
-
-                        <label for="lastName1">Apellido 1:</label>
-                        <input type="text" id="lastName1" name="lastName1">
-
-                        <label for="lastName2">Apellido 2:</label>
-                        <input type="text" id="lastName2" name="lastName2">
-                    </div>
-                    </form>
-
-                </div>
-
-                <div class="container-activity">
-                    <h2>Lista Socios</h2>
-                    <div class="list-group">
-                        <ul id="ul-members-activity" class="list-horizontal">
-
-
-                        </ul>
+                                </tr>
+                            </tbody>
+                    
+                        </table>
+                    
                     </div>
                 </div>
+                
+
+                
 
                 <!-- End of Main Content -->
 
