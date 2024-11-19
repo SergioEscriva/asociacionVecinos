@@ -10,10 +10,10 @@
             break;
             case button3:
             window.location.href = `./memberList.html?id=3`;
-
             break;
             case button4:
-            window.location.href= 'activitiesList.html'
+            window.location.href = `./activitiesList.html?id=4`;
+            //window.location.href= 'activitiesList.html'
             break;
 
         }

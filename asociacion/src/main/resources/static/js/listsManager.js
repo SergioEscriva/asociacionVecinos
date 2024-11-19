@@ -24,6 +24,10 @@ window.onload = async function () {
       response = await RequestGet.getListMembersInactives()
       renderList(response)
       break;
+    case '4':
+       response = await RequestGet.getActivitys()
+       renderActivityList(countActivities(response))
+    break;
 
   }
 }
@@ -48,6 +52,40 @@ function getHtmlRowMembers(member) {
             </tr>`;
 
 }
+
+function renderActivityList(activities) {
+    let html = '';
+
+    Object.entries(activities).forEach(([activity, repetitions]) => {
+
+        html += getHtmlRowActivities(activity, repetitions);
+    });
+
+    let tbody = document.getElementById('tbody-activity');
+    tbody.innerHTML = html;
+}
+
+function getHtmlRowActivities(activity, repetitions) {
+    return `<tr>
+                <td>${activity}</td>
+                <td>${repetitions}</td>
+            </tr>`;
+}
+
+function countActivities(activities) {
+    const contador = {};
+
+    activities.forEach(activity => {
+        const name = activity.name;
+        // Si la actividad ya existe en el contador, aumentamos el contador, si no, la inicializamos en 1
+        contador[name] = (contador[name] || 0) + 1;
+    });
+
+    return contador;
+}
+
+
+
 
 /* function onClickLogOut(){
      sessionStorage.token = null;
