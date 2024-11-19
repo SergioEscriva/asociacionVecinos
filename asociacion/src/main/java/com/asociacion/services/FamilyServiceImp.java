@@ -1,16 +1,13 @@
 package com.asociacion.services;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.asociacion.models.Family;
-import com.asociacion.models.Member;
 import com.asociacion.repositories.FamilyRepository;
-import com.asociacion.repositories.MemberRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FamilyServiceImp implements FamilyService {
@@ -18,8 +15,8 @@ public class FamilyServiceImp implements FamilyService {
     @Autowired
     private FamilyRepository familyRepository;
 
-    @Autowired
-    private MemberRepository memberRepository;
+    // @Autowired
+    // private MemberRepository memberRepository;
 
     public Family saveFamily(Family family) {
         Long familyMasterNumber = family.getFamilyMasterNumber();
@@ -57,15 +54,17 @@ public class FamilyServiceImp implements FamilyService {
     }
 
     public List<Family> findByFamilyMasterNumber(Long familyMasterNumber) {
-        List<Family> familys = familyRepository.findAll();
-        List<Family> familysByFamilyNumber = new ArrayList<>();
+        // List<Family> familys = familyRepository.findAll();
+        // List<Family> familysByFamilyNumber = new ArrayList<>();
 
-        for (Family family : familys) {
-            if (family.getFamilyMasterNumber().equals(familyMasterNumber)) {
-                familysByFamilyNumber.add(family);
-            }
-        }
-        return familysByFamilyNumber;
+        // for (Family family : familys) {
+        // if (family.getFamilyMasterNumber().equals(familyMasterNumber)) {
+        // familysByFamilyNumber.add(family);
+        // }
+        // }
+        // return familysByFamilyNumber;
+
+        return familyRepository.findAllByFamilyMasterNumber(familyMasterNumber);
     }
 
     public List<Family> getFamilys() {
