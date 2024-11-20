@@ -87,7 +87,7 @@ export class MembersManager {
     document.getElementById('gender').value = member.gender;
     document.getElementById('active').value = await this.getActivo(member.active);
     document.getElementById('notes').value = member.notes;
-    this.updateFee()
+    FeeManager.checkFee()
     this.inyectOption()
     await ActivityMemberManager.getActivitiesByMemberId(member.id)
   }
@@ -199,7 +199,7 @@ export class MembersManager {
   }
 
   static async updateFee() {
-    FeeManager.checkFee()
+    FeeManager.paidFee()
   }
 
 }

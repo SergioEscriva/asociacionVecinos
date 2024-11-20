@@ -25,5 +25,39 @@ export class FeeManager {
         }
     }
 
+    static async paidFee() {
+
+        const currentYear = new Date().getFullYear();
+        const currentDate = new Date();
+
+        const memberId = document.getElementById('memberId').value
+        const feesMember = await RequestGet.getFeeMember(memberId)
+
+        if (confirm("¿Estás seguro de actulizar el pago para el año " + currentYear + "?")) {
+            try {
+                const exist = feesMember.some(item => item.year === currentYear); // || item.date.startsWith('2023'));
+                if (exist) {
+                    return
+                } else {
+                    const feeUpdate = {
+                        memberId: memberId,
+                        date: currentDate,
+                        year: currentYear
+
+                    }
+                    const button = document.getElementById('updateFee')
+                    button.classList = 'buttonFee button-green'
+                    button.textContent = "Sin Deudas"
+                    RequestPost.newFee(feeUpdate)
+                }
+            } catch (error) {
+                console.error("Error al actulizar el pago:", error);
+                alert("Error al actulizar el pago. Por favor, intente de nuevo.");
+            }
+        }
+
+    }
+
+
 
 }

@@ -15,9 +15,6 @@ public class FamilyServiceImp implements FamilyService {
     @Autowired
     private FamilyRepository familyRepository;
 
-    // @Autowired
-    // private MemberRepository memberRepository;
-
     public Family saveFamily(Family family) {
         Long familyMasterNumber = family.getFamilyMasterNumber();
         boolean coulBeMaster = true;
@@ -54,16 +51,6 @@ public class FamilyServiceImp implements FamilyService {
     }
 
     public List<Family> findByFamilyMasterNumber(Long familyMasterNumber) {
-        // List<Family> familys = familyRepository.findAll();
-        // List<Family> familysByFamilyNumber = new ArrayList<>();
-
-        // for (Family family : familys) {
-        // if (family.getFamilyMasterNumber().equals(familyMasterNumber)) {
-        // familysByFamilyNumber.add(family);
-        // }
-        // }
-        // return familysByFamilyNumber;
-
         return familyRepository.findAllByFamilyMasterNumber(familyMasterNumber);
     }
 
