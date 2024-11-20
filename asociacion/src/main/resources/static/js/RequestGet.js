@@ -29,11 +29,12 @@ export class RequestGet {
 
     static async getFeeMember(memberId) {
         const url = "/api/fee/" + memberId
+        return await RequestGet._getRequest(url)
     }
+
     static async getListMembersActives() {
         const url = "/api/members/actives"
         return await RequestGet._getRequest(url)
-
     }
 
     static async getListMembersInactives() {

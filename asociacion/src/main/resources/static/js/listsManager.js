@@ -1,49 +1,56 @@
 import { RequestGet } from './RequestGet.js';
 
+export class ListsManager {
 
-window.onload = async function () {
-  //Obtener el parámetro activityId de la URL
-  const urlParams = new URLSearchParams(window.location.search);
-  let id = urlParams.get('id');
-
-  const title = document.getElementById('txtTitleList');
-  let response = "";
-  switch (id) {
-    case '1':
-      title.textContent = 'Listado de Miembros Completo'
-      response = await RequestGet.getAllMembers()
-      renderList(response)
-      break;
-    case '2':
-      title.textContent = 'Listado de Miembros Activos'
-      response = await RequestGet.getListMembersActives()
-      renderList(response)
-      break;
-    case '3':
-      title.textContent = 'Listado de Miembros Inactivos'
-      response = await RequestGet.getListMembersInactives()
-      renderList(response)
-      break;
-    case '4':
-       response = await RequestGet.getActivitys()
-       renderActivityList(countActivities(response))
-    break;
+  constructor() {
 
   }
-}
 
-async function renderList(members) {
-  let html = '';
-  for (let member of members) {
-    html += getHtmlRowMembers(member);
+  async init() {
+    //Obtener el parámetro activityId de la URL
+    //const urlParams = new URLSearchParams(window.location.search);
+    // let id = urlParams.get('id');
+
+    const id = document.body.getAttribute('data-page-selection');
+
+    const title = document.getElementById('txtTitleList');
+    let response = "";
+    switch (id) {
+      case 'button1':
+        title.textContent = 'Listado de Miembros Completo'
+        response = await RequestGet.getAllMembers()
+        this.renderList(response)
+        break;
+      case 'button2':
+        title.textContent = 'Listado de Miembros Activos'
+        response = await RequestGet.getListMembersActives()
+        this.renderList(response)
+        break;
+      case 'button3':
+        title.textContent = 'Listado de Miembros Inactivos'
+        response = await RequestGet.getListMembersInactives()
+        this.renderList(response)
+        break;
+      case 'button4':
+        response = await RequestGet.getActivitys()
+        const responseCount = ListsManager.countActivities(response)
+        this.renderActivityList(responseCount)
+        break;
+    }
   }
 
-  let tbody = document.getElementById('tbody-member');
-  tbody.innerHTML = html;
-}
+  async renderList(members) {
+    let html = '';
+    for (let member of members) {
+      html += this.getHtmlRowMembers(member);
+    }
 
-function getHtmlRowMembers(member) {
-  return `<tr>
+    let tbody = document.getElementById('tbody-member');
+    tbody.innerHTML = html;
+  }
+
+  getHtmlRowMembers(member) {
+    return `<tr>
                 <td>${member.name} </td>
                 <td>${member.lastName1} ${member.lastName2} </td>
                 <td>${member.memberNumber}</td>
@@ -51,40 +58,41 @@ function getHtmlRowMembers(member) {
 
             </tr>`;
 
-}
+  }
 
-function renderActivityList(activities) {
+  renderActivityList(activities) {
     let html = '';
 
     Object.entries(activities).forEach(([activity, repetitions]) => {
 
-        html += getHtmlRowActivities(activity, repetitions);
+      html += this.getHtmlRowActivities(activity, repetitions);
     });
 
     let tbody = document.getElementById('tbody-activity');
     tbody.innerHTML = html;
-}
+  }
 
-function getHtmlRowActivities(activity, repetitions) {
+  getHtmlRowActivities(activity, repetitions) {
     return `<tr>
                 <td>${activity}</td>
                 <td>${repetitions}</td>
             </tr>`;
-}
+  }
 
-function countActivities(activities) {
+  static countActivities(activities) {
+
     const contador = {};
 
     activities.forEach(activity => {
-        const name = activity.name;
-        // Si la actividad ya existe en el contador, aumentamos el contador, si no, la inicializamos en 1
-        contador[name] = (contador[name] || 0) + 1;
+      const name = activity.name;
+      // Si la actividad ya existe en el contador, aumentamos el contador, si no, la inicializamos en 1
+      contador[name] = (contador[name] || 0) + 1;
     });
 
     return contador;
+  }
+
 }
-
-
 
 
 /* function onClickLogOut(){

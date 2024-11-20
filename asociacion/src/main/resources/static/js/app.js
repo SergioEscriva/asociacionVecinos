@@ -14,8 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.reload();
             }
 
+            const buttonList = linkElement.getAttribute('id')
+
             if (section) {
-                loadContent(section);
+                loadContent(section, buttonList);
             } else {
                 console.error("Error: 'data-section' no está definido en el enlace.");
             }
@@ -30,15 +32,26 @@ document.addEventListener('DOMContentLoaded', () => {
         activityIndex: async () => {
             const { initActivityIndex } = await import('/js/main.js');
             initActivityIndex();
+        },
+        memberList: async () => {
+            const { initListsIndex } = await import('/js/main.js');
+            initListsIndex();
+        },
+        activitiesList: async () => {
+            const { initListsIndex } = await import('/js/main.js');
+            initListsIndex();
+
         }
+
     };
 
-    function loadContent(section) {
+    function loadContent(section, idList) {
         fetch(`${section}.html`)
             .then(response => response.text())
             .then(html => {
                 content.innerHTML = html;
                 document.body.setAttribute('data-page', section);
+                document.body.setAttribute('data-page-selection', idList);
 
                 updateActiveMenuIcons(section);
 
@@ -64,6 +77,5 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
 
 });
