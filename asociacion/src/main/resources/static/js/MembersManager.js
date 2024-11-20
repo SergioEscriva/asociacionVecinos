@@ -156,7 +156,7 @@ export class MembersManager {
       }
 
       let request;
-      if (!memberNumber) {
+      if (!memberId) {
         request = await RequestPost.newMember(memberUpdate);
         await FamilyManager.createFamily(request.memberNumber)
       } else {

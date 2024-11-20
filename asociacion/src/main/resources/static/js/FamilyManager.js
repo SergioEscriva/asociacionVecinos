@@ -35,7 +35,7 @@ export class FamilyManager {
         await RequestPut.editFamily(familyTypeId, familyUpdate)
     }
 
-    async createFamily(memberNumber) {
+    static async createFamily(memberNumber) {
 
         let familyMasterNumber = document.getElementById("familyMasterNumber").value;
 
