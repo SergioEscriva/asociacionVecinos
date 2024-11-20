@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const content = document.getElementById('content');
-    const links = document.querySelectorAll('#sidebar a');
+    const links = document.querySelectorAll('#sidebar a[data-section]');
 
     links.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const linkElement = e.currentTarget;
             const section = linkElement.getAttribute('data-section');
+
+            if (section === 'index') {
+                window.location.reload();
+            }
 
             if (section) {
                 loadContent(section);
@@ -27,6 +31,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const { initActivityIndex } = await import('/js/main.js');
             initActivityIndex();
         },
+        allMembers: async () => {
+            const { Lists } = await import('/js/lists.js');
+            changelist(1)
+        },
+        activeMembers: async () => {
+            // Inicialización específica para miembros activos 
+        },
+        inactiveMembers: async () => {
+            // Inicialización específica para miembros inactivos 
+        },
+        activities: async () => {
+            // Inicialización específica para actividades 
+        }
     };
 
     function loadContent(section) {

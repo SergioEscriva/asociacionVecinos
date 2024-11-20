@@ -60,14 +60,14 @@
                     <i class="fas fa-solid fa-list-ul"></i>
                     <span>Listados</span>
                 </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#sidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a id="button1" class="collapse-item" onclick="changelist(this)" href="#">Todos los
-                            miembros</a>
-                        <a id="button2" class="collapse-item" href="#">Miembros Activos</a>
-                        <a id="button3" class="collapse-item" href="#">Miembros Inactivos</a>
-                        <a id="button4" class="collapse-item" onclick="changelist(this)" href="#">Actividades</a>
+                        <a id="button1" class="collapse-item" data-section="memberList" href="#">Todos los miembros</a>
+                        <a id="button2" class="collapse-item" data-section="activitiesList" href="#">Miembros
+                            Activos</a>
+                        <a id="button3" class="collapse-item" data-section="inactiveMembers" href="#">Miembros
+                            Inactivos</a> <a id="button4" class="collapse-item" data-section="activities"
+                            href="#">Actividades</a>
                     </div>
                 </div>
             </li>
@@ -217,7 +217,6 @@
         <!-- Page level custom scripts -->
         <script src="js/app.js"></script>
         <script type="module" src="js/main.js"></script>
-        <script src="js/lists.js"></script>
 
 
 </body>
