@@ -30,19 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         activityIndex: async () => {
             const { initActivityIndex } = await import('/js/main.js');
             initActivityIndex();
-        },
-        allMembers: async () => {
-            const { Lists } = await import('/js/lists.js');
-            changelist(1)
-        },
-        activeMembers: async () => {
-            // Inicialización específica para miembros activos 
-        },
-        inactiveMembers: async () => {
-            // Inicialización específica para miembros inactivos 
-        },
-        activities: async () => {
-            // Inicialización específica para actividades 
         }
     };
 
@@ -53,7 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 content.innerHTML = html;
                 document.body.setAttribute('data-page', section);
 
-                // Llama al inicializador de la sección cargada
+                updateActiveMenuIcons(section);
+
                 if (pageInitializers[section]) {
                     pageInitializers[section]();
                 }
@@ -64,6 +52,18 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // Opción para cargar contenido inicial si se desea
-    // loadContent('index');
+    function updateActiveMenuIcons(activeSection) {
+        const menuItems = document.querySelectorAll('#sidebar .nav-item');
+        menuItems.forEach(item => {
+            const link = item.querySelector('.nav-link');
+            const section = link.getAttribute('data-section');
+            if (section === activeSection) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+
+
 });
