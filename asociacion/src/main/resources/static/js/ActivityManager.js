@@ -4,22 +4,32 @@ import { RequestPost } from "./RequestPost.js";
 import { ActivityMemberManager } from "./ActivityMemberManager.js";
 import { Listeners } from "./Listeners.js";
 
-window.onload = function () {
 
-  //Obtener el parámetro activityId de la URL
-  const urlParams = new URLSearchParams(window.location.search);
-  let activityId = urlParams.get('activityId');
-  document.getElementById("updateActivity").addEventListener("click", function () { ActivityManager.updateActivity(); });
-  document.getElementById("getElementByIdSelected").addEventListener("click", function () { ActivityManager.getMemberByNumber(); });
-  document.getElementById("updateActivityMember").addEventListener("click", function () { ActivityManager.updateActivityMember(); });
+//window.onload = function () {
 
-  Listeners.setupActivityListeners();
-  ActivityManager.inyectOption(activityId)
-  ActivityManager.getActivityById(activityId);
 
-};
+
+//};
 
 export class ActivityManager {
+
+  constructor() {
+
+  }
+
+  async init() {
+    //Obtener el parámetro activityId de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    let activityId = urlParams.get('activityId');
+    document.getElementById("updateActivity").addEventListener("click", function () { ActivityManager.updateActivity(); });
+    document.getElementById("getElementByIdSelected").addEventListener("click", function () { ActivityManager.getMemberByNumber(); });
+    document.getElementById("updateActivityMember").addEventListener("click", function () { ActivityManager.updateActivityMember(); });
+
+    Listeners.setupActivityListeners();
+    ActivityManager.inyectOption(activityId)
+    ActivityManager.getActivityById(activityId);
+
+  }
 
   static async limpiaCampos() {
     document.getElementById('activityId').value = "";

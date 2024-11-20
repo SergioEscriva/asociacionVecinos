@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initMemberIndex();
         },
         activityIndex: async () => {
-            const { initActivityIndex } = await import('/js/ActivityManager.js');
+            const { initActivityIndex } = await import('/js/main.js');
             initActivityIndex();
         },
     };
