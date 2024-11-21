@@ -14,7 +14,7 @@ export class FamilyManager {
 
     static async getFamilyByMemberNumber(memberNumber) {
 
-        const family = await RequestGet.getFamilyByMemberNumber(memberNumber)
+        let family = await RequestGet.getFamilyByMemberNumber(memberNumber)
         let inputElement = document.getElementById("familyMasterNumber");
         inputElement.dataset.familyType = family.id; // se añade o cambia el valor al item
         inputElement.value = family.familyMasterNumber
@@ -45,7 +45,7 @@ export class FamilyManager {
 
         const familyUpdate = {
             familyMasterNumber: familyMasterNumber,
-            idMember: memberNumber
+            memberNumber: memberNumber
         }
         await RequestPost.newFamily(familyUpdate)
 
