@@ -64,7 +64,7 @@ export class RequestGet {
     }
 
 
-    static async getActivitysByMemberNumber(memberNumber) {
+    static async getMemberByMemberNumber(memberNumber) {
         const url = "api/members/number/" + memberNumber
         return await RequestGet._getRequest(url)
 

@@ -6,16 +6,18 @@ import java.util.Optional;
 
 public interface MemberService {
 
-    public Member saveMember(Member member);
+    Member saveMember(Member member);
 
-    public Optional<Member> findById(Long id);
+    Optional<Member> findById(Long id);
 
-    public List<Member> getMembers();
+    List<Member> getMembers();
 
-    public Optional<Member> findByMemberNumber(Long memberNumber);
+    Optional<Member> findByMemberNumber(Long memberNumber);
 
-    public List<Member> getActives();
+    List<Member> getActives();
 
-    public List<Member> getInactives();
+    List<Member> getInactives();
+
+    List<Member> searchMembers(String query);
 
 }

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.asociacion.models.Member;
 
@@ -20,6 +21,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("SELECT m FROM Member m WHERE m.active = false")
     List<Member> findInactives();
 
-
     Optional<Member> findByMemberNumber(Long memberNumber);
+
+    @Query("SELECT m FROM Member m WHERE CAST(m.memberNumber AS string) LIKE %:query%")
+    List<Member> searchByMemberNumberContaining(@Param("query") String query);
 }

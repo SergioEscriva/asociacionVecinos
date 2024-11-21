@@ -46,9 +46,13 @@ public class MemberServiceImp implements MemberService {
         return memberRepository.findInactives();
     }
 
-
     public Optional<Member> findByMemberNumber(Long memberNumber) {
         return memberRepository.findByMemberNumber(memberNumber);
+    }
+
+    @Override
+    public List<Member> searchMembers(String query) {
+        return memberRepository.searchByMemberNumberContaining(query);
     }
 
 }

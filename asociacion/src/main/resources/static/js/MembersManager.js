@@ -23,17 +23,39 @@ export class MembersManager {
     }
     MembersManager.getMemberByNumber(memberNumber);
 
-    document.getElementById("findMember").addEventListener("click", function () { MembersManager.findMember("normal"); });
-    document.getElementById("findMemberXS").addEventListener("click", function () { MembersManager.findMember("xs"); });
-
     document.getElementById("updateMember").addEventListener("click", function () { MembersManager.updateMember(); });
     document.getElementById("newMember").addEventListener("click", function () { MembersManager.newMember(); });
 
     const buttonFee = document.getElementById("updateFee")
     buttonFee.addEventListener("click", function () { MembersManager.updateFee(); });
     buttonFee.textContent = "¿Deudas?"
-  }
 
+
+    const memberIdInput = document.getElementById('memberIdInput');
+
+    memberIdInput.addEventListener('input', () => {
+      const query = memberIdInput.value;
+
+      if (query.length > 0) {
+        fetch(`/api/members/search-member?query=${query}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.length > 0) {
+              const member = data[0];
+              MembersManager.getMemberByNumber(member.memberNumber);
+            } else {
+              // Limpiar los campos si no hay resultados
+              MembersManager.limpiaCampos()
+            }
+          })
+          .catch(error => console.error('Error fetching member data:', error));
+      } else {
+        // Limpiar los campos si no hay entrada
+        MembersManager.limpiaCampos()
+      }
+    });
+
+  }
 
   static async limpiaCampos() {
     document.getElementById('memberId').value = "";
@@ -71,7 +93,7 @@ export class MembersManager {
   static async getMemberByNumber(memberNumber) {
     await this.limpiaCampos()
 
-    const member = await RequestGet.getActivitysByMemberNumber(memberNumber)
+    const member = await RequestGet.getMemberByMemberNumber(memberNumber)
     if (member <= 0) {
       return
     } else if (!member) {
@@ -212,4 +234,9 @@ export class MembersManager {
     await FeeManager.paidFee()
   }
 
+  //* busqueda *//
+
+
+
 }
+
