@@ -40,6 +40,13 @@ function initListsIndex() {
         });
 }
 
+function mostrarFecha() {
+    const fechaActual = new Date();
+    const opciones = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+    const fechaFormateada = fechaActual.toLocaleDateString('es-ES', opciones);
+    document.getElementById('fecha').innerText = fechaFormateada;
+}
 
+mostrarFecha()
 export { initActivityIndex, initListsIndex, initMemberIndex };
 

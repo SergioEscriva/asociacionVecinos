@@ -16,10 +16,10 @@ body {
     max-width: 1200px;
     padding: 10px;
     margin: 0 auto;
-    padding: 15px;
     border-radius: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     justify-items: center;
+    justify-content: center;
 }
 
 .input-group {
@@ -318,6 +318,24 @@ input[type="checkbox-small"] {
 
 .button-green {
     background-color: green;
+}
+
+#fecha {
+    font-family: Arial, sans-serif;
+    font-size: 22px;
+    text-align: center;
+
+}
+
+.img-fluid {
+
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+}
+
+.sticky-footer {
+    flex-shrink: 0;
 }
 
 
