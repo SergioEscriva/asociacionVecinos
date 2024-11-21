@@ -48,8 +48,18 @@
                     <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" class="form-control border-0 small" placeholder="Buscar Socio..."
-                                aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput">
+                            <!--  <input type="text" class="form-control border-0 small" placeholder="Buscar Socio..."
+                                aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput"> -->
+
+                            <!-- Otros elementos del nav -->
+                            <div class="input-container">
+                                <input type="input-find" id="input-find" class="input-find"
+                                    placeholder="Buscar Socio...">
+                            </div>
+
+                            <ul id="suggestions" class="suggestions-list"></ul>
+
+
                             <div class="input-group-append">
 
                                 <button class="btn btn-primary" type="button" id="newMember">
@@ -70,7 +80,7 @@
                         <li class="nav-item dropdown no-arrow d-sm-none">
                             <i class="fas fa-search fa-fw"></i>
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar..."
-                                aria-label="Search" aria-describedby="basic-addon2" id="memberIdInputXS">
+                                aria-label="Search" aria-describedby="basic-addon2" id="input-find-XS">
                             <div class="input-group">
                                 <button class="btn btn-primary" type="button" id="findMemberXS">
                                     <i class="fas fa-search fa-sm"></i>

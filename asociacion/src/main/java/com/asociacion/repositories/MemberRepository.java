@@ -23,14 +23,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByMemberNumber(Long memberNumber);
 
-    /*
-     * @Query("SELECT m FROM Member m WHERE " +
-     * "CAST(m.memberNumber AS string) LIKE %:query% OR "
-     * + "LOWER(m.name) LIKE LOWER(CONCAT('%', :query, '%')) OR "
-     * + "LOWER(m.lastName1) LIKE LOWER(CONCAT('%', :query, '%')) OR "
-     * + "LOWER(m.lastName2) LIKE LOWER(CONCAT('%', :query, '%'))")
-     */
-
     @Query("SELECT m FROM Member m WHERE "
             + "CONCAT(LOWER(m.name), ' ', LOWER(m.lastName1), ' ', LOWER(m.lastName2)) LIKE LOWER(CONCAT('%', :query, '%')) OR "
             + "CAST(m.memberNumber AS string) LIKE %:query%")

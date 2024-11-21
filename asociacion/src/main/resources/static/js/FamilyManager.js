@@ -13,12 +13,12 @@ export class FamilyManager {
     }
 
     static async getFamilyByMemberNumber(memberNumber) {
-
         let family = await RequestGet.getFamilyByMemberNumber(memberNumber)
         let inputElement = document.getElementById("familyMasterNumber");
-        inputElement.dataset.familyType = family.id; // se añade o cambia el valor al item
-        inputElement.value = family.familyMasterNumber
-
+        if (family) {
+            inputElement.dataset.familyType = family.id; // se añade o cambia el valor al item
+            inputElement.value = family.familyMasterNumber
+        }
     }
 
 

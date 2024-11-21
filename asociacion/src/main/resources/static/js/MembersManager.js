@@ -23,6 +23,7 @@ export class MembersManager {
     }
     MembersManager.getMemberByNumber(memberNumber);
 
+    document.getElementById("findMemberXS").addEventListener("click", function () { MembersManager.findMember("xs"); });
     document.getElementById("updateMember").addEventListener("click", function () { MembersManager.updateMember(); });
     document.getElementById("newMember").addEventListener("click", function () { MembersManager.newMember(); });
 
@@ -31,29 +32,44 @@ export class MembersManager {
     buttonFee.textContent = "¿Deudas?"
 
 
-    const memberIdInput = document.getElementById('memberIdInput');
 
-    memberIdInput.addEventListener('input', () => {
-      const query = memberIdInput.value;
+    const inputFind = document.getElementById('input-find');
+    const suggestionsList = document.getElementById('suggestions');
+
+    inputFind.addEventListener('input', () => {
+      const query = inputFind.value;
 
       if (query.length > 0) {
         fetch(`/api/members/search-member?query=${query}`)
           .then(response => response.json())
           .then(data => {
+            suggestionsList.innerHTML = '';
             if (data.length > 0) {
-              const member = data[0];
-              MembersManager.getMemberByNumber(member.memberNumber);
-            } else {
-              // Limpiar los campos si no hay resultados
-              MembersManager.limpiaCampos()
+              data.forEach(member => {
+                const suggestionItem = document.createElement('li');
+                suggestionItem.textContent = `${member.name} ${member.lastName1} ${member.lastName2} (${member.memberNumber})`;
+                suggestionItem.addEventListener('click', () => {
+                  inputFind.value = `${member.name} ${member.lastName1} ${member.lastName2} (${member.memberNumber})`;
+                  suggestionsList.innerHTML = ''; // Limpiar las sugerencias
+                  MembersManager.getMemberByNumber(member.memberNumber);
+                });
+                suggestionsList.appendChild(suggestionItem);
+                MembersManager.getMemberByNumber(member.memberNumber);
+              });
             }
           })
           .catch(error => console.error('Error fetching member data:', error));
       } else {
-        // Limpiar los campos si no hay entrada
-        MembersManager.limpiaCampos()
+        suggestionsList.innerHTML = ''; // Limpiar las sugerencias si no hay entrada
       }
     });
+
+    document.addEventListener('click', (event) => {
+      if (!suggestionsList.contains(event.target) && event.target !== inputFind) {
+        suggestionsList.innerHTML = ''; // Limpiar las sugerencias si se hace clic fuera
+      }
+    });
+
 
   }
 
@@ -123,9 +139,10 @@ export class MembersManager {
     }
   }
 
+
   static async findMember(screen) {
-    const memberNumber = document.getElementById('memberIdInput').value;
-    const memberNumberXS = document.getElementById('memberIdInputXS').value;
+    const memberNumber = document.getElementById('input-find').value;
+    const memberNumberXS = document.getElementById('input-find-XS').value;
     if (screen === "xs") {
       this.getMemberByNumber(memberNumberXS)
       return
