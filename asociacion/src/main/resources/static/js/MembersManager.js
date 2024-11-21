@@ -16,17 +16,19 @@ export class MembersManager {
   async init() {
     //Obtener el parámetro activityId de la URL
     const urlParams = new URLSearchParams(window.location.search);
-    let memberId = urlParams.get('memberId');
+    let memberNumber = urlParams.get('memberId');
 
-    if (!memberId) {
-      memberId = 10002
+    if (!memberNumber) {
+      memberNumber = 10002
     }
-    MembersManager.getMemberByNumber(memberId);
+    MembersManager.getMemberByNumber(memberNumber);
 
-    document.getElementById("getElementByIdSelected").addEventListener("click", function () { MembersManager.getElementByIdSelected("normal"); });
-    document.getElementById("getElementByIdSelectedXS").addEventListener("click", function () { MembersManager.getElementByIdSelected("xs"); });
+    document.getElementById("findMember").addEventListener("click", function () { MembersManager.findMember("normal"); });
+    document.getElementById("findMemberXS").addEventListener("click", function () { MembersManager.findMember("xs"); });
 
     document.getElementById("updateMember").addEventListener("click", function () { MembersManager.updateMember(); });
+    document.getElementById("newMember").addEventListener("click", function () { MembersManager.newMember(); });
+
     const buttonFee = document.getElementById("updateFee")
     buttonFee.addEventListener("click", function () { MembersManager.updateFee(); });
     buttonFee.textContent = "¿Deudas?"
@@ -55,6 +57,10 @@ export class MembersManager {
     this.limpiaCamposActividad();
   }
 
+  static async newMember() {
+    MembersManager.getMemberByNumber(0);
+  }
+
   static async limpiaCamposActividad() {
     const activitySel = document.getElementById("ul-activity-member");
     const oldListener = activitySel.onclick;
@@ -66,33 +72,36 @@ export class MembersManager {
     await this.limpiaCampos()
 
     const member = await RequestGet.getActivitysByMemberNumber(memberNumber)
-    if (!member) {
+    if (member <= 0) {
+      return
+    } else if (!member) {
       alert("El socio " + memberNumber + " no existe")
       return
+    } else {
+      document.getElementById('memberId').value = member.id;
+      document.getElementById('memberNumber').value = memberNumber;
+      FamilyManager.getFamilyByMemberNumber(memberNumber);
+      document.getElementById('name').value = member.name;
+      document.getElementById('lastName1').value = member.lastName1;
+      document.getElementById('lastName2').value = member.lastName2;
+      document.getElementById('address').value = member.address;
+      document.getElementById('addressNumber').value = member.addressNumber;
+      document.getElementById('addressDoor').value = member.addressDoor;
+      document.getElementById('addressStaircase').value = member.addressStaircase;
+      document.getElementById('location').value = member.location;
+      document.getElementById('phone').value = member.phone;
+      document.getElementById('email').value = member.email;
+      document.getElementById('dni').value = member.dni;
+      document.getElementById('gender').value = member.gender;
+      document.getElementById('active').value = await this.getActivo(member.active);
+      document.getElementById('notes').value = member.notes;
+      FeeManager.checkFee()
+      this.inyectOption()
+      await ActivityMemberManager.getActivitiesByMemberId(member.id)
     }
-    document.getElementById('memberId').value = member.id;
-    document.getElementById('memberNumber').value = memberNumber;
-    FamilyManager.getFamilyByMemberNumber(memberNumber);
-    document.getElementById('name').value = member.name;
-    document.getElementById('lastName1').value = member.lastName1;
-    document.getElementById('lastName2').value = member.lastName2;
-    document.getElementById('address').value = member.address;
-    document.getElementById('addressNumber').value = member.addressNumber;
-    document.getElementById('addressDoor').value = member.addressDoor;
-    document.getElementById('addressStaircase').value = member.addressStaircase;
-    document.getElementById('location').value = member.location;
-    document.getElementById('phone').value = member.phone;
-    document.getElementById('email').value = member.email;
-    document.getElementById('dni').value = member.dni;
-    document.getElementById('gender').value = member.gender;
-    document.getElementById('active').value = await this.getActivo(member.active);
-    document.getElementById('notes').value = member.notes;
-    FeeManager.checkFee()
-    this.inyectOption()
-    await ActivityMemberManager.getActivitiesByMemberId(member.id)
   }
 
-  static async getElementByIdSelected(screen) {
+  static async findMember(screen) {
     const memberNumber = document.getElementById('memberIdInput').value;
     const memberNumberXS = document.getElementById('memberIdInputXS').value;
     if (screen === "xs") {
@@ -101,6 +110,7 @@ export class MembersManager {
     }
 
     this.getMemberByNumber(memberNumber)
+
   }
 
   static async getActivo(active) {
