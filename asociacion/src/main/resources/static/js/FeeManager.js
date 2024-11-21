@@ -24,40 +24,94 @@ export class FeeManager {
             button.textContent = "Con Deudas"
         }
     }
-
     static async paidFee() {
-
         const currentYear = new Date().getFullYear();
         const currentDate = new Date();
 
         const memberId = document.getElementById('memberId').value
         const feesMember = await RequestGet.getFeeMember(memberId)
 
-        if (confirm("¿Estás seguro de actulizar el pago para el año " + currentYear + "?")) {
+        try {
+            const exist = feesMember.some(item => item.year === currentYear); // || item.date.startsWith('2023'));
+            if (exist) {
+                this.delPaidFee(feesMember)
+                return
+            } else {
+                this.updatePaidFee(memberId, feesMember)
+            }
+        } catch (error) {
+            console.error("Error al actualizar el pago:", error);
+            alert("Error al actualizar el pago. Por favor, intente de nuevo.");
+        }
+    }
+
+    static async updatePaidFee(memberId, feesMember) {
+
+        const currentYear = new Date().getFullYear();
+        const currentDate = new Date();
+
+        if (confirm("¿Estás seguro de actualizar el pago?")) {
+            let yearToUpdate = currentYear;
+            const changeYear = confirm("¿Deseas mantener el año en curso (" + currentYear + ")?\nPresiona 'Aceptar' para mantener, o 'Cancelar' para cambiar.");
+
+            if (!changeYear) {
+                const newYear = prompt("Introduce el nuevo año:", currentYear);
+                if (newYear && !isNaN(newYear)) {
+                    yearToUpdate = parseInt(newYear);
+                } else {
+                    alert("Año no válido. Se mantendrá el año en curso.");
+                }
+            }
+
             try {
-                const exist = feesMember.some(item => item.year === currentYear); // || item.date.startsWith('2023'));
+                const exist = feesMember.some(item => item.year === yearToUpdate);
                 if (exist) {
-                    return
+                    alert("Ya existe un pago para el año " + yearToUpdate);
+                    return;
                 } else {
                     const feeUpdate = {
                         memberId: memberId,
                         date: currentDate,
-                        year: currentYear
+                        year: yearToUpdate
+                    };
+                    const button = document.getElementById('updateFee');
+                    button.classList = 'buttonFee button-green';
+                    button.textContent = "Sin Deudas";
+                    RequestPost.newFee(feeUpdate);
 
-                    }
-                    const button = document.getElementById('updateFee')
-                    button.classList = 'buttonFee button-green'
-                    button.textContent = "Sin Deudas"
-                    RequestPost.newFee(feeUpdate)
                 }
             } catch (error) {
-                console.error("Error al actulizar el pago:", error);
-                alert("Error al actulizar el pago. Por favor, intente de nuevo.");
+                console.error("Error al actualizar el pago:", error);
+                alert("Error al actualizar el pago. Por favor, intente de nuevo.");
             }
         }
 
     }
 
+    static async delPaidFee(feesMember) {
 
+        const currentYear = new Date().getFullYear();
+
+        if (confirm("¿Estás seguro de BORRAR el pago para el año " + currentYear + "?")) {
+            try {
+                const matchingItem = feesMember.find(item => item.year === currentYear); // || item.date.startsWith('2023'));
+                if (matchingItem) {
+                    const matchingId = matchingItem ? matchingItem.id : null;
+
+                    await RequestDel.delFee(matchingId)
+                    this.checkFee()
+
+                    return
+                } else {
+                    return
+                }
+            } catch (error) {
+                console.error("Error al borrar el pago:", error);
+                alert("Error al borrar el pago. Por favor, intente de nuevo.");
+            }
+        }
+
+
+    }
 
 }

@@ -17,6 +17,23 @@ export class RequestDel {
         }
     }
 
+    static async delFee(id) {
+        try {
+            const feeDel = {
+                method: 'DELETE',
+                body: JSON.stringify({ id }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            };
+            // Devuelve la respuesta en formato JSON
+            return await RequestDel._delRequest(`/api/fee/${id}`, feeDel);
+        } catch (error) {
+            console.error('Error en la solicitud DEL:', error);
+            throw error;
+        }
+    }
+
     //REQUEST
 
     static async _delRequest(url, data) {

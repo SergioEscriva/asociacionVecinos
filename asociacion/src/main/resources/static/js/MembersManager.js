@@ -209,7 +209,7 @@ export class MembersManager {
   }
 
   static async updateFee() {
-    FeeManager.paidFee()
+    await FeeManager.paidFee()
   }
 
 }
