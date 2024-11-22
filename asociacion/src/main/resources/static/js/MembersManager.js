@@ -50,7 +50,7 @@ export class MembersManager {
                 suggestionItem.textContent = `${member.name} ${member.lastName1} ${member.lastName2} (${member.memberNumber})`;
                 suggestionItem.addEventListener('click', () => {
                   inputFind.value = `${member.name} ${member.lastName1} ${member.lastName2} (${member.memberNumber})`;
-                  suggestionsList.innerHTML = ''; // Limpiar las sugerencias
+                  suggestionsList.innerHTML = '';
                   MembersManager.getMemberByNumber(member.memberNumber);
                 });
                 suggestionsList.appendChild(suggestionItem);
@@ -60,13 +60,13 @@ export class MembersManager {
           })
           .catch(error => console.error('Error fetching member data:', error));
       } else {
-        suggestionsList.innerHTML = ''; // Limpiar las sugerencias si no hay entrada
+        suggestionsList.innerHTML = '';
       }
     });
 
     document.addEventListener('click', (event) => {
       if (!suggestionsList.contains(event.target) && event.target !== inputFind) {
-        suggestionsList.innerHTML = ''; // Limpiar las sugerencias si se hace clic fuera
+        suggestionsList.innerHTML = '';
       }
     });
 
@@ -250,10 +250,5 @@ export class MembersManager {
   static async updateFee() {
     await FeeManager.paidFee()
   }
-
-  //* busqueda *//
-
-
-
 }
 

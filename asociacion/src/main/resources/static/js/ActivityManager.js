@@ -68,8 +68,8 @@ export class ActivityManager {
       activities.forEach((activity) => {
         activitySel.innerHTML += `
                 <li id="li-activitys-member-${activity.memberId}" data-activity-id="${activity.memberId}">
-                    <button class="delete-button" id="li-button-${activity.memberId}"><i class="fas fa-trash"></i></button>
-                    <label class="text-activity" for="option${activity.memberId}" id="li-label-${activity.memberId}">${activity.memberName} ${activity.memberApellido}</label>
+                    <button class="delete-button" id="li-button-${activity.memberId}" title="Eliminar Socio de la Actividad"><i class="fas fa-trash"></i></button>
+                    <label class="text-activity" for="option${activity.memberId}" id="li-label-${activity.memberId}" title="Pulsar para abrir Socio">${activity.memberName} ${activity.memberApellido}</label>
                 </li>`;
       });
     } catch (error) {

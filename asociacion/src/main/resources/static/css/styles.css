@@ -360,6 +360,16 @@ input[type="checkbox-small"] {
     max-height: 200px;
 }
 
+.input-activity {
+    font-size: 20px;
+    width: 415px;
+    color: blue;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
+
 .suggestions-list {
     list-style-type: none;
     padding: 0;
@@ -372,7 +382,6 @@ input[type="checkbox-small"] {
     width: 100%;
     z-index: 1000;
     top: 100%;
-    /* Colocar debajo del input */
     left: 0;
 }
 
