@@ -49,6 +49,11 @@ export class RequestGet {
 
     }
 
+    static async getAllConfigs() {
+        const url = "/api/configs"
+        return await RequestGet._getRequest(url)
+
+    }
 
 
     static async getActivity(activityId) {

@@ -1,4 +1,5 @@
 import { ActivityManager } from './ActivityManager.js';
+import { ConfigManager } from './ConfigManager.js';
 import { Listeners } from './Listeners.js';
 import { MembersManager } from './MembersManager.js';
 import { ListsManager } from './listsManager.js';
@@ -40,6 +41,17 @@ function initListsIndex() {
         });
 }
 
+function initConfigIndex() {
+    const configManager = new ConfigManager();
+    configManager.init()
+        .then(() => {
+
+        })
+        .catch(error => {
+            console.error('Error initializing:', error);
+        });
+}
+
 function mostrarFecha() {
     const fechaActual = new Date();
     const opciones = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
@@ -48,5 +60,6 @@ function mostrarFecha() {
 }
 
 mostrarFecha()
-export { initActivityIndex, initListsIndex, initMemberIndex };
+
+export { initActivityIndex, initListsIndex, initMemberIndex, initConfigIndex };
 

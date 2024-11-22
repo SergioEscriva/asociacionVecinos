@@ -12,6 +12,7 @@ export class Listeners {
 
     }
 
+
     static setupActivityManagerListeners() {
         const activitySel = document.getElementById("ul-activity-member");
 
@@ -48,8 +49,8 @@ export class Listeners {
                 Utility.delMemberOfActivity(memberId, activityId.value, li);
             } else if (target.tagName === 'LABEL') {
                 const member = await RequestGet.getMemberById(memberId)
-
-                window.location.href = `./memberIndex.html?memberId=${member.memberNumber}`;
+                app.loadContent("memberIndex")
+                //window.location.href = `./memberIndex.html?memberId=${member.memberNumber}`;
             }
         });
     }

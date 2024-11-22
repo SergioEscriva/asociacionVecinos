@@ -1,3 +1,5 @@
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const content = document.getElementById('content');
     const links = document.querySelectorAll('#sidebar a[data-section]');
@@ -40,7 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
         activitiesList: async () => {
             const { initListsIndex } = await import('/js/main.js');
             initListsIndex();
-
+        },
+        configIndex: async () => {
+            const { initConfigIndex } = await import('/js/main.js');
+            initConfigIndex();
         }
 
     };
