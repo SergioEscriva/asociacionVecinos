@@ -48,4 +48,11 @@ export class Utility {
             return
         }
     }
+
+    static async getActivo(active, element) {
+        var checkbox = element
+        checkbox.checked = false
+        if (active == 1)
+            checkbox.checked = true
+    }
 }

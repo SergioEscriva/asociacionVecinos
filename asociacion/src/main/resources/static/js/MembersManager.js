@@ -4,6 +4,7 @@ import { RequestGet } from './RequestGet.js';
 import { FamilyManager } from './FamilyManager.js';
 import { ActivityMemberManager } from './ActivityMemberManager.js';
 import { FeeManager } from './FeeManager.js';
+import { Utility } from './Utility.js';
 
 
 
@@ -131,7 +132,9 @@ export class MembersManager {
       document.getElementById('email').value = member.email;
       document.getElementById('dni').value = member.dni;
       document.getElementById('gender').value = member.gender;
-      document.getElementById('active').value = await this.getActivo(member.active);
+      const active = document.getElementById('active')
+      active.value = await Utility.getActivo(member.active, active);
+
       document.getElementById('notes').value = member.notes;
       FeeManager.checkFee()
       this.inyectOption()
@@ -150,13 +153,6 @@ export class MembersManager {
 
     this.getMemberByNumber(memberNumber)
 
-  }
-
-  static async getActivo(active) {
-    var checkbox = document.getElementById('active');
-    checkbox.checked = false
-    if (active == 1)
-      checkbox.checked = true
   }
 
   static async updateMember() {
