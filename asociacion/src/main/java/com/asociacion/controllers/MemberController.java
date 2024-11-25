@@ -34,6 +34,18 @@ public class MemberController {
 
         return memberService.getMembers();
     }
+    @GetMapping("/byName")
+    public List<Member> getMembersByNames() {
+
+        return memberService.getMembersOrderedByNames();
+    }
+
+    @GetMapping("/byMemberNumber")
+    public List<Member> getMembersByMemberNumber() {
+
+        return memberService.getMembersOrderedByMemberNumber();
+    }
+
 
     @GetMapping("/actives")
     public List<Member> getActives() {
@@ -41,10 +53,34 @@ public class MemberController {
         return memberService.getActives();
     }
 
+    @GetMapping("/actives/byName")
+    public List<Member> getActivesOrderedByName() {
+
+        return memberService.getActivesOrderedByName();
+    }
+
+    @GetMapping("/actives/byMemberNumber")
+    public List<Member> getActivesOrderedByMemberNumber() {
+
+        return memberService.getActivesOrderedByMemberNumber();
+    }
+
     @GetMapping("/inactives")
     public List<Member> getInactives() {
 
         return memberService.getInactives();
+    }
+
+    @GetMapping("/inactives/byName")
+    public List<Member> getInactivesOrderedByName() {
+
+        return memberService.getInactivesOrderedByName();
+    }
+
+    @GetMapping("/inactives/byMemberNumber")
+    public List<Member> getInactivesOrderedByMemberNumber() {
+
+        return memberService.getInactivesOrderedByMemberNumber();
     }
 
     @GetMapping("/number/{number}")
