@@ -50,11 +50,14 @@ export class ListsManager {
   }
 
   getHtmlRowMembers(member) {
+
+    const activeStatus = member.active ? '✓' : 'X';
+
     return `<tr>
                 <td>${member.name} </td>
                 <td>${member.lastName1} ${member.lastName2} </td>
                 <td>${member.memberNumber}</td>
-                <td>${member.active}</td>
+                <td>${activeStatus}</td>
 
             </tr>`;
 
