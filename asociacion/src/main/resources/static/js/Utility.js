@@ -49,9 +49,4 @@ export class Utility {
         }
     }
 
-    static async getActivo(active, element) {
-        element.checked = false
-        if (active == 1)
-            element.checked = true
-    }
 }

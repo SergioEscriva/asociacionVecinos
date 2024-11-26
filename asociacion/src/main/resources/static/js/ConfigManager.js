@@ -14,33 +14,34 @@ export class ConfigManager {
   }
 
   async renderList(configs) {
-    let html = '';
+    let html = ''
     for (let config of configs) {
-      html += this.getHtmlRowConfigs(config);
-      let tbody = document.getElementById('tbody-config');
-      tbody.innerHTML = html;
+      html += this.getHtmlRowConfigs(config)
+    }
+    let tbody = document.getElementById('tbody-config')
+    tbody.innerHTML = html
+
+    for (let config of configs) {
       this.fillInputs(config)
     }
 
   }
 
   getHtmlRowConfigs(config) {
-    console.log(config)
     return `<tr>
-                <td><input type="checkbox" id="active-${config.id}" name="active-${config.id}" checked="${config.active}"></td>
+                <td><input type="checkbox" id="active-${config.id}" name="active-${config.id}"></td>
                 <td>${config.configOption}</td>
-                <td><input type="input-config" id="atributo-${config.id}" name="atributo-${config.id}"></td>
-            </tr>`;
+                <td><input type="input-config" id="atributo-${config.id}" name="atributo-${config.id}" value="${config.attribute}"></td>
+            </tr>`
   }
 
-  async fillInputs(config) {
-    const active = document.getElementById('active-' + config.id)
+  fillInputs(config) {
+    let checkbox = document.getElementById(`active-${config.id}`)
+    if (config.active) {
+      checkbox.checked = true
+    }
 
-    active.checked = config.active === 1
-
-    document.getElementById('atributo-' + config.id).value = config.attribute
   }
-
 }
 
 
