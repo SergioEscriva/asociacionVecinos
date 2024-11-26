@@ -12,6 +12,6 @@ public interface ConfigService {
 
     public List<Config> getConfigs();
 
-    List<Config> findConfigByOption(String option);
+    List<Config> findConfigByOption(String configOption);
 
 }

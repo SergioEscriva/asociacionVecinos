@@ -132,8 +132,8 @@ export class MembersManager {
       document.getElementById('email').value = member.email;
       document.getElementById('dni').value = member.dni;
       document.getElementById('gender').value = member.gender;
-      const active = document.getElementById('active')
-      active.value = await Utility.getActivo(member.active, active);
+      const activeCheckbox = document.getElementById('active')
+      activeCheckbox.checked = member.active === true
 
       document.getElementById('notes').value = member.notes;
       FeeManager.checkFee()

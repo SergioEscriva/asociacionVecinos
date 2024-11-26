@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface ConfigRepository extends JpaRepository<Config, Long> {
 
-    @Query("SELECT a FROM Config a WHERE option LIKE %:option%")
-    List<Config> findConfigByOption(@Param("option") String option);
+    @Query("SELECT a FROM Config a WHERE configOption LIKE %:configOption%")
+    List<Config> findConfigByOption(@Param("configOption") String configOption);
 
 }

@@ -29,8 +29,8 @@ public class ConfigServiceImp implements ConfigService {
     }
 
     @Override
-    public List<Config> findConfigByOption(String option) {
-        return configRepository.findConfigByOption(option);
+    public List<Config> findConfigByOption(String configOption) {
+        return configRepository.findConfigByOption(configOption);
     }
 
 }

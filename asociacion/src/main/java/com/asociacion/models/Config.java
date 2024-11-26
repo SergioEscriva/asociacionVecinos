@@ -1,5 +1,7 @@
 package com.asociacion.models;
 
+import org.hibernate.annotations.SQLInsert;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +19,16 @@ public class Config {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String option;
+    private String configOption;
     private Boolean active;
-    private String notes;
+    private String attribute;
+
+    public Config() {
+    }
+
+    public Config(String configOption, boolean active, String attribute) {
+        this.configOption = configOption;
+        this.active = active;
+        this.attribute = attribute;
+    }
 }
