@@ -18,9 +18,19 @@ export class ActivityManager {
   }
 
   async init() {
-    //Obtener el parámetro activityId de la URL
-    const urlParams = new URLSearchParams(window.location.search);
-    let activityId = urlParams.get('activityId');
+    // Cuando se redirecciona memberIndex desde activityIndex
+    const activityLink = document.querySelector('a[data-section="activityIndex"]');
+    const activityIdByLink = activityLink.getAttribute('data-activity-id');
+    let activityId = 0
+    if (activityIdByLink) {
+      const activity = await RequestGet.getActivityById(activityIdByLink)
+      //ActivityManager.getMemberByNumber(activityNumber.id);
+      activityId = activity.id
+
+    }
+
+
+
     document.getElementById("updateActivity").addEventListener("click", function () { ActivityManager.updateActivity(); });
     document.getElementById("getElementByIdSelected").addEventListener("click", function () { ActivityManager.getMemberByNumber(); });
     document.getElementById("updateActivityMember").addEventListener("click", function () { ActivityManager.updateActivityMember(); });
@@ -53,7 +63,7 @@ export class ActivityManager {
     let activity = "";
     await ActivityManager.limpiaCampos()
     if (activityId) {
-      activity = await RequestGet.getActivity(activityId)
+      activity = await RequestGet.getActivityById(activityId)
     }
     if (activity) {
       document.getElementById('activityId').value = activityId;

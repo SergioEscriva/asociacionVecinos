@@ -31,8 +31,13 @@ export class Listeners {
             if (target.classList.contains('delete-button') || target.closest('.delete-button')) {
                 Utility.delMemberOfActivityMember(memberId, activityIdLong, li);
             } else if (target.tagName === 'LABEL') {
-                window.location.href = `./activityIndex.html?activityId=${activityId}`;
+                const activityLink = document.querySelector('a[data-section="activityIndex"]');
+                if (activityLink) {
+                    activityLink.setAttribute('data-activity-id', activityId)
+                    activityLink.click();
+                }
             }
+
         });
     }
 
@@ -59,6 +64,7 @@ export class Listeners {
         });
     }
 }
+
 
 
 /*Busqueda */

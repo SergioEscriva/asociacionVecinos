@@ -62,7 +62,7 @@ export class RequestGet {
     }
 
 
-    static async getActivity(activityId) {
+    static async getActivityById(activityId) {
         const url = "/api/activity/" + activityId
         return await RequestGet._getRequest(url)
 

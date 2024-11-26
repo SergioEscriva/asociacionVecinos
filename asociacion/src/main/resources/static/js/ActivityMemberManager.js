@@ -103,26 +103,4 @@ export class ActivityMemberManager {
         const match = cadena.match(regex);
         return match ? parseInt(match[0]) : null;
     }
-
-    static setupActivityListeners2() {
-        const activitySel = document.getElementById("ul-activity-member");
-
-        activitySel.addEventListener('click', async (event) => {
-            const target = event.target;
-            const li = target.closest('li');
-            if (!li) return;
-
-            const activityId = li.dataset.activityId;
-            const memberId = document.getElementById('memberId').value;
-            const activities = await RequestGet.getActivitiesByMemberId(memberId)
-            const activityInMember = activities.find(activityOne => activityOne.activityId == activityId)
-            const activityIdLong = activityInMember.idLong
-
-            if (target.classList.contains('delete-button') || target.closest('.delete-button')) {
-                this.delMemberOfActivity(memberId, activityIdLong, li);
-            } else if (target.tagName === 'LABEL') {
-                window.location.href = `./activityIndex.html?activityId=${activityId}`;
-            }
-        });
-    }
 }
