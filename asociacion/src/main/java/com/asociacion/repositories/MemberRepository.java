@@ -12,7 +12,7 @@ import com.asociacion.models.Member;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    @Query("SELECT MAX(m.memberNumber) FROM Member m WHERE m.memberNumber >= 10000")
+    @Query("SELECT MAX(m.memberNumber) FROM Member m WHERE m.memberNumber >= :threshold")
     Long findMaxMemberNumberAbove(Long threshold);
 
     @Query("SELECT m FROM Member m WHERE m.active = true")

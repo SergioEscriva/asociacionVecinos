@@ -24,7 +24,7 @@ export class MembersManager {
       MembersManager.getMemberByNumber(memberNumber.memberNumber);
     }
 
-    //TODO para pruebas
+    //TODO solo para pruebas
     if (!memberNumber) {
       MembersManager.getMemberByNumber(10002);
     }
@@ -166,7 +166,7 @@ export class MembersManager {
   static async updateMember() {
     try {
       const memberId = document.getElementById('memberId').value
-      const memberNumber = document.getElementById('memberNumber').value
+      let memberNumber = document.getElementById('memberNumber').value
       const name = document.getElementById('name').value
       const lastName1 = document.getElementById('lastName1').value
       const lastName2 = document.getElementById('lastName2').value
@@ -211,11 +211,13 @@ export class MembersManager {
       let request;
       if (!memberId) {
         request = await RequestPost.newMember(memberUpdate);
-        await FamilyManager.createFamily(request.memberNumber)
+        memberNumber = request.memberNumber
+        await FamilyManager.createFamily(memberNumber)
       } else {
         request = await RequestPut.editMember(memberId, memberUpdate);
         await FamilyManager.updateFamily(memberNumber)
       }
+      MembersManager.getMemberByNumber(memberNumber);
       return request;
 
     } catch (error) {

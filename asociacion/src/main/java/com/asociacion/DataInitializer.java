@@ -20,5 +20,6 @@ public class DataInitializer implements CommandLineRunner {
             configRepository.save(new Config("Número Socio Inicial", false, "10000"));
             configRepository.save(new Config("Atributo Socio", true, "Agrupado/a"));
         }
+
     }
 }
