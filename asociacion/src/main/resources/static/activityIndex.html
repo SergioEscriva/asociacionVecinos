@@ -104,16 +104,17 @@
                             <form
                                 class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                                 <div class="input-group-append">
-                                    <input type="text" class=border-0 small" placeholder="Añadir Socio..."
-                                        aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput">
+                                    <input type="text" class="border-0 small" id="placeholderActivity"
+                                        placeholder="Añadir..." aria-label="Search" aria-describedby="basic-addon2"
+                                        id="memberIdInput">
 
                                     <button class="btn btn-primary" type="button" id="getElementByIdSelected"
-                                        title="Buscar Socio">
+                                        title="Buscar">
                                         <i class="fas fa-search fa-sm"></i>
                                     </button>
 
                                     <button class="btn btn-primary" type="button" id="updateActivityMember"
-                                        title="Añadir Socio a Actividad">
+                                        title="Añadir a actividad">
                                         <i class="fas fa-download"></i>
                                     </button>
 
@@ -136,7 +137,7 @@
                 </div>
 
                 <div class="container-activity">
-                    <h2>Lista Socios</h2>
+                    <h2 id="h2ActivityMembers">Lista Socios</h2>
                     <div class="list-group">
                         <ul id="ul-members-activity" class="list-horizontal">
 

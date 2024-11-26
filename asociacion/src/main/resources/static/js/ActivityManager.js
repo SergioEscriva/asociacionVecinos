@@ -25,6 +25,12 @@ export class ActivityManager {
     document.getElementById("getElementByIdSelected").addEventListener("click", function () { ActivityManager.getMemberByNumber(); });
     document.getElementById("updateActivityMember").addEventListener("click", function () { ActivityManager.updateActivityMember(); });
 
+    const memberAttribute = await RequestGet.getConfigById(3)
+    document.getElementById('placeholderActivity').placeholder = "Añadir " + memberAttribute.attribute;
+    document.getElementById('h2ActivityMembers').textContent = "Lista de " + memberAttribute.attribute + "(s)";
+
+
+
     Listeners.setupActivityListeners();
     ActivityManager.inyectOption(activityId)
     ActivityManager.getActivityById(activityId);
