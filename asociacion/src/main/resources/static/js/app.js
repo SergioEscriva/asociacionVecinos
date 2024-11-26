@@ -1,5 +1,4 @@
 
-
 document.addEventListener('DOMContentLoaded', () => {
     const content = document.getElementById('content');
     const links = document.querySelectorAll('#sidebar a[data-section]');

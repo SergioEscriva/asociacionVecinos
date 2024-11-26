@@ -1,31 +1,34 @@
-import { RequestPut } from './RequestPut.js';
-import { RequestPost } from './RequestPost.js';
-import { RequestGet } from './RequestGet.js';
-import { FamilyManager } from './FamilyManager.js';
 import { ActivityMemberManager } from './ActivityMemberManager.js';
+import { FamilyManager } from './FamilyManager.js';
 import { FeeManager } from './FeeManager.js';
-import { Utility } from './Utility.js';
-
-
-
+import { RequestGet } from './RequestGet.js';
+import { RequestPost } from './RequestPost.js';
+import { RequestPut } from './RequestPut.js';
 
 export class MembersManager {
   constructor() {
-
   }
 
   async init() {
-    //Obtener el parámetro activityId de la URL
-    const urlParams = new URLSearchParams(window.location.search);
-    let memberNumber = urlParams.get('memberId');
 
     // Variables Config
     MembersManager.memberAttribute = await RequestGet.getConfigById(3)
+    let memberNumber = null
 
-    if (!memberNumber) {
-      memberNumber = 10002
+    // Cuando se redirecciona memberIndex desde activityIndex
+    const memberLink = document.querySelector('a[data-section="memberIndex"]');
+    const memberIdByLink = memberLink.getAttribute('data-member-id');
+
+    if (memberIdByLink) {
+      memberNumber = await RequestGet.getMemberById(memberIdByLink)
+      MembersManager.getMemberByNumber(memberNumber.memberNumber);
     }
-    MembersManager.getMemberByNumber(memberNumber);
+
+    //TODO para pruebas
+    if (!memberNumber) {
+      MembersManager.getMemberByNumber(10002);
+    }
+
 
     document.getElementById("findMemberXS").addEventListener("click", function () { MembersManager.findMember("xs"); });
     document.getElementById("updateMember").addEventListener("click", function () { MembersManager.updateMember(); });
@@ -34,8 +37,6 @@ export class MembersManager {
     const buttonFee = document.getElementById("updateFee")
     buttonFee.addEventListener("click", function () { MembersManager.updateFee(); });
     buttonFee.textContent = "¿Deudas?"
-
-
 
     const inputFind = document.getElementById('input-find');
     const suggestionsList = document.getElementById('suggestions');
@@ -114,14 +115,14 @@ export class MembersManager {
     await this.limpiaCampos()
 
     // Variables config
-    document.getElementById('labelMemberNumber').textContent = "Número " + MembersManager.memberAttribute.attribute;
+    document.getElementById('labelMemberNumber').textContent = "N.º " + MembersManager.memberAttribute.attribute;
     document.getElementById('titleMemberPage').textContent = "Ficha " + MembersManager.memberAttribute.attribute;
 
     const member = await RequestGet.getMemberByMemberNumber(memberNumber)
     if (member <= 0) {
       return
     } else if (!member) {
-      alert("El socio " + memberNumber + " no existe")
+      alert("El " + MembersManager.memberAttribute.attribute + " " + memberNumber + " no existe")
       return
     } else {
       document.getElementById('memberId').value = member.id;

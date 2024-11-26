@@ -1,5 +1,6 @@
 import { RequestGet } from "./RequestGet.js";
 import { Utility } from "./Utility.js";
+import { MembersManager } from "./MembersManager.js";
 
 export class Listeners {
     constructor() {
@@ -48,12 +49,17 @@ export class Listeners {
             if (target.classList.contains('delete-button') || target.closest('.delete-button')) {
                 Utility.delMemberOfActivity(memberId, activityId.value, li);
             } else if (target.tagName === 'LABEL') {
-                const member = await RequestGet.getMemberById(memberId)
-                app.loadContent("memberIndex")
-                //window.location.href = `./memberIndex.html?memberId=${member.memberNumber}`;
+
+                const memberLink = document.querySelector('a[data-section="memberIndex"]');
+                if (memberLink) {
+                    memberLink.setAttribute('data-member-id', memberId)
+                    memberLink.click();
+                }
             }
         });
     }
 }
+
+
 /*Busqueda */
 
