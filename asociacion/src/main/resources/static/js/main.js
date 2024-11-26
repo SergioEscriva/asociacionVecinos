@@ -3,6 +3,7 @@ import { ConfigManager } from './ConfigManager.js';
 import { Listeners } from './Listeners.js';
 import { MembersManager } from './MembersManager.js';
 import { ListsManager } from './listsManager.js';
+import { RequestGet } from './RequestGet.js';
 
 
 
@@ -60,6 +61,15 @@ function mostrarFecha() {
 }
 
 mostrarFecha()
+
+// Variables config
+
+const memberAttribute = await RequestGet.getConfigById(3)
+document.getElementById('button1').textContent = "Todos los " + memberAttribute.attribute + "(s)";
+document.getElementById('button2').textContent = memberAttribute.attribute + "(s) activo/a(s)";
+document.getElementById('button3').textContent = memberAttribute.attribute + "(s) inactivo/a(s)";
+
+
 
 export { initActivityIndex, initListsIndex, initMemberIndex, initConfigIndex };
 
