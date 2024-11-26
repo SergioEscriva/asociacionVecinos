@@ -55,6 +55,12 @@ export class RequestGet {
 
     }
 
+    static async getConfigById(configId) {
+        const url = "/api/configs/" + configId
+        return await RequestGet._getRequest(url)
+
+    }
+
 
     static async getActivity(activityId) {
         const url = "/api/activity/" + activityId

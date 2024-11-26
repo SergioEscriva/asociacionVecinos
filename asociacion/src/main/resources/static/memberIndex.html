@@ -53,8 +53,7 @@
 
                             <!-- Otros elementos del nav -->
                             <div class="input-container">
-                                <input type="input-find" id="input-find" class="input-find"
-                                    placeholder="Buscar Socio...">
+                                <input type="input-find" id="input-find" class="input-find" placeholder="Buscar...">
                             </div>
 
                             <ul id="suggestions" class="suggestions-list"></ul>
@@ -98,10 +97,10 @@
                     <img src="img/mislata.png" alt="Valencia Street" class="background-image">
 
                     <form method="post">
-                        <h2>Ficha Socio</h2>
+                        <h2 id="titleMemberPage"></h2>
 
                         <div class="input-group">
-                            <label for="active">Miembro Activo:</label>
+                            <label for="active">Activo:</label>
                             <input type="checkbox" id="active" name="active">
 
                             <button class="buttonFee" id="updateFee" type="button" title="Pulsar para cambiar"></button>
@@ -110,7 +109,7 @@
                             <label for="memberId">Member Id:</label>
                             <input type="number" id="memberId" name="memberId">
 
-                            <label for="memberNumber">Número Socio:</label>
+                            <label id="labelMemberNumber" for="memberNumber"></label>
                             <input type="number" id="memberNumber" name="memberNumber">
 
                             <label for="familyMasterNumber">Familia:</label>

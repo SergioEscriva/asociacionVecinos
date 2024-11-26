@@ -19,6 +19,9 @@ export class MembersManager {
     const urlParams = new URLSearchParams(window.location.search);
     let memberNumber = urlParams.get('memberId');
 
+    // Variables Config
+    MembersManager.memberAttribute = await RequestGet.getConfigById(3)
+
     if (!memberNumber) {
       memberNumber = 10002
     }
@@ -109,6 +112,10 @@ export class MembersManager {
 
   static async getMemberByNumber(memberNumber) {
     await this.limpiaCampos()
+
+    // Variables config
+    document.getElementById('labelMemberNumber').textContent = "Número " + MembersManager.memberAttribute.attribute;
+    document.getElementById('titleMemberPage').textContent = "Ficha " + MembersManager.memberAttribute.attribute;
 
     const member = await RequestGet.getMemberByMemberNumber(memberNumber)
     if (member <= 0) {
