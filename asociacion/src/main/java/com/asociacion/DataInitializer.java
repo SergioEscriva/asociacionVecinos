@@ -16,8 +16,8 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (configRepository.count() == 0) {
-            configRepository.save(new Config("Nombre Organización", true, "Agrupación Mislata"));
-            configRepository.save(new Config("Número Socio Inicial", false, "10000"));
+            configRepository.save(new Config("Nombre Organización", true, "Agrupación Vecinal"));
+            configRepository.save(new Config("Número Socio Inicial", true, "0"));
             configRepository.save(new Config("Atributo Socio", true, "Agrupado/a"));
         }
 

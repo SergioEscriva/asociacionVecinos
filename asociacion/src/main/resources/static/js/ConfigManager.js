@@ -11,6 +11,15 @@ export class ConfigManager {
     const response = await RequestGet.getAllConfigs()
     this.renderList(response)
 
+    // document.addEventListener('DOMContentLoaded', function () {
+    // const inputs = document.querySelectorAll('input[id^="atributo-"]');
+    // inputs.forEach(input => {
+    // input.addEventListener('blur', function () {
+    //  ConfigManager.showInputValue(this);
+    //  });
+    // });
+    // });
+
   }
 
   async renderList(configs) {
@@ -22,7 +31,11 @@ export class ConfigManager {
     tbody.innerHTML = html
 
     for (let config of configs) {
-      this.fillInputs(config)
+      this.fillInputs(config);
+      const input = document.getElementById(`atributo-${config.id}`);
+      input.addEventListener('blur', function () {
+        ConfigManager.showInputValue(this);
+      });
     }
 
   }
@@ -31,7 +44,7 @@ export class ConfigManager {
     return `<tr>
                 <td><input type="checkbox" id="active-${config.id}" name="active-${config.id}"></td>
                 <td>${config.configOption}</td>
-                <td><input type="input-config" id="atributo-${config.id}" name="atributo-${config.id}" value="${config.attribute}"></td>
+                <td><input type="text" id="atributo-${config.id}" name="atributo-${config.id}" value="${config.attribute}"></td>
             </tr>`
   }
 
@@ -42,7 +55,14 @@ export class ConfigManager {
     }
 
   }
+
+  static showInputValue(input) {
+    if (!input.hasShownAlert) {
+      alert("Valor introducido: " + input.value);
+      input.hasShownAlert = true;
+    }
+  }
+
+
+
 }
-
-
-
