@@ -153,7 +153,7 @@ export class ActivityManager {
   }
 
   static async getMemberByNumber() {
-    const memberNumber = document.getElementById('memberIdInput').value
+    const memberNumber = document.getElementById('placeholderActivity').value
     //ActivityManager.limpiaCampos()
 
     const member = await RequestGet.getMemberByNumber(memberNumber)

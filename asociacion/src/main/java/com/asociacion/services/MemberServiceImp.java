@@ -1,16 +1,15 @@
 package com.asociacion.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.asociacion.models.Family;
-import com.asociacion.models.Member;
-import com.asociacion.repositories.MemberRepository;
+import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.asociacion.models.Member;
+import com.asociacion.repositories.MemberRepository;
 
 @Service
 public class MemberServiceImp implements MemberService {

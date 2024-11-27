@@ -50,7 +50,7 @@ export class ActivityMemberManager {
     }
 
     static async createActivityMember(activityId, memberId) {
-        const activity = await RequestGet.getActivity(activityId)
+        const activity = await RequestGet.getActivityById(activityId)
         const activities = await RequestGet.getActivitiesByMemberId(memberId)
         const activityExistInMember = activities.some(activityOne => activityOne.activityId == activityId)
 
@@ -67,6 +67,8 @@ export class ActivityMemberManager {
             try {
                 await RequestPost.newActivityMember(request)
                 alert("Añadido a " + activity.name)
+                ActivityMemberManager.limpiaCamposActividad()
+                return
             } catch (error) {
                 console.error("Error añadiendo ActivityMember:", error)
                 alert("Error al añadir socio a la actividad. Por favor, intente de nuevo.");
@@ -86,6 +88,7 @@ export class ActivityMemberManager {
             try {
                 await RequestDel.delActivityMember(activityIdLong);
                 li.remove();
+                ActivityMemberManager.limpiaCamposActividad();
                 //this.getActivitiesByMemberId(memberId)
             } catch (error) {
                 console.error("Error al eliminar la actividad:", error);
@@ -97,6 +100,14 @@ export class ActivityMemberManager {
         await ActivityMemberManager.getActivitiesByMemberId(memberId)
     }
 
+    static async limpiaCamposActividad() {
+        const activitySel = document.getElementById("ul-activity-member");
+        if (activitySel) {
+            const oldListener = activitySel.onclick;
+            activitySel.removeEventListener('click', oldListener);
+            activitySel.innerHTML = "";
+        }
+    }
 
     static extraerUltimoNumero(cadena) {
         const regex = /\d+$/;
