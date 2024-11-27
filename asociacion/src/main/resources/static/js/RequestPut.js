@@ -47,9 +47,24 @@ export class RequestPut {
           'Content-Type': 'application/json'
         }
       };
-      // Devuelve la respuesta en formato JSON
-      alert("Cambios Guardados")
       return await RequestPut._putRequest(`/api/members/${memberId}`, response);
+    } catch (error) {
+      console.error('Error en la solicitud PUT:', error);
+      throw error;
+    }
+  }
+
+  static async editConfig(configId, configUpdate) {
+
+    try {
+      const response = {
+        method: "PUT",
+        body: JSON.stringify(configUpdate),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      return await RequestPut._putRequest(`/api/configs/${configId}`, response);
     } catch (error) {
       console.error('Error en la solicitud PUT:', error);
       throw error;

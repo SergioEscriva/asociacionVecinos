@@ -1,5 +1,5 @@
 import { RequestGet } from './RequestGet.js';
-import { Utility } from './Utility.js';
+import { RequestPut } from './RequestPut.js';
 
 export class ConfigManager {
 
@@ -34,7 +34,7 @@ export class ConfigManager {
       this.fillInputs(config);
       const input = document.getElementById(`atributo-${config.id}`);
       input.addEventListener('blur', function () {
-        ConfigManager.showInputValue(this);
+        ConfigManager.showInputValue(this, config);
       });
     }
 
@@ -44,7 +44,7 @@ export class ConfigManager {
     return `<tr>
                 <td><input type="checkbox" id="active-${config.id}" name="active-${config.id}"></td>
                 <td>${config.configOption}</td>
-                <td><input type="text" id="atributo-${config.id}" name="atributo-${config.id}" value="${config.attribute}"></td>
+                <td><input type="input-config" id="atributo-${config.id}" name="atributo-${config.id}" value="${config.attribute}"></td>
             </tr>`
   }
 
@@ -56,13 +56,26 @@ export class ConfigManager {
 
   }
 
-  static showInputValue(input) {
+  static showInputValue(input, config) {
     if (!input.hasShownAlert) {
-      alert("Valor introducido: " + input.value);
-      input.hasShownAlert = true;
+      if (input.value != config.attribute) {
+        alert("Nuevo valor introducido: " + input.value);
+        this.updateConfig(input, config)
+        input.hasShownAlert = true;
+      }
     }
   }
 
+  static async updateConfig(input, config) {
+    const configId = config.id
 
+    const configUpdate = {
+      configId: configId,
+      configOption: config.configOption,
+      active: config.active,
+      attribute: input.value
+    }
+    await RequestPut.editConfig(configId, configUpdate)
+  }
 
 }
