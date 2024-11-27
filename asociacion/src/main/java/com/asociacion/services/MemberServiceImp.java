@@ -37,12 +37,42 @@ public class MemberServiceImp implements MemberService {
         return memberRepository.findAll();
     }
 
+    @Override
+    public List<Member> getMembersOrderedByNames() {
+        return memberRepository.findAllOrderedByNames();
+    }
+
+    @Override
+    public List<Member> getMembersOrderedByMemberNumber() {
+        return memberRepository.findAllOrderedByMemberNumber();
+    }
+
     public List<Member> getActives() {
         return memberRepository.findActives();
     }
 
+    @Override
+    public List<Member> getActivesOrderedByName() {
+        return memberRepository.findActivesOrderedByName();
+    }
+
+    @Override
+    public List<Member> getActivesOrderedByMemberNumber() {
+        return memberRepository.findActivesOrderedByMemberNumber();
+    }
+
     public List<Member> getInactives() {
         return memberRepository.findInactives();
+    }
+
+    @Override
+    public List<Member> getInactivesOrderedByName() {
+        return memberRepository.findInactivesOrderedByName();
+    }
+
+    @Override
+    public List<Member> getInactivesOrderedByMemberNumber() {
+        return memberRepository.findInactivesOrderedByMemberNumber();
     }
 
     public Optional<Member> findByMemberNumber(Long memberNumber) {
