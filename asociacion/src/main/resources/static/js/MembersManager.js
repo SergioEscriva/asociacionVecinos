@@ -141,13 +141,30 @@ export class MembersManager {
       document.getElementById('dni').value = member.dni;
       document.getElementById('gender').value = member.gender;
       const activeCheckbox = document.getElementById('active')
-      activeCheckbox.checked = member.active === true
+      this.checkActive(activeCheckbox, member)
 
       document.getElementById('notes').value = member.notes;
       FeeManager.checkFee()
       this.inyectOption()
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
     }
+  }
+
+
+  static async checkActive(element, member) {
+    const registrys = await RequestGet.getRegistryByMemberId(member.id)
+    const inActive = registrys.some(item => item.endData === null)
+    const feesMember = await RequestGet.getFeeByMemberId(member.id)
+    const actualYear = new Date().getFullYear()
+    const configYearsForInactive = await RequestGet.getConfigById(4)
+    const yearsForInactive = actualYear - configYearsForInactive.attribute;
+    const existActualFee = feesMember.some(item => item.year >= yearsForInactive);
+
+    element.checked = false
+    if (inActive & existActualFee) {
+      element.checked = true
+    }
+    element.dataset.memberbyId = member.id
   }
 
 
