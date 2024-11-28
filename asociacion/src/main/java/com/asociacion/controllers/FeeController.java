@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.asociacion.Utils.Utils;
 import com.asociacion.models.Fee;
 import com.asociacion.services.FeeServiceImp;
 
@@ -25,29 +27,40 @@ public class FeeController {
     @Autowired
     private FeeServiceImp feeService;
 
+    @Autowired
+    Utils utils;
+
     @GetMapping()
     public List<Fee> getFees() {
         return feeService.getFees();
     }
 
     @GetMapping("/{id}")
-    public List<Fee> getFeeById(@PathVariable Long id) {
+    public Optional<Fee> getFeeById(@PathVariable Long id) {
+        return feeService.findFeeById(id);
+    }
+
+    @GetMapping("/member/{id}")
+    public List<Fee> getFeeByMemberId(@PathVariable Long id) {
         return feeService.findByMemberId(id);
     }
 
     @PostMapping
     public ResponseEntity<Fee> createFee(@RequestBody Fee fee) {
         Fee savedFee = feeService.saveFee(fee);
+        utils.checkInactiveNotFee(savedFee.getId());
         return new ResponseEntity<>(savedFee, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     public void delFeeById(@PathVariable Long id) {
+        utils.checkInactiveNotFee(id);
         feeService.delFeeById(id);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Fee> updateFee(@PathVariable Long id, @RequestBody Fee fee) {
+        utils.checkInactiveNotFee(fee.getId());
         return null;
     }
 

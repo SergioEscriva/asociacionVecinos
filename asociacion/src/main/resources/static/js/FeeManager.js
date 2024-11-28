@@ -11,17 +11,27 @@ export class FeeManager {
 
 
     static async checkFee() {
+
+
         const button = document.getElementById('updateFee')
         const currentYear = new Date().getFullYear();
         const memberId = document.getElementById('memberId').value
-        const feesMember = await RequestGet.getFeeMember(memberId)
+        const feesMember = await RequestGet.getFeeByMemberId(memberId)
+
+        const member = await RequestGet.getMemberById(memberId);
+        const checkFee = document.getElementById('active');
+
+
         const exist = feesMember.some(item => item.year === currentYear); // || item.date.startsWith('2023'));
+
         if (exist) {
             button.classList = 'buttonFee button-green'
             button.textContent = "Sin Deudas"
+            checkFee.checked = member.active === true;
         } else {
             button.classList = 'buttonFee button-red'
             button.textContent = "Con Deudas"
+            checkFee.checked = member.active === false;
         }
     }
     static async paidFee() {
@@ -29,7 +39,7 @@ export class FeeManager {
         const currentDate = new Date();
 
         const memberId = document.getElementById('memberId').value
-        const feesMember = await RequestGet.getFeeMember(memberId)
+        const feesMember = await RequestGet.getFeeByMemberId(memberId)
 
         try {
             const exist = feesMember.some(item => item.year === currentYear); // || item.date.startsWith('2023'));
@@ -74,10 +84,9 @@ export class FeeManager {
                         date: currentDate,
                         year: yearToUpdate
                     };
-                    const button = document.getElementById('updateFee');
-                    button.classList = 'buttonFee button-green';
-                    button.textContent = "Sin Deudas";
-                    RequestPost.newFee(feeUpdate);
+
+                    await RequestPost.newFee(feeUpdate);
+                    this.checkFee()
 
                 }
             } catch (error) {

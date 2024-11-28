@@ -33,7 +33,6 @@ public class MemberServiceImp implements MemberService {
     }
 
     public List<Member> getMembers() {
-
         return memberRepository.findAll();
     }
 

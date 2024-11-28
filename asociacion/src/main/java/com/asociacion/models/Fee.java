@@ -23,6 +23,6 @@ public class Fee {
 
     @Temporal(TemporalType.DATE)
     private Date date; // "2024-11-12"
-    private Long year;
+    private int year;
 
 }

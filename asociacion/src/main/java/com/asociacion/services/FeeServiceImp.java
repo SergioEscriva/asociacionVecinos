@@ -1,6 +1,7 @@
 package com.asociacion.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,22 +15,31 @@ public class FeeServiceImp implements FeeService {
     @Autowired
     private FeeRepository feeRepository;
 
+    @Override
     public Fee saveFee(Fee fee) {
         return feeRepository.save(fee);
     }
 
+    @Override
     public List<Fee> findByMemberId(Long memberId) {
         return feeRepository.findByMemberId(memberId);
     }
 
+    @Override
     public List<Fee> getFees() {
 
         return feeRepository.findAll();
     }
 
+    @Override
     public void delFeeById(Long id) {
         feeRepository.deleteById(id);
 
+    }
+
+    @Override
+    public Optional<Fee> findFeeById(Long id) {
+        return feeRepository.findById(id);
     }
 
 }
