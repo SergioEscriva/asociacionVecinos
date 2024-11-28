@@ -12,7 +12,6 @@ export class FeeManager {
 
     static async checkFee() {
 
-
         const button = document.getElementById('updateFee')
         const currentYear = new Date().getFullYear();
         const memberId = document.getElementById('memberId').value

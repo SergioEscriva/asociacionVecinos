@@ -1,6 +1,7 @@
 import { RequestGet } from "./RequestGet.js";
+import { RequestPost } from "./RequestPost.js";
 import { Utility } from "./Utility.js";
-import { MembersManager } from "./MembersManager.js";
+import { RegistryManager } from "./RegistryManager.js";
 
 export class Listeners {
     constructor() {
@@ -10,9 +11,25 @@ export class Listeners {
 
     static async init() {
         this.setupActivityManagerListeners()
+        this.setupCheckActiveManagerListeners()
 
     }
 
+    static setupCheckActiveManagerListeners() {
+
+        const activeSel = document.getElementById("active")
+        activeSel.addEventListener('click', async (event) => {
+            const checkedStatus = event.target.checked
+            const checkbox = document.querySelector('input[data-memberby-id]');
+            const memberId = checkbox.getAttribute('data-memberby-id');
+
+            if (checkedStatus) {
+                RegistryManager.checkActivityTrue(memberId)
+            } else {
+                RegistryManager.checkActivityFalse(memberId)
+            }
+        });
+    }
 
     static setupActivityManagerListeners() {
         const activitySel = document.getElementById("ul-activity-member");
@@ -21,7 +38,6 @@ export class Listeners {
             const target = event.target;
             const li = target.closest('li');
             if (!li) return;
-
             const activityId = li.dataset.activityId;
             const memberId = document.getElementById('memberId').value;
             const activities = await RequestGet.getActivitiesByMemberId(memberId)

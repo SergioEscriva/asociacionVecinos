@@ -101,10 +101,17 @@ export class RequestGet {
     static async oneFamilyCheck(memberNumber, familyMasterNumber) {
         const url = "api/family/check/" + memberNumber + "/" + familyMasterNumber
         return await RequestGet._getRequest(url)
-
     }
 
+    static async checkActivity(checkedStatus) {
+        const url = "api/registry/" + checkedStatus
+        return await RequestGet._getRequest(url)
+    }
 
+    static async getRegistryByMemberId(memberId) {
+        const url = "/api/registry/member/" + memberId
+        return await RequestGet._getRequest(url)
+    }
 
 
 

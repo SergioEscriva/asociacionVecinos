@@ -71,6 +71,23 @@ export class RequestPut {
     }
   }
 
+  static async editRegistry(registryId, registryUpdate) {
+
+    try {
+      const response = {
+        method: "PUT",
+        body: JSON.stringify(registryUpdate),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      return await RequestPut._putRequest(`/api/registry/${registryId}`, response);
+    } catch (error) {
+      console.error('Error en la solicitud PUT:', error);
+      throw error;
+    }
+  }
+
   static async _putRequest(url, data) {
     try {
       const response = await fetch(url, data);

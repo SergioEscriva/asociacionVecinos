@@ -93,6 +93,24 @@ export class RequestPost {
     }
   }
 
+  static async newRegistry(registryUpdate) {
+
+    try {
+      const response = {
+        method: "POST",
+        body: JSON.stringify(registryUpdate),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      // Devuelve la respuesta en formato JSON
+      return await RequestPost._postRequest(`/api/registry`, response);
+    } catch (error) {
+      console.error('Error en la solicitud POST:', error);
+      throw error;
+    }
+  }
+
   static async _postRequest(url, data) {
     try {
       const response = await fetch(url, data);

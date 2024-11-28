@@ -1,5 +1,6 @@
 package com.asociacion.models;
 
+import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,9 +18,9 @@ public class Registry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long idMember;
-    private Long startData;
-    private Long endData;
-    private String reasonEnd; //en código "Fallecido", "Personal" etc
-    
+    private Long memberId;
+    private Date startData; // "2024-11-12"
+    private Date endData;
+    private String reasonEnd; // en código "Fallecido", "Personal" etc
+
 }
