@@ -45,17 +45,17 @@ export class ListsManager {
   async renderList(members) {
     let html = '';
     for (let member of members) {
-      html += this.getHtmlRowMembers(member);
+      html += await this.getHtmlRowMembers(member);
     }
 
     let tbody = document.getElementById('tbody-member');
     tbody.innerHTML = html;
   }
 
-  getHtmlRowMembers(member) {
+  async getHtmlRowMembers(member) {
 
     const activeStatus = member.active ? '✓' : 'X';
-    const lastPaidYear =  this.getLastPaidYear(member.memberNumber)
+    const lastPaidYear =  await this.getLastPaidYear(member.id)
 
     return `<tr>
                 <td>${member.name} </td>
@@ -68,15 +68,26 @@ export class ListsManager {
 
   }
 
-  async getLastPaidYear(memberNumber){
-    let response = "";
+  async getLastPaidYear(memberid){
     
-    //El método getFeeByMemberNumber aún no existe. (Crear en RequestGet y en el back)
-    response =  await RequestGet.getFeeByMemberNumber(memberNumber);
-   
-    //Falta dejar solo el último año
-      return response.year;
     
+    
+    let response = await RequestGet.getFeeMember(memberid);
+    
+    // Verificamos si la respuesta es un arreglo y si tiene elementos
+    if (Array.isArray(response) && response.length > 0) {
+      // Buscamos el objeto que coincida con el `memberId`
+      const memberRecord = response.find(record => record.memberId === memberid);
+      
+      // Si encontramos un registro, devolvemos el 'year'
+      if (memberRecord && memberRecord.year) {
+        return memberRecord.year;
+      } else {
+        return "-"; // Si no hay 'year' en el registro, devolvemos "-"
+      }
+    } else {
+      return "-"; // Si la respuesta no es válida o está vacía, devolvemos "-"
+    }
   
 
 
