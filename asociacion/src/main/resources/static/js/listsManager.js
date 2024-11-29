@@ -36,6 +36,9 @@ export class ListsManager {
         const responseCount = ListsManager.countActivities(response)
         this.renderActivityList(responseCount)
         break;
+      case 'button5':
+        title.textContent = 'Listado de Impagos'
+        
     }
   }
 
