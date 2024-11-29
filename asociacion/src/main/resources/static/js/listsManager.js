@@ -55,16 +55,33 @@ export class ListsManager {
   getHtmlRowMembers(member) {
 
     const activeStatus = member.active ? '✓' : 'X';
+    const lastPaidYear =  this.getLastPaidYear(member.memberNumber)
 
     return `<tr>
                 <td>${member.name} </td>
                 <td>${member.lastName1} ${member.lastName2} </td>
                 <td>${member.memberNumber}</td>
                 <td>${activeStatus}</td>
+                <td>${lastPaidYear}</td>
 
             </tr>`;
 
   }
+
+  async getLastPaidYear(memberNumber){
+    let response = "";
+    
+    //El método getFeeByMemberNumber aún no existe. (Crear en RequestGet y en el back)
+    response =  await RequestGet.getFeeByMemberNumber(memberNumber);
+   
+    //Falta dejar solo el último año
+      return response.year;
+    
+  
+
+
+  }
+
 
   renderActivityList(activities) {
     let html = '';
