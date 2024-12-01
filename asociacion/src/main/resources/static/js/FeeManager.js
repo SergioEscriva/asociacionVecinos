@@ -122,4 +122,8 @@ export class FeeManager {
 
     }
 
+    static async paidFeeList(memberId) {
+        return await RequestGet.getFeeByMemberId(memberId)
+    }
+
 }

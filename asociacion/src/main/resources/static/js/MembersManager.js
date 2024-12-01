@@ -25,9 +25,9 @@ export class MembersManager {
       MembersManager.getMemberByNumber(memberNumber.memberNumber);
     }
 
-    //TODO solo para pruebas
+
     if (!memberNumber) {
-      MembersManager.getMemberByNumber(10002);
+      MembersManager.getMemberByNumber(10002); //TODO solo para pruebas, debe ser 0
     }
 
 
@@ -144,8 +144,11 @@ export class MembersManager {
       const activeCheckbox = document.getElementById('active')
       this.checkActive(activeCheckbox, member)
 
+
       document.getElementById('notes').value = member.notes;
       FeeManager.checkFee()
+      const buttonFee = document.getElementById("updateFee")
+      buttonFee.title = await MembersManager.updateFeeTitle(member.id)
       this.inyectOption()
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
     }
@@ -276,5 +279,13 @@ export class MembersManager {
   static async updateFee() {
     await FeeManager.paidFee()
   }
-}
 
+  static async updateFeeTitle(memberId) {
+    const listFees = await FeeManager.paidFeeList(memberId)
+    let text = "Pagados años: ";
+    for (let x in listFees) {
+      text += " - " + listFees[x].year;
+    }
+    return text
+  }
+}

@@ -27,7 +27,6 @@ export class RegistryManager {
     static async activeMemberStart(memberId) {
         const currentDate = new Date();
         const registryExist = await this.activeMemberRegistry(memberId)
-        console.log(registryExist, "00000000000000000000000")
         if (!registryExist) {
             const registry = {
                 memberId: memberId,
