@@ -1,5 +1,6 @@
 import { ActivityMemberManager } from './ActivityMemberManager.js';
 import { FamilyManager } from './FamilyManager.js';
+import { RegistryManager } from './RegistryManager.js';
 import { FeeManager } from './FeeManager.js';
 import { RequestGet } from './RequestGet.js';
 import { RequestPost } from './RequestPost.js';
@@ -229,7 +230,9 @@ export class MembersManager {
       if (!memberId) {
         request = await RequestPost.newMember(memberUpdate);
         memberNumber = request.memberNumber
+        const newMemberId = request.id
         await FamilyManager.createFamily(memberNumber)
+        await RegistryManager.activeMemberStart(newMemberId)
       } else {
         request = await RequestPut.editMember(memberId, memberUpdate);
         await FamilyManager.updateFamily(memberNumber)

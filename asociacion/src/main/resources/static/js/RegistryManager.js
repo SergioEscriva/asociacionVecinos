@@ -26,8 +26,8 @@ export class RegistryManager {
 
     static async activeMemberStart(memberId) {
         const currentDate = new Date();
-        const registryExist = await activeMemberRegistry(memberId)
-
+        const registryExist = await this.activeMemberRegistry(memberId)
+        console.log(registryExist, "00000000000000000000000")
         if (!registryExist) {
             const registry = {
                 memberId: memberId,
@@ -35,14 +35,12 @@ export class RegistryManager {
                 endData: null,
                 reasonEnd: null
             }
+            RequestPost.newRegistry(registry)
         }
-
-
     }
 
     static async activeMemberEnd(memberId, reason) {
         const registryExist = await this.activeMemberRegistry(memberId)
-        console.log(registryExist.id)
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().slice(0, -5) + "+00:00";
 
