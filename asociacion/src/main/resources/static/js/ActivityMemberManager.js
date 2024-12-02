@@ -42,11 +42,10 @@ export class ActivityMemberManager {
     static async createActivityMemberThis(activityId, memberId) {
         const activity = await RequestGet.getActivityById(activityId);
         const activities = await RequestGet.getActivitiesByMemberId(memberId);
-        const activityExistInMember = activities.some(activityOne => activityOne.activityId === activityId);
-
+        const activityExistInMember = activities.some(activityOne => activityOne.activityId == activityId);
         if (activityId == 0 || activityExistInMember) {
             if (activityExistInMember) {
-                alert("ERROR: Ya existe en la actividad: " + activity.activityName);
+                alert("ERROR: Ya existe en la actividad: " + activity.name);
             }
             return;
         }
