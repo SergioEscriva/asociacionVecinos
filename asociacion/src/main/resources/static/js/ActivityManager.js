@@ -176,7 +176,7 @@ export class ActivityManager {
     const memberHtml = document.getElementById('name')
     const memberId = memberHtml.dataset.familyType
 
-    await ActivityMemberManager.createActivityMemberInActivity(activityId, memberId)
+    await ActivityMemberManager.createActivityMemberThis(activityId, memberId)
     this.getActivityById(activityId)
   }
 }

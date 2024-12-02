@@ -6,14 +6,13 @@ import { RequestGet } from './RequestGet.js';
 
 export class ActivityMemberManager {
 
-
     static async getActivitiesByMemberId(memberId) {
+        this.clearActivityList();
         const activitySel = document.getElementById("ul-activity-member");
-        activitySel.innerHTML = ``;
+        activitySel.innerHTML = "";
 
         try {
-
-            const activities = await RequestGet.getActivitiesByMemberId(memberId)
+            const activities = await RequestGet.getActivitiesByMemberId(memberId);
             activities.forEach((activity) => {
                 activitySel.innerHTML += `
                     <li id="li-activitys-member-${activity.idLong}" data-activity-id="${activity.activityId}">
@@ -22,9 +21,10 @@ export class ActivityMemberManager {
                     </li>`;
             });
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error al obtener actividades:', error);
         }
     }
+
 
     static async updateFamily(memberNumber) {
 
@@ -40,71 +40,52 @@ export class ActivityMemberManager {
     }
 
     static async createActivityMemberThis(activityId, memberId) {
-        await this.createActivityMember(activityId, memberId)
-        await this.getActivitiesByMemberId(memberId)
+        const activity = await RequestGet.getActivityById(activityId);
+        const activities = await RequestGet.getActivitiesByMemberId(memberId);
+        const activityExistInMember = activities.some(activityOne => activityOne.activityId === activityId);
 
-    }
-
-    static async createActivityMemberInActivity(activityId, memberId) {
-        await this.createActivityMember(activityId, memberId)
-    }
-
-    static async createActivityMember(activityId, memberId) {
-        const activity = await RequestGet.getActivityById(activityId)
-        const activities = await RequestGet.getActivitiesByMemberId(memberId)
-        const activityExistInMember = activities.some(activityOne => activityOne.activityId == activityId)
-
-        if (activityId == 0) {
-            return
-        } else if (activityExistInMember) {
-            alert("ERROR: Ya existe en la actividad: ", activity.activityName)
-            return
-        } else {
-            const request = {
-                activity: activity,
-                memberId: memberId
+        if (activityId == 0 || activityExistInMember) {
+            if (activityExistInMember) {
+                alert("ERROR: Ya existe en la actividad: " + activity.activityName);
             }
-            try {
-                await RequestPost.newActivityMember(request)
-                alert("Añadido a " + activity.name)
-                ActivityMemberManager.limpiaCamposActividad()
-                return
-            } catch (error) {
-                console.error("Error añadiendo ActivityMember:", error)
-                alert("Error al añadir socio a la actividad. Por favor, intente de nuevo.");
-            }
+            return;
         }
 
+        const request = {
+            activity: activity,
+            memberId: memberId
+        };
+
+        try {
+            await RequestPost.newActivityMember(request);
+            alert("Añadido a " + activity.name);
+            await ActivityMemberManager.getActivitiesByMemberId(memberId); // Actualiza las actividades solo para el miembro actual
+        } catch (error) {
+            console.error("Error añadiendo ActivityMember:", error);
+            alert("Error al añadir socio a la actividad. Por favor, intente de nuevo.");
+        }
     }
+
 
     static async delMemberOfActivity1(memberId, activityIdLong, li) {
         const memberName = document.getElementById('name').value;
+        const activityName = li.querySelector('label.text-activity').textContent;
 
-        const liElement = document.getElementById('li-activitys-member-' + activityIdLong);
-        const labelElement = liElement.querySelector('label.text-activity');
-        const activityName = labelElement.textContent;
-
-        if (confirm("¿Estás seguro de eleminar a " + memberName + " de la actividad " + activityName + "?")) {
+        if (confirm(`¿Estás seguro de eliminar a ${memberName} de la actividad ${activityName}?`)) {
             try {
                 await RequestDel.delActivityMember(activityIdLong);
                 li.remove();
-                ActivityMemberManager.limpiaCamposActividad();
-                //this.getActivitiesByMemberId(memberId)
+                await this.getActivitiesByMemberId(memberId); // Actualizar lista después de eliminar
             } catch (error) {
                 console.error("Error al eliminar la actividad:", error);
                 alert("Error al eliminar la actividad. Por favor, intente de nuevo.");
             }
         }
-        const activitySel = document.getElementById("ul-activity-member");
-        activitySel.innerHTML = "";
-        await ActivityMemberManager.getActivitiesByMemberId(memberId)
     }
 
-    static async limpiaCamposActividad() {
+    static clearActivityList() {
         const activitySel = document.getElementById("ul-activity-member");
         if (activitySel) {
-            const oldListener = activitySel.onclick;
-            activitySel.removeEventListener('click', oldListener);
             activitySel.innerHTML = "";
         }
     }

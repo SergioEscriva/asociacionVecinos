@@ -98,7 +98,7 @@ export class MembersManager {
     document.getElementById('active').value = "";
     document.getElementById('notes').value = "";
     document.getElementById("memberNumber").value = "";
-    this.limpiaCamposActividad();
+    await this.limpiaCamposActividad();
   }
 
   static async newMember() {
@@ -107,8 +107,8 @@ export class MembersManager {
 
   static async limpiaCamposActividad() {
     const activitySel = document.getElementById("ul-activity-member");
-    const oldListener = activitySel.onclick;
-    activitySel.removeEventListener('click', oldListener);
+    //const oldListener = activitySel.onclick;
+    //activitySel.removeEventListener('input', oldListener);
     activitySel.innerHTML = "";
   }
 
@@ -149,11 +149,10 @@ export class MembersManager {
       FeeManager.checkFee()
       const buttonFee = document.getElementById("updateFee")
       buttonFee.title = await MembersManager.updateFeeTitle(member.id)
-      this.inyectOption()
+      this.inyectOption(member.id)
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
     }
   }
-
 
   static async checkActive(element, member) {
     const registrys = await RequestGet.getRegistryByMemberId(member.id)
@@ -248,8 +247,8 @@ export class MembersManager {
     }
   }
 
-  static async inyectOption() {
-    const memberId = document.getElementById('memberId').value
+  static async inyectOption(memberId) {
+    //const memberId = document.getElementById('memberId').value
     const activitySel = document.getElementById("activity-select")
     activitySel.innerHTML = "";
     activitySel.innerHTML = `<option selected value="0">Lista de Actividades</option>`
@@ -268,12 +267,13 @@ export class MembersManager {
 
     // Listening desplegable Option
     const select1 = document.getElementById('activity-select')
-    let selectedURL = ''
-    const handleChange1 = (event) => {
+    select1.replaceWith(select1.cloneNode(true)); // elimina envents anteriores
+
+    const handleChange1 = async (event) => {
       const { value } = event.target
-      ActivityMemberManager.createActivityMemberThis(value, memberId)
+      await ActivityMemberManager.createActivityMemberThis(value, memberId)
     }
-    select1.addEventListener('change', handleChange1)
+    document.getElementById('activity-select').addEventListener('change', handleChange1);
   }
 
   static async updateFee() {
