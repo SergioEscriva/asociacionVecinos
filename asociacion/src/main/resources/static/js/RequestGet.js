@@ -37,6 +37,11 @@ export class RequestGet {
         return await RequestGet._getRequest(url)
     }
 
+    static async getFeeList() {
+        const url = "/api/fee/"
+        return await RequestGet._getRequest(url)
+    }
+
     static async getListMembersActives() {
         const url = "/api/members/actives"
         return await RequestGet._getRequest(url)

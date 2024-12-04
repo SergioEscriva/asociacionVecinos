@@ -36,32 +36,63 @@ export class ListsManager {
         const responseCount = ListsManager.countActivities(response)
         this.renderActivityList(responseCount)
         break;
+      case 'button5':
+        title.textContent = 'Listado de Impagos'
+        
     }
   }
 
   async renderList(members) {
     let html = '';
     for (let member of members) {
-      html += this.getHtmlRowMembers(member);
+      html += await this.getHtmlRowMembers(member);
     }
 
     let tbody = document.getElementById('tbody-member');
     tbody.innerHTML = html;
   }
 
-  getHtmlRowMembers(member) {
+  async getHtmlRowMembers(member) {
 
     const activeStatus = member.active ? '✓' : 'X';
+    const lastPaidYear =  await this.getLastPaidYear(member.id)
 
     return `<tr>
                 <td>${member.name} </td>
                 <td>${member.lastName1} ${member.lastName2} </td>
                 <td>${member.memberNumber}</td>
                 <td>${activeStatus}</td>
+                <td>${lastPaidYear}</td>
 
             </tr>`;
 
   }
+
+  async getLastPaidYear(memberid){
+    
+    
+    
+    let response = await RequestGet.getFeeMember(memberid);
+    
+    // Verificamos si la respuesta es un arreglo y si tiene elementos
+    if (Array.isArray(response) && response.length > 0) {
+      // Buscamos el objeto que coincida con el `memberId`
+      const memberRecord = response.find(record => record.memberId === memberid);
+      
+      // Si encontramos un registro, devolvemos el 'year'
+      if (memberRecord && memberRecord.year) {
+        return memberRecord.year;
+      } else {
+        return "-"; // Si no hay 'year' en el registro, devolvemos "-"
+      }
+    } else {
+      return "-"; // Si la respuesta no es válida o está vacía, devolvemos "-"
+    }
+  
+
+
+  }
+
 
   renderActivityList(activities) {
     let html = '';
