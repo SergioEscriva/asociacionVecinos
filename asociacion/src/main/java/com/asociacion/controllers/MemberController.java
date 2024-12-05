@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.asociacion.models.Member;
-import com.asociacion.services.ActivityService;
 import com.asociacion.services.MemberService;
 
 @RestController
@@ -26,14 +25,12 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @Autowired
-    private ActivityService activityService;
-
     @GetMapping()
     public List<Member> getMembers() {
 
         return memberService.getMembers();
     }
+
     @GetMapping("/byName")
     public List<Member> getMembersByNames() {
 
@@ -45,7 +42,6 @@ public class MemberController {
 
         return memberService.getMembersOrderedByMemberNumber();
     }
-
 
     @GetMapping("/actives")
     public List<Member> getActives() {
