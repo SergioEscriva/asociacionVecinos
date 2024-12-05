@@ -38,7 +38,7 @@ export class ListsManager {
         break;
       case 'button5':
         title.textContent = 'Listado de Impagos'
-        
+
     }
   }
 
@@ -55,7 +55,7 @@ export class ListsManager {
   async getHtmlRowMembers(member) {
 
     const activeStatus = member.active ? '✓' : 'X';
-    const lastPaidYear =  await this.getLastPaidYear(member.id)
+    const lastPaidYear = await this.getLastPaidYear(member.id)
 
     return `<tr>
                 <td>${member.name} </td>
@@ -68,17 +68,17 @@ export class ListsManager {
 
   }
 
-  async getLastPaidYear(memberid){
-    
-    
-    
-    let response = await RequestGet.getFeeMember(memberid);
-    
+  async getLastPaidYear(memberid) {
+
+
+
+    let response = await RequestGet.getFeeByMemberId(memberid);
+
     // Verificamos si la respuesta es un arreglo y si tiene elementos
     if (Array.isArray(response) && response.length > 0) {
       // Buscamos el objeto que coincida con el `memberId`
       const memberRecord = response.find(record => record.memberId === memberid);
-      
+
       // Si encontramos un registro, devolvemos el 'year'
       if (memberRecord && memberRecord.year) {
         return memberRecord.year;
@@ -88,7 +88,7 @@ export class ListsManager {
     } else {
       return "-"; // Si la respuesta no es válida o está vacía, devolvemos "-"
     }
-  
+
 
 
   }
