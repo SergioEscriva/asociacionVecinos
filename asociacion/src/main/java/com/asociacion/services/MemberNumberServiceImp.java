@@ -35,7 +35,7 @@ public class MemberNumberServiceImp implements MemberNumberService {
                 throw new IllegalStateException("El atributo de configuración no es un número válido.", e);
             }
         } else {
-            throw new IllegalStateException("No se encontró la configuración con ID 2L.");
+            numberStart = 0L;
         }
 
         Long maxNumber = memberRepository.findMaxMemberNumberAbove(numberStart);
