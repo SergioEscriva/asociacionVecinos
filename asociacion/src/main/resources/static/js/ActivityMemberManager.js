@@ -58,7 +58,6 @@ export class ActivityMemberManager {
         try {
             await RequestPost.newActivityMember(request);
             alert("Añadido a " + activity.name);
-            await ActivityMemberManager.getActivitiesByMemberId(memberId); // Actualiza las actividades solo para el miembro actual
         } catch (error) {
             console.error("Error añadiendo ActivityMember:", error);
             alert("Error al añadir socio a la actividad. Por favor, intente de nuevo.");

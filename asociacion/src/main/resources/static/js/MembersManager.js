@@ -272,6 +272,7 @@ export class MembersManager {
     const handleChange1 = async (event) => {
       const { value } = event.target
       await ActivityMemberManager.createActivityMemberThis(value, memberId)
+      await ActivityMemberManager.getActivitiesByMemberId(memberId);
     }
     document.getElementById('activity-select').addEventListener('change', handleChange1);
   }
