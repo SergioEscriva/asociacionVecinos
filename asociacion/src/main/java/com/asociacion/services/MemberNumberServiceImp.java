@@ -32,10 +32,9 @@ public class MemberNumberServiceImp implements MemberNumberService {
     @PostConstruct
     public void initialize() {
 
-        Optional<Config> optionalConfig = configServiceImp.findById(2L);
-
         if (configRepository.findById(2L).isPresent()) {
             try {
+                Optional<Config> optionalConfig = configServiceImp.findById(2L);
                 numberStart = Long.parseLong(optionalConfig.get().getAttribute());
             } catch (NumberFormatException e) {
                 throw new IllegalStateException("El atributo de configuración no es un número válido.", e);
