@@ -3,15 +3,18 @@ package com.asociacion.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import com.asociacion.models.Config;
+import com.asociacion.repositories.ConfigRepository;
 import com.asociacion.repositories.MemberRepository;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 
 @Service
+@DependsOn("dataInitializer")
 public class MemberNumberServiceImp implements MemberNumberService {
 
     @Autowired
@@ -19,6 +22,9 @@ public class MemberNumberServiceImp implements MemberNumberService {
 
     @Autowired
     private ConfigServiceImp configServiceImp;
+
+    @Autowired
+    private ConfigRepository configRepository;
 
     private Long numberStart;
     private Long lastGeneratedNumber;
@@ -28,14 +34,14 @@ public class MemberNumberServiceImp implements MemberNumberService {
 
         Optional<Config> optionalConfig = configServiceImp.findById(2L);
 
-        if (optionalConfig.isPresent()) {
+        if (configRepository.findById(2L).isPresent()) {
             try {
                 numberStart = Long.parseLong(optionalConfig.get().getAttribute());
             } catch (NumberFormatException e) {
                 throw new IllegalStateException("El atributo de configuración no es un número válido.", e);
             }
         } else {
-            throw new IllegalStateException("No se encontró la configuración con ID 2L.");
+            numberStart = 0L;
         }
 
         Long maxNumber = memberRepository.findMaxMemberNumberAbove(numberStart);
