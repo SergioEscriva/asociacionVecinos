@@ -23,18 +23,15 @@ public class MemberNumberServiceImp implements MemberNumberService {
     @Autowired
     private ConfigServiceImp configServiceImp;
 
-    @Autowired
-    private ConfigRepository configRepository;
-
     private Long numberStart;
     private Long lastGeneratedNumber;
 
     @PostConstruct
     public void initialize() {
+        Optional<Config> optionalConfig = configServiceImp.findById(2L);
 
-        if (configRepository.findById(2L).isPresent()) {
+        if (optionalConfig.isPresent()) {
             try {
-                Optional<Config> optionalConfig = configServiceImp.findById(2L);
                 numberStart = Long.parseLong(optionalConfig.get().getAttribute());
             } catch (NumberFormatException e) {
                 throw new IllegalStateException("El atributo de configuración no es un número válido.", e);
