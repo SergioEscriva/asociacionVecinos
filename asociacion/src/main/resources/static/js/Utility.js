@@ -34,7 +34,6 @@ export class Utility {
         const activityInMember = activities.find(activityOne => activityOne.activityId == activityId)
         const activityIdLong = activityInMember.idLong
 
-        console.log(memberName, activityName)
         if (confirm("¿Estás seguro de eleminar a " + memberName + " de la actividad " + activityName + "?")) {
             try {
                 await RequestDel.delActivityMember(activityIdLong);
