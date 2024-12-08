@@ -75,23 +75,23 @@ export class ListsManager {
 
   async getLastPaidYear(memberid) {
 
+    let response = await RequestGet.getLastFeeByMemberId(memberid);
+    
+    
+    
 
-
-    let response = await RequestGet.getFeeByMemberId(memberid);
-
-    // Verificamos si la respuesta es un arreglo y si tiene elementos
     if (Array.isArray(response) && response.length > 0) {
-      // Buscamos el objeto que coincida con el `memberId`
+      
       const memberRecord = response.find(record => record.memberId === memberid);
 
-      // Si encontramos un registro, devolvemos el 'year'
+    
       if (memberRecord && memberRecord.year) {
         return memberRecord.year;
       } else {
-        return "-"; // Si no hay 'year' en el registro, devolvemos "-"
+        return "-"; 
       }
     } else {
-      return "-"; // Si la respuesta no es válida o está vacía, devolvemos "-"
+      return "-"; 
     }
 
 

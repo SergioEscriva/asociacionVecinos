@@ -44,6 +44,11 @@ public class FeeController {
         return feeService.findByMemberId(id);
     }
 
+    @GetMapping("/member/lastFee/{id}")
+    public List<Fee> findLastFeeByMemberId(@PathVariable Long id) {
+        return feeService.findLastFeeByMemberId(id);
+    }
+
     @PostMapping
     public ResponseEntity<Fee> createFee(@RequestBody Fee fee) {
         Fee savedFee = feeService.saveFee(fee);

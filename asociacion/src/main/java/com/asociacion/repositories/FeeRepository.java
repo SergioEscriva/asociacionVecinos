@@ -12,4 +12,9 @@ import com.asociacion.models.Fee;
 public interface FeeRepository extends JpaRepository<Fee, Long> {
     @Query("SELECT m FROM Fee m WHERE m.memberId = :memberId")
     List<Fee> findByMemberId(Long memberId);
+
+    @Query("SELECT m FROM Fee m WHERE m.memberId = :memberId ORDER BY m.year DESC")
+    List<Fee> findLastFeeByMemberId(Long memberId);
+
+
 }
