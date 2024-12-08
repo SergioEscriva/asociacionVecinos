@@ -38,7 +38,7 @@ export class ListsManager {
       case 'button4':
         response = await RequestGet.getActivitys()
         const responseCount = ListsManager.countActivities(response)
-        document.getElementById('activitiesListMemberConfig').textContent = "Nº " + memberAttribute.attribute.toUpperCase() + "(S) REGISTRADAS"
+        document.getElementById('activitiesListMemberConfig').textContent = memberAttribute.attribute.toUpperCase() + "(S) REGISTRADO/A(S)"
         this.renderActivityList(responseCount)
         break;
       case 'button5':
