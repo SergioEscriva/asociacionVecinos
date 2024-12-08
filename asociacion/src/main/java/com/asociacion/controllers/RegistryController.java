@@ -11,16 +11,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.asociacion.models.Registry;
 import com.asociacion.services.RegistryServiceImp;
 
+@RestController
+@RequestMapping("/api/registry")
 public class RegistryController {
 
     @Autowired
     private RegistryServiceImp registryService;
-
-    
 
     @GetMapping("/{id}")
     public Optional<Registry> getRegistryById(@PathVariable Long id) {
@@ -50,5 +52,4 @@ public class RegistryController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 }

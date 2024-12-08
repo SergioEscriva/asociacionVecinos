@@ -18,19 +18,19 @@ export class ListsManager {
     let response = "";
     switch (id) {
       case 'button1':
-        title.textContent = 'Listado de ' + memberAttribute.attribute + '(S) Completo'
+        title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Completo'
         document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         response = await RequestGet.getAllMembers()
         this.renderList(response)
         break;
       case 'button2':
-        title.textContent = 'Listado de ' + memberAttribute.attribute + '(S) Activos'
+        title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Activos'
         document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         response = await RequestGet.getListMembersActives()
         this.renderList(response)
         break;
       case 'button3':
-        title.textContent = 'Listado de ' + memberAttribute.attribute + '(S) Inactivos'
+        title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Inactivos'
         document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         response = await RequestGet.getListMembersInactives()
         this.renderList(response)
@@ -38,7 +38,7 @@ export class ListsManager {
       case 'button4':
         response = await RequestGet.getActivitys()
         const responseCount = ListsManager.countActivities(response)
-        document.getElementById('activitiesListMemberConfig').textContent = memberAttribute.attribute.toUpperCase() + "(S) REGISTRADO/A(S)"
+        document.getElementById('activitiesListMemberConfig').textContent = memberAttribute.attribute.toUpperCase() + "(s) REGISTRADO/A(S)"
         this.renderActivityList(responseCount)
         break;
       case 'button5':
