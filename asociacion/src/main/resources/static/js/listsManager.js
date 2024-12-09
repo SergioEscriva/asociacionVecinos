@@ -42,7 +42,15 @@ export class ListsManager {
         this.renderActivityList(responseCount)
         break;
       case 'button5':
+        title.textContent = 'Listado de Pagos'
+        document.getElementById('year').textContent = "AÑO PAGADO"
+        //response = await RequestGet.getAllMembers() 
+        //this.renderPayList(response)
+        break;
+      case 'button6' :
         title.textContent = 'Listado de Impagos'
+        document.getElementById('year').textContent = "ÚLTIMO AÑO PAGADO"
+        break;
 
     }
   }
@@ -73,9 +81,34 @@ export class ListsManager {
 
   }
 
+  /*async renderPayList(members) {
+    let html = '';
+    for (let member of members) {
+      html += await this.getHtmlPayRowMembers(member);
+    }
+
+    let tbody = document.getElementById('tbody-member');
+    tbody.innerHTML = html;
+  }
+
+  async getHtmlPayRowMembers(member) {
+
+    const lastPaidYear = await this.getLastPaidYear(member.id)
+
+    return `<tr>
+                <td>${member.name} </td>
+                <td>${member.lastName1} ${member.lastName2} </td>
+                <td>${member.memberNumber}</td>
+                <td>${lastPaidYear}</td>
+
+            </tr>`;
+
+  }*/
+
+
   async getLastPaidYear(memberid) {
 
-    let response = await RequestGet.getLastFeeByMemberId(memberid);
+    let response = await RequestGet.getFeeByMemberId(memberid);
     
     
     
