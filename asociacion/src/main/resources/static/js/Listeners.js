@@ -2,6 +2,7 @@ import { RequestGet } from "./RequestGet.js";
 import { RequestPost } from "./RequestPost.js";
 import { Utility } from "./Utility.js";
 import { RegistryManager } from "./RegistryManager.js";
+import { ActivityMemberManager } from "./ActivityMemberManager.js";
 
 export class Listeners {
     constructor() {
@@ -12,6 +13,7 @@ export class Listeners {
     static async init() {
         this.setupActivityManagerListeners()
         this.setupCheckActiveManagerListeners()
+        this.listeningActividadesMember()
 
     }
 
@@ -78,6 +80,20 @@ export class Listeners {
                 }
             }
         });
+    }
+
+    static listeningActividadesMember() {
+        // Listening desplegable Option
+        const select1 = document.getElementById('activity-select')
+        select1.replaceWith(select1.cloneNode(true)); // elimina envents anteriores
+
+        const handleChange1 = async (event) => {
+            const { value } = event.target
+            const memberId = document.getElementById('memberId').value
+            await ActivityMemberManager.createActivityMemberThis(value, memberId)
+            await ActivityMemberManager.getActivitiesByMemberId(memberId);
+        }
+        document.getElementById('activity-select').addEventListener('change', handleChange1);
     }
 }
 
