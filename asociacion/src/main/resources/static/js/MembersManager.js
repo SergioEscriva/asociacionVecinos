@@ -149,8 +149,8 @@ export class MembersManager {
       FeeManager.checkFee()
       const buttonFee = document.getElementById("updateFee")
       buttonFee.title = await MembersManager.updateFeeTitle(member.id)
-      this.inyectOption(member.id)
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
+      this.inyectOption(member.id)
     }
   }
 
@@ -247,14 +247,14 @@ export class MembersManager {
     }
   }
 
-  static async inyectOption(memberId) {
-    //const memberId = document.getElementById('memberId').value
+  static async inyectOption() {
+
     const activitySel = document.getElementById("activity-select")
     activitySel.innerHTML = "";
     activitySel.innerHTML = `<option selected value="0">Lista de Actividades</option>`
     try {
-
       const activities = await RequestGet.getActivitys()
+
       activities.forEach((activity) => {
 
         activitySel.innerHTML += `<option value="${activity.id}">${activity.name}</option>`;
@@ -265,16 +265,7 @@ export class MembersManager {
       activitySel.innerHTML = '<p>Error al cargar las actividades.</p>';
     }
 
-    // Listening desplegable Option
-    const select1 = document.getElementById('activity-select')
-    select1.replaceWith(select1.cloneNode(true)); // elimina envents anteriores
 
-    const handleChange1 = async (event) => {
-      const { value } = event.target
-      await ActivityMemberManager.createActivityMemberThis(value, memberId)
-      await ActivityMemberManager.getActivitiesByMemberId(memberId);
-    }
-    document.getElementById('activity-select').addEventListener('change', handleChange1);
   }
 
   static async updateFee() {
