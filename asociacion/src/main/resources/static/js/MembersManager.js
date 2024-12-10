@@ -39,6 +39,7 @@ export class MembersManager {
     buttonFee.addEventListener("click", function () { MembersManager.updateFee(); });
     buttonFee.textContent = "¿Deudas?"
 
+
     const inputFind = document.getElementById('input-find');
     const suggestionsList = document.getElementById('suggestions');
 
@@ -57,10 +58,10 @@ export class MembersManager {
                 suggestionItem.addEventListener('click', () => {
                   inputFind.value = `${member.name} ${member.lastName1} ${member.lastName2} (${member.memberNumber})`;
                   suggestionsList.innerHTML = '';
-                  MembersManager.getMemberByNumber(member.memberNumber);
+                  memberNumber = member.memberNumber
                 });
                 suggestionsList.appendChild(suggestionItem);
-                MembersManager.getMemberByNumber(member.memberNumber);
+                memberNumber = member.memberNumber
               });
             }
           })
@@ -73,9 +74,10 @@ export class MembersManager {
     document.addEventListener('click', (event) => {
       if (!suggestionsList.contains(event.target) && event.target !== inputFind) {
         suggestionsList.innerHTML = '';
+
+        MembersManager.getMemberByNumber(memberNumber);
       }
     });
-
 
   }
 
@@ -114,7 +116,7 @@ export class MembersManager {
 
   static async getMemberByNumber(memberNumber) {
     await this.limpiaCampos()
-
+    MembersManager.inyectOption()
     // Variables config
     document.getElementById('labelMemberNumber').textContent = "N.º " + MembersManager.memberAttribute.attribute;
     document.getElementById('titleMemberPage').textContent = "Ficha " + MembersManager.memberAttribute.attribute;
@@ -150,7 +152,7 @@ export class MembersManager {
       const buttonFee = document.getElementById("updateFee")
       buttonFee.title = await MembersManager.updateFeeTitle(member.id)
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
-      this.inyectOption(member.id)
+
     }
   }
 
@@ -250,6 +252,7 @@ export class MembersManager {
   static async inyectOption() {
 
     const activitySel = document.getElementById("activity-select")
+    console.log(activitySel)
     activitySel.innerHTML = "";
     activitySel.innerHTML = `<option selected value="0">Lista de Actividades</option>`
     try {
