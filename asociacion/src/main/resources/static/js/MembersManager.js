@@ -8,7 +8,26 @@ import { RequestPut } from './RequestPut.js';
 
 export class MembersManager {
   constructor() {
+    this.scheduleBackupConsolidation();
   }
+
+  scheduleBackupConsolidation() {
+    const now = new Date();
+    const night = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + 1, // mañana
+      23, 59, 0 // 23:59:00
+    );
+    const msUntilMidnight = night.getTime() - now.getTime();
+
+    setTimeout(() => {
+      BackupManager.consolidateBackups();
+      // Programar la próxima consolidación
+      this.scheduleBackupConsolidation();
+    }, msUntilMidnight);
+  }
+
 
   async init() {
 
@@ -38,47 +57,6 @@ export class MembersManager {
     const buttonFee = document.getElementById("updateFee")
     buttonFee.addEventListener("click", function () { MembersManager.updateFee(); });
     buttonFee.textContent = "¿Deudas?"
-
-
-    const inputFind = document.getElementById('input-find');
-    const suggestionsList = document.getElementById('suggestions');
-
-    inputFind.addEventListener('input', () => {
-      const query = inputFind.value;
-
-      if (query.length > 0) {
-        fetch(`/api/members/search-member?query=${query}`)
-          .then(response => response.json())
-          .then(data => {
-            suggestionsList.innerHTML = '';
-            if (data.length > 0) {
-              data.forEach(member => {
-                const suggestionItem = document.createElement('li');
-                suggestionItem.textContent = `${member.name} ${member.lastName1} ${member.lastName2} (${member.memberNumber})`;
-                suggestionItem.addEventListener('click', () => {
-                  inputFind.value = `${member.name} ${member.lastName1} ${member.lastName2} (${member.memberNumber})`;
-                  suggestionsList.innerHTML = '';
-                  memberNumber = member.memberNumber
-                });
-                suggestionsList.appendChild(suggestionItem);
-                memberNumber = member.memberNumber
-              });
-            }
-          })
-          .catch(error => console.error('Error fetching member data:', error));
-      } else {
-        suggestionsList.innerHTML = '';
-      }
-    });
-
-    document.addEventListener('click', (event) => {
-      if (!suggestionsList.contains(event.target) && event.target !== inputFind) {
-        suggestionsList.innerHTML = '';
-
-        MembersManager.getMemberByNumber(memberNumber);
-      }
-    });
-
   }
 
   static async limpiaCampos() {
@@ -252,7 +230,6 @@ export class MembersManager {
   static async inyectOption() {
 
     const activitySel = document.getElementById("activity-select")
-    console.log(activitySel)
     activitySel.innerHTML = "";
     activitySel.innerHTML = `<option selected value="0">Lista de Actividades</option>`
     try {
@@ -284,3 +261,5 @@ export class MembersManager {
     return text
   }
 }
+
+

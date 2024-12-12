@@ -1,8 +1,8 @@
-import { RequestGet } from "./RequestGet.js";
-import { RequestPost } from "./RequestPost.js";
-import { Utility } from "./Utility.js";
-import { RegistryManager } from "./RegistryManager.js";
 import { ActivityMemberManager } from "./ActivityMemberManager.js";
+import { MembersManager } from "./MembersManager.js";
+import { RegistryManager } from "./RegistryManager.js";
+import { RequestGet } from "./RequestGet.js";
+import { Utility } from "./Utility.js";
 
 export class Listeners {
     constructor() {
@@ -14,6 +14,7 @@ export class Listeners {
         this.setupActivityManagerListeners()
         this.setupCheckActiveManagerListeners()
         this.listeningActividadesMember()
+        this.listeningMember()
 
     }
 
@@ -95,9 +96,48 @@ export class Listeners {
         }
         document.getElementById('activity-select').addEventListener('change', handleChange1);
     }
+
+    static listeningMember() {
+        let memberNumber = 0
+        const inputFind = document.getElementById('input-find');
+        const suggestionsList = document.getElementById('suggestions');
+
+        inputFind.addEventListener('input', () => {
+            const query = inputFind.value;
+
+            if (query.length > 0) {
+                fetch(`/api/members/search-member?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        suggestionsList.innerHTML = '';
+                        if (data.length > 0) {
+                            data.forEach(member => {
+                                const suggestionItem = document.createElement('li');
+                                suggestionItem.textContent = `${member.name} ${member.lastName1} ${member.lastName2} (${member.memberNumber})`;
+                                suggestionItem.addEventListener('click', () => {
+                                    inputFind.value = `${member.name} ${member.lastName1} ${member.lastName2} (${member.memberNumber})`;
+                                    suggestionsList.innerHTML = '';
+                                    memberNumber = member.memberNumber
+                                });
+                                suggestionsList.appendChild(suggestionItem);
+                                memberNumber = member.memberNumber
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Error fetching member data:', error));
+            } else {
+                suggestionsList.innerHTML = '';
+            }
+        });
+
+        suggestionsList.addEventListener('click', (event) => {
+            if (!suggestionsList.contains(event.target) && event.target !== inputFind) {
+                suggestionsList.innerHTML = '';
+                MembersManager.getMemberByNumber(memberNumber);
+            }
+        });
+
+    }
+
 }
-
-
-
-/*Busqueda */
 
