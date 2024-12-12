@@ -52,6 +52,8 @@ export class ListsManager {
         title.textContent = 'Listado de Impagos'
         document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('year').textContent = "ÚLTIMO AÑO PAGADO"
+        response = await RequestGet.getAllMembers() 
+        this.renderUnpayList(response)
         break;
 
     }
@@ -105,6 +107,39 @@ export class ListsManager {
                 <td>${member.lastName1} ${member.lastName2} </td>
                 <td>${member.memberNumber}</td>
                 <td>${PaidYears}</td>
+
+            </tr>`;
+
+  }
+
+  async renderUnpayList(members) {
+    let html = '';
+    const currentYear = new Date().getFullYear();
+    
+
+    for (let member of members) {
+      const PaidYears = await this.getPaidYears(member.id);
+      const hasPaidThisYear = PaidYears.includes(currentYear);
+
+      if (!hasPaidThisYear){
+        html += await this.getHtmlUnpayRowMembers(member);
+      }
+      
+    }
+
+    let tbody = document.getElementById('tbody-member');
+    tbody.innerHTML = html;
+  }
+
+  async getHtmlUnpayRowMembers(member) {
+
+    const lastPaidYear = await this.getLastPaidYear(member.id)
+
+    return `<tr>
+                <td>${member.name} </td>
+                <td>${member.lastName1} ${member.lastName2} </td>
+                <td>${member.memberNumber}</td>
+                <td>${lastPaidYear}</td>
 
             </tr>`;
 
