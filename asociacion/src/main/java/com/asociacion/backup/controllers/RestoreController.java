@@ -1,4 +1,4 @@
-package com.asociacion.backup;
+package com.asociacion.backup.controllers;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,9 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.asociacion.backup.services.RestoreService;
 
 @RestController
 @RequestMapping("/api/database")
@@ -19,7 +20,7 @@ public class RestoreController {
     private RestoreService restoreService;
 
     @PostMapping("/restore")
-    public ResponseEntity<String> restoreDatabase(@RequestParam("backupFile") MultipartFile backupFile) {
+    public ResponseEntity<String> restoreDatabase(MultipartFile backupFile) {
         try {
     
             File tempFile = File.createTempFile("backup", ".sql");

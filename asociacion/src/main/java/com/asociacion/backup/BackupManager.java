@@ -9,7 +9,7 @@ public class BackupManager {
         String dbUsername = "root";
         String dbPassword = "000000";
         String dbName = "asociacion";
-        String outputFile = "backupSQL.sql";
+        String outputFile = "./backup/backupSQL.sql";
         
         ProcessBuilder pb = new ProcessBuilder(
             "mysqldump",
