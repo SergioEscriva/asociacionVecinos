@@ -43,12 +43,14 @@ export class ListsManager {
         break;
       case 'button5':
         title.textContent = 'Listado de Pagos'
+        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('year').textContent = "AÑO PAGADO"
-        //response = await RequestGet.getAllMembers() 
-        //this.renderPayList(response)
+        response = await RequestGet.getAllMembers() 
+        this.renderPayList(response)
         break;
       case 'button6' :
         title.textContent = 'Listado de Impagos'
+        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('year').textContent = "ÚLTIMO AÑO PAGADO"
         break;
 
@@ -81,7 +83,7 @@ export class ListsManager {
 
   }
 
-  /*async renderPayList(members) {
+  async renderPayList(members) {
     let html = '';
     for (let member of members) {
       html += await this.getHtmlPayRowMembers(member);
@@ -93,17 +95,20 @@ export class ListsManager {
 
   async getHtmlPayRowMembers(member) {
 
-    const lastPaidYear = await this.getLastPaidYear(member.id)
+    const PaidYears = await this.getPaidYears(member.id)
+    
+    
+  
 
     return `<tr>
                 <td>${member.name} </td>
                 <td>${member.lastName1} ${member.lastName2} </td>
                 <td>${member.memberNumber}</td>
-                <td>${lastPaidYear}</td>
+                <td>${PaidYears}</td>
 
             </tr>`;
 
-  }*/
+  }
 
 
   async getLastPaidYear(memberid) {
@@ -129,6 +134,23 @@ export class ListsManager {
 
 
 
+  }
+
+  async getPaidYears(memberid) {
+
+    let response = await RequestGet.getFeeByMemberId(memberid);
+  
+    if (Array.isArray(response) && response.length > 0) {
+      const memberRecords = response.filter(record => record.memberId === memberid);
+      if (memberRecords.length > 0) {
+        const years = memberRecords.map(record => record.year);
+        return years;  
+      } else {
+        return ["-"];  
+      }
+    } else {
+      return ["-"];  
+    }
   }
 
 
