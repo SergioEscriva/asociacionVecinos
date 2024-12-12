@@ -20,6 +20,8 @@ public class DataInitializer implements CommandLineRunner {
             configRepository.save(new Config("Número Socio Inicial", true, "0"));
             configRepository.save(new Config("Atributo Socio", true, "Socio/a"));
             configRepository.save(new Config("Año/s impago para Inactivo", true, "1"));
+            configRepository.save(new Config("Token Dropbox Backup", true, "tu_token"));
+            configRepository.save(new Config("Directorio en Dropbox Backup", true, "/Aplicaciones/Asociacion/"));
         } else {
         }
     }
