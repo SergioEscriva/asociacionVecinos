@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.asociacion.backup.BackupServiceImp;
 import com.asociacion.models.Member;
 import com.asociacion.services.MemberService;
 
@@ -93,6 +94,7 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<Member> createMember(@RequestBody Member member) {
         Member savedMember = memberService.saveMember(member);
+        BackupServiceImp.performBackup();
         return new ResponseEntity<>(savedMember, HttpStatus.CREATED);
     }
 
@@ -102,6 +104,7 @@ public class MemberController {
         if (existingMember.isPresent()) {
             member.setId(id);
             Member updatedMember = memberService.saveMember(member);
+            BackupServiceImp.performBackup();
             return new ResponseEntity<>(updatedMember, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
