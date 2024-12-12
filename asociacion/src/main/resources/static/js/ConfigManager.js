@@ -1,5 +1,6 @@
 import { RequestGet } from './RequestGet.js';
 import { RequestPut } from './RequestPut.js';
+import { BackupRecoveryManager } from './BackupRecoveryManager.js';
 
 export class ConfigManager {
 
@@ -11,15 +12,23 @@ export class ConfigManager {
     const response = await RequestGet.getAllConfigs()
     this.renderList(response)
 
-    // document.addEventListener('DOMContentLoaded', function () {
-    // const inputs = document.querySelectorAll('input[id^="atributo-"]');
-    // inputs.forEach(input => {
-    // input.addEventListener('blur', function () {
-    //  ConfigManager.showInputValue(this);
-    //  });
-    // });
-    // });
+    document.getElementById("recoverBackup").addEventListener("click", function () {
+      ConfigManager.handleBackupRecovery();
+    });
 
+  }
+
+
+  static async handleBackupRecovery() {
+    const backupFileInput = document.getElementById("backupFileInput");
+    if (backupFileInput.files.length > 0) {
+      const backupFile = backupFileInput.files[0];
+      await BackupRecoveryManager.recoverBackup(backupFile);
+      window.location.reload();
+      console.log("Procesando archivo de backup:", backupFile.name);
+    } else {
+      console.error("No se ha seleccionado ningún archivo de backup");
+    }
   }
 
   async renderList(configs) {
