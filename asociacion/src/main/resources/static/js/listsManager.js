@@ -32,8 +32,9 @@ export class ListsManager {
       case 'button3':
         title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Inactivos'
         document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        document.getElementById('reason').textContent = "MOTIVO INACTIVIDAD" 
         response = await RequestGet.getListMembersInactives()
-        this.renderList(response)
+        this.renderInactivesList(response)
         break;
       case 'button4':
         response = await RequestGet.getActivitys()
@@ -80,6 +81,35 @@ export class ListsManager {
                 <td>${member.memberNumber}</td>
                 <td>${activeStatus}</td>
                 <td>${lastPaidYear}</td>
+
+            </tr>`;
+
+  }
+
+  async renderInactivesList(members) {
+    let html = '';
+    for (let member of members) {
+      html += await this.getHtmlInactivesRowMembers(member);
+    }
+
+    let tbody = document.getElementById('tbody-member');
+    tbody.innerHTML = html;
+  }
+
+  async getHtmlInactivesRowMembers(member) {
+
+    const activeStatus = member.active ? '✓' : 'X';
+    const lastPaidYear = await this.getLastPaidYear(member.id)
+    const reason = await  this.getReason(member.id)
+    
+
+    return `<tr>
+                <td>${member.name} </td>
+                <td>${member.lastName1} ${member.lastName2} </td>
+                <td>${member.memberNumber}</td>
+                <td>${activeStatus}</td>
+                <td>${lastPaidYear}</td>
+                <td>${reason.reasonEnd}</td>
 
             </tr>`;
 
@@ -142,6 +172,27 @@ export class ListsManager {
                 <td>${lastPaidYear}</td>
 
             </tr>`;
+
+  }
+
+  async getReason(memberid) {
+
+    let response = await RequestGet.getRegistryByMemberId(memberid); 
+
+    if (Array.isArray(response) && response.length > 0) {
+      
+      const reason = response.find(record => record.memberId === memberid);
+
+    
+      if (reason && reason.reasonEnd) {
+        return reason.reasonEnd;
+      } else {
+        return "-"; 
+      }
+    } else {
+      return "-"; 
+    }
+
 
   }
 
