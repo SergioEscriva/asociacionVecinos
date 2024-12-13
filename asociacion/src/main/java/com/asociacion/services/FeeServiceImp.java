@@ -26,6 +26,11 @@ public class FeeServiceImp implements FeeService {
     }
 
     @Override
+    public List<Fee> findLastFeeByMemberId(Long memberId) {
+        return feeRepository.findLastFeeByMemberId(memberId);
+    }
+
+    @Override
     public List<Fee> getFees() {
 
         return feeRepository.findAll();

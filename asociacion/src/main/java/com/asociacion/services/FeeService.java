@@ -11,6 +11,8 @@ public interface FeeService {
 
     List<Fee> findByMemberId(Long id);
 
+    List<Fee> findLastFeeByMemberId(Long id);
+
     List<Fee> getFees();
 
     void delFeeById(Long id);

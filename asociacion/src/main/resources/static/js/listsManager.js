@@ -42,7 +42,19 @@ export class ListsManager {
         this.renderActivityList(responseCount)
         break;
       case 'button5':
+        title.textContent = 'Listado de Pagos'
+        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        document.getElementById('year').textContent = "AÑO PAGADO"
+        response = await RequestGet.getAllMembers() 
+        this.renderPayList(response)
+        break;
+      case 'button6' :
         title.textContent = 'Listado de Impagos'
+        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        document.getElementById('year').textContent = "ÚLTIMO AÑO PAGADO"
+        response = await RequestGet.getAllMembers() 
+        this.renderUnpayList(response)
+        break;
 
     }
   }
@@ -73,29 +85,107 @@ export class ListsManager {
 
   }
 
+  async renderPayList(members) {
+    let html = '';
+    for (let member of members) {
+      html += await this.getHtmlPayRowMembers(member);
+    }
+
+    let tbody = document.getElementById('tbody-member');
+    tbody.innerHTML = html;
+  }
+
+  async getHtmlPayRowMembers(member) {
+
+    const PaidYears = await this.getPaidYears(member.id)
+    
+    
+  
+
+    return `<tr>
+                <td>${member.name} </td>
+                <td>${member.lastName1} ${member.lastName2} </td>
+                <td>${member.memberNumber}</td>
+                <td>${PaidYears}</td>
+
+            </tr>`;
+
+  }
+
+  async renderUnpayList(members) {
+    let html = '';
+    const currentYear = new Date().getFullYear();
+    
+
+    for (let member of members) {
+      const PaidYears = await this.getPaidYears(member.id);
+      const hasPaidThisYear = PaidYears.includes(currentYear);
+
+      if (!hasPaidThisYear){
+        html += await this.getHtmlUnpayRowMembers(member);
+      }
+      
+    }
+
+    let tbody = document.getElementById('tbody-member');
+    tbody.innerHTML = html;
+  }
+
+  async getHtmlUnpayRowMembers(member) {
+
+    const lastPaidYear = await this.getLastPaidYear(member.id)
+
+    return `<tr>
+                <td>${member.name} </td>
+                <td>${member.lastName1} ${member.lastName2} </td>
+                <td>${member.memberNumber}</td>
+                <td>${lastPaidYear}</td>
+
+            </tr>`;
+
+  }
+
+
   async getLastPaidYear(memberid) {
 
-
-
     let response = await RequestGet.getFeeByMemberId(memberid);
+    
+    
+    
 
-    // Verificamos si la respuesta es un arreglo y si tiene elementos
     if (Array.isArray(response) && response.length > 0) {
-      // Buscamos el objeto que coincida con el `memberId`
+      
       const memberRecord = response.find(record => record.memberId === memberid);
 
-      // Si encontramos un registro, devolvemos el 'year'
+    
       if (memberRecord && memberRecord.year) {
         return memberRecord.year;
       } else {
-        return "-"; // Si no hay 'year' en el registro, devolvemos "-"
+        return "-"; 
       }
     } else {
-      return "-"; // Si la respuesta no es válida o está vacía, devolvemos "-"
+      return "-"; 
     }
 
 
 
+  }
+
+  async getPaidYears(memberid) {
+
+    let response = await RequestGet.getFeeByMemberId(memberid);
+  
+    if (Array.isArray(response) && response.length > 0) {
+      const memberRecords = response.filter(record => record.memberId === memberid);
+      if (memberRecords.length > 0) {
+        const years = memberRecords.map(record => record.year);
+        return years;  
+      } else {
+        return ["-"];  
+      }
+    } else {
+      return ["-"];  
+    }
   }
 
 

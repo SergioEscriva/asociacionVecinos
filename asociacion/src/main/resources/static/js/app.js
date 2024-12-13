@@ -38,6 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const { initListsIndex } = await import('/js/main.js');
             initListsIndex();
         },
+        payList: async () => {
+            const { initListsIndex } = await import('/js/main.js');
+            initListsIndex();
+        },
         activitiesList: async () => {
             const { initListsIndex } = await import('/js/main.js');
             initListsIndex();
