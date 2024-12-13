@@ -13,7 +13,7 @@ import com.dropbox.core.v2.files.WriteMode;
 
 @Component
 public class DropboxUploader {
-    
+
     @Autowired
     private DropboxFileManager dropboxFileManager;
 
