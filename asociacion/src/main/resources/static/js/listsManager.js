@@ -32,7 +32,7 @@ export class ListsManager {
       case 'button3':
         title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Inactivos'
         document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
-        document.getElementById('reason').textContent = "MOTIVO INACTIVIDAD" 
+        document.getElementById('reason').textContent = "MOTIVO INACTIVIDAD"
         response = await RequestGet.getListMembersInactives()
         this.renderInactivesList(response)
         break;
@@ -46,14 +46,14 @@ export class ListsManager {
         title.textContent = 'Listado de Pagos'
         document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('year').textContent = "AÑO PAGADO"
-        response = await RequestGet.getAllMembers() 
+        response = await RequestGet.getAllMembers()
         this.renderPayList(response)
         break;
-      case 'button6' :
+      case 'button6':
         title.textContent = 'Listado de Impagos'
         document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('year').textContent = "ÚLTIMO AÑO PAGADO"
-        response = await RequestGet.getAllMembers() 
+        response = await RequestGet.getAllMembers()
         this.renderUnpayList(response)
         break;
 
@@ -100,8 +100,8 @@ export class ListsManager {
 
     const activeStatus = member.active ? '✓' : 'X';
     const lastPaidYear = await this.getLastPaidYear(member.id)
-    const reason = await  this.getReason(member.id)
-    
+    const reason = await this.getReason(member.id)
+
 
     return `<tr>
                 <td>${member.name} </td>
@@ -109,7 +109,7 @@ export class ListsManager {
                 <td>${member.memberNumber}</td>
                 <td>${activeStatus}</td>
                 <td>${lastPaidYear}</td>
-                <td>${reason.reasonEnd}</td>
+                <td>${reason}</td>
 
             </tr>`;
 
@@ -128,9 +128,9 @@ export class ListsManager {
   async getHtmlPayRowMembers(member) {
 
     const PaidYears = await this.getPaidYears(member.id)
-    
-    
-  
+
+
+
 
     return `<tr>
                 <td>${member.name} </td>
@@ -145,16 +145,16 @@ export class ListsManager {
   async renderUnpayList(members) {
     let html = '';
     const currentYear = new Date().getFullYear();
-    
+
 
     for (let member of members) {
       const PaidYears = await this.getPaidYears(member.id);
       const hasPaidThisYear = PaidYears.includes(currentYear);
 
-      if (!hasPaidThisYear){
+      if (!hasPaidThisYear) {
         html += await this.getHtmlUnpayRowMembers(member);
       }
-      
+
     }
 
     let tbody = document.getElementById('tbody-member');
@@ -177,20 +177,21 @@ export class ListsManager {
 
   async getReason(memberid) {
 
-    let response = await RequestGet.getRegistryByMemberId(memberid); 
+    let response = await RequestGet.getRegistryByMemberId(memberid);
+
 
     if (Array.isArray(response) && response.length > 0) {
-      
+
       const reason = response.find(record => record.memberId === memberid);
 
-    
+
       if (reason && reason.reasonEnd) {
         return reason.reasonEnd;
       } else {
-        return "-"; 
+        return "-";
       }
     } else {
-      return "-"; 
+      return "-";
     }
 
 
@@ -200,22 +201,22 @@ export class ListsManager {
   async getLastPaidYear(memberid) {
 
     let response = await RequestGet.getFeeByMemberId(memberid);
-    
-    
-    
+
+
+
 
     if (Array.isArray(response) && response.length > 0) {
-      
+
       const memberRecord = response.find(record => record.memberId === memberid);
 
-    
+
       if (memberRecord && memberRecord.year) {
         return memberRecord.year;
       } else {
-        return "-"; 
+        return "-";
       }
     } else {
-      return "-"; 
+      return "-";
     }
 
 
@@ -225,17 +226,17 @@ export class ListsManager {
   async getPaidYears(memberid) {
 
     let response = await RequestGet.getFeeByMemberId(memberid);
-  
+
     if (Array.isArray(response) && response.length > 0) {
       const memberRecords = response.filter(record => record.memberId === memberid);
       if (memberRecords.length > 0) {
         const years = memberRecords.map(record => record.year);
-        return years;  
+        return years;
       } else {
-        return ["-"];  
+        return ["-"];
       }
     } else {
-      return ["-"];  
+      return ["-"];
     }
   }
 
