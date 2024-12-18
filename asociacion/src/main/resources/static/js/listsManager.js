@@ -33,6 +33,7 @@ export class ListsManager {
         title.textContent = 'Histórico Inactivo/a(s)'
         document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('reason').textContent = "MOTIVO INACTIVIDAD"
+        document.getElementById('date').textContent = "FECHA BAJA"
         //response = await RequestGet.getListMembersInactives()   Da todos los miembros inactivos
         response = await RequestGet.getResgistries()
         this.renderInactivesList(response)
@@ -103,7 +104,11 @@ export class ListsManager {
 
     const activeStatus = member.active ? '✓' : 'X';
     const lastPaidYear = await this.getLastPaidYear(member.id)
-    const reason = await RequestGet.getRegistryById(registry.id);
+    const registro = await RequestGet.getRegistryById(registry.id);
+
+    const startData = registro.startData
+    const dateObj = new Date(startData)
+    const dateOnly = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
     return `<tr>
                 <td>${member.name} </td>
@@ -111,7 +116,8 @@ export class ListsManager {
                 <td>${member.memberNumber}</td>
                 <td>${activeStatus}</td>
                 <td>${lastPaidYear}</td>
-                <td>${reason.reasonEnd}</td>
+                <td>${registro.reasonEnd}</td>
+                <td>${dateOnly}
 
             </tr>`;
 
