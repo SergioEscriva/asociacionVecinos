@@ -69,7 +69,8 @@ const titleAttribute = await RequestGet.getConfigById(1)
 document.getElementById('title').textContent = titleAttribute.attribute;
 document.getElementById('button1').textContent = "Todos los " + memberAttribute.attribute + "(s)";
 document.getElementById('button2').textContent = memberAttribute.attribute + "(s) activo/a(s)";
-document.getElementById('button3').textContent = memberAttribute.attribute + "(s) inactivo/a(s)";
+//document.getElementById('button3').textContent = memberAttribute.attribute + "(s) inactivo/a(s)";
+document.getElementById('button3').textContent = "Histórico inactivo/a(s)";
 
 
 

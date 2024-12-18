@@ -13,6 +13,8 @@ public interface RegistryService {
 
     List<Registry> getRegistrys();
 
+    List<Registry> getRegistriesOrderByMemberId();
+
     void delRegistryById(Long id);
 
     Optional<Registry> findRegistryById(Long id);

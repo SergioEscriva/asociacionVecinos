@@ -118,8 +118,13 @@ export class RequestGet {
         return await RequestGet._getRequest(url)
     }
 
-    static async getRegistryByMemberId(memberId) {
-        const url = "/api/registry/member/" + memberId
+    static async getRegistryById(registryId) {
+        const url = "/api/registry/" + registryId
+        return await RequestGet._getRequest(url)
+    }
+
+    static async getResgistries() {
+        const url = "/api/registry"
         return await RequestGet._getRequest(url)
     }
 

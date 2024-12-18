@@ -10,7 +10,11 @@ import com.asociacion.models.Registry;
 
 @Repository
 public interface RegistryRepository extends JpaRepository<Registry, Long> {
+
     @Query("SELECT m FROM Registry m WHERE m.memberId = :memberId")
     List<Registry> findByMemberId(Long memberId);
+
+    @Query("SELECT m FROM Registry m ORDER BY m.memberId")
+    List<Registry> getRegistriesOrderByMemberId();
 
 }

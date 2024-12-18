@@ -30,10 +30,11 @@ export class ListsManager {
         this.renderList(response)
         break;
       case 'button3':
-        title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Inactivos'
+        title.textContent = 'Histórico Inactivo/a(s)'
         document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('reason').textContent = "MOTIVO INACTIVIDAD"
-        response = await RequestGet.getListMembersInactives()
+        //response = await RequestGet.getListMembersInactives()   Da todos los miembros inactivos
+        response = await RequestGet.getResgistries()
         this.renderInactivesList(response)
         break;
       case 'button4':
@@ -86,22 +87,23 @@ export class ListsManager {
 
   }
 
-  async renderInactivesList(members) {
+  async renderInactivesList(registries) {
     let html = '';
-    for (let member of members) {
-      html += await this.getHtmlInactivesRowMembers(member);
+    for (let registry of registries) {
+      html += await this.getHtmlInactivesRowMembers(registry);
     }
 
     let tbody = document.getElementById('tbody-member');
     tbody.innerHTML = html;
   }
 
-  async getHtmlInactivesRowMembers(member) {
+  async getHtmlInactivesRowMembers(registry) {
+
+    const member = await RequestGet.getMemberById(registry.memberId)
 
     const activeStatus = member.active ? '✓' : 'X';
     const lastPaidYear = await this.getLastPaidYear(member.id)
-    const reason = await this.getReason(member.id)
-
+    const reason = await RequestGet.getRegistryById(registry.id);
 
     return `<tr>
                 <td>${member.name} </td>
@@ -109,7 +111,7 @@ export class ListsManager {
                 <td>${member.memberNumber}</td>
                 <td>${activeStatus}</td>
                 <td>${lastPaidYear}</td>
-                <td>${reason}</td>
+                <td>${reason.reasonEnd}</td>
 
             </tr>`;
 
@@ -172,28 +174,6 @@ export class ListsManager {
                 <td>${lastPaidYear}</td>
 
             </tr>`;
-
-  }
-
-  async getReason(memberid) {
-
-    let response = await RequestGet.getRegistryByMemberId(memberid);
-
-
-    if (Array.isArray(response) && response.length > 0) {
-
-      const reason = response.find(record => record.memberId === memberid);
-
-
-      if (reason && reason.reasonEnd) {
-        return reason.reasonEnd;
-      } else {
-        return "-";
-      }
-    } else {
-      return "-";
-    }
-
 
   }
 
