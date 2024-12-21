@@ -29,6 +29,11 @@ public class ActivityServiceImp implements ActivityService {
     }
 
     @Override
+    public List<Activity> getActivitiesOrderByName() {
+        return activityRepository.getActivitiesOrderByName();
+    }
+
+    @Override
     public List<Activity> findActivityByName(String name) {
         return activityRepository.findActivityByName(name);
     }

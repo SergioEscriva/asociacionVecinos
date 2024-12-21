@@ -18,4 +18,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
     @Query ("SELECT a FROM Activity a WHERE name LIKE %:name%")
     List<Activity> findActivityByName(@Param("name") String name);
 
+    @Query ("SELECT a FROM Activity a ORDER BY a.name")
+    List<Activity> getActivitiesOrderByName();
+
 }

@@ -29,6 +29,11 @@ public class ActivityController {
         return activityService.getActivities();
     }
 
+    @GetMapping("/byName")
+    public List<Activity> getActivitiesOrderByName(){
+        return activityService.getActivitiesOrderByName();
+    }
+
 
 
     @GetMapping("/{id}")
