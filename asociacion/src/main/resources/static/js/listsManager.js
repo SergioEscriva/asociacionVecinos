@@ -19,7 +19,7 @@ export class ListsManager {
     switch (id) {
       case 'button1':
         title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Completo'
-        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        document.getElementById('sortByMemberNumber').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         response = await RequestGet.getAllMembers()
         this.renderList(response)
 
@@ -34,7 +34,7 @@ export class ListsManager {
         break;
       case 'button2':
         title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Activos'
-        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        document.getElementById('sortByMemberNumber').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         response = await RequestGet.getListMembersActives()
         this.renderList(response)
 
@@ -50,7 +50,7 @@ export class ListsManager {
         break;
       case 'button3':
         title.textContent = 'Histórico Inactivo/a(s)'
-        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        document.getElementById('sortByMemberNumber').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('reason').textContent = "MOTIVO INACTIVIDAD"
         document.getElementById('date').textContent = "FECHA BAJA"
 
@@ -70,7 +70,7 @@ export class ListsManager {
         break;
       case 'button5':
         title.textContent = 'Listado de Pagos'
-        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        document.getElementById('sortByMemberNumberPayList').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('year').textContent = "AÑO PAGADO"
         response = await RequestGet.getAllMembers()
         this.renderPayList(response)
@@ -86,7 +86,7 @@ export class ListsManager {
         break;
       case 'button6':
         title.textContent = 'Listado de Impagos'
-        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        document.getElementById('sortByMemberNumberPayList').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('year').textContent = "ÚLTIMO AÑO PAGADO"
         response = await RequestGet.getAllMembers()
         this.renderUnpayList(response)
