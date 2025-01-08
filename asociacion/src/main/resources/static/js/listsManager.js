@@ -227,7 +227,7 @@ export class ListsManager {
 
   async getLastPaidYear(memberid) {
 
-    let response = await RequestGet.getFeeByMemberId(memberid);
+    let response = await RequestGet.getLastFeeByMemberId(memberid);
 
 
 
