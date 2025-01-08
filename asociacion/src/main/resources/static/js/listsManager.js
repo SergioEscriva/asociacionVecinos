@@ -54,9 +54,8 @@ export class ListsManager {
         document.getElementById('reason').textContent = "MOTIVO INACTIVIDAD"
         document.getElementById('date').textContent = "FECHA BAJA"
 
-        //Ocultamos los botones
-        document.getElementById('sortByName').style.display = 'none';
-        document.getElementById('sortByMemberNumber').style.display = 'none';
+        document.getElementById('sortByName').style.cursor = 'text'; 
+        document.getElementById('sortByMemberNumber').style.cursor = 'text';
 
         //response = await RequestGet.getListMembersInactives()   Da todos los miembros inactivos
         response = await RequestGet.getResgistries()
