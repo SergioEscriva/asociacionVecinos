@@ -97,7 +97,7 @@ export class RequestGet {
     }
 
 
-    
+
 
     static async getAllConfigs() {
         const url = "/api/configs"
@@ -155,6 +155,11 @@ export class RequestGet {
 
     static async getRegistryById(registryId) {
         const url = "/api/registry/" + registryId
+        return await RequestGet._getRequest(url)
+    }
+
+    static async getRegistryByMemberId(registryId) {
+        const url = "/api/registry/member/" + registryId
         return await RequestGet._getRequest(url)
     }
 
