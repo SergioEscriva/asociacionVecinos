@@ -188,7 +188,7 @@ export class MembersManager {
       if (isActive) {
         activate = 1
       }
-      console.log(activate, isActive)
+
       const memberUpdate = {
 
         memberNumber: memberNumber,

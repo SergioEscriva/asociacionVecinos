@@ -4,10 +4,17 @@ import { RequestGet } from './RequestGet.js';
 
 export class RegistryManager {
     static async checkActivityTrue(memberId) {
+        const buttonFee = document.getElementById("updateFee")
+        const activeCheckbox = document.getElementById('active')
+        const titleButton = buttonFee.className
 
-
-        if (confirm("¿Estás seguro de actualizar el estado a ACTIVO?")) {
-            this.activeMemberStart(memberId)
+        if (titleButton.includes("buttonFee button-green")) {
+            if (confirm("¿Estás seguro de actualizar el estado a ACTIVO?")) {
+                this.activeMemberStart(memberId)
+            }
+        } else {
+            alert("No se puede activar con deudas")
+            activeCheckbox.checked = false
         }
     }
 

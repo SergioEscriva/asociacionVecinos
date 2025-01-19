@@ -119,7 +119,7 @@ export class RequestGet {
     }
 
     static async getActivitys() {
-        const url = "/api/activity/byName"
+        const url = "/api/activity"
         return await RequestGet._getRequest(url)
 
     }
