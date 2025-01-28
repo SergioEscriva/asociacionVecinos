@@ -1,5 +1,7 @@
 package com.asociacion.repositories;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +17,9 @@ public interface FeeRepository extends JpaRepository<Fee, Long> {
 
     @Query("SELECT m FROM Fee m WHERE m.memberId = :memberId ORDER BY m.year DESC")
     List<Fee> findLastFeeByMemberId(Long memberId);
+
+    @Query("SELECT m FROM Fee m WHERE m.date = :date")
+    List<Fee> findFeesByDate(LocalDate date);
 
 
 }
