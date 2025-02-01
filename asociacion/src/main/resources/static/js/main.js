@@ -43,7 +43,7 @@ function initListsIndex() {
         });
 }
 
-function initFeesBydate(){
+function initFeesBydateIndex(){
     const feesBydate = new FeesBydate();
     feesBydate.init()
         .then(() => {
