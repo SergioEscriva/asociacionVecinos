@@ -4,7 +4,7 @@ import { Listeners } from './Listeners.js';
 import { MembersManager } from './MembersManager.js';
 import { ListsManager } from './listsManager.js';
 import { RequestGet } from './RequestGet.js';
-import {FeesByDate} from '/FeesByDate.js';
+import { FeesBydate } from './FeesBydate.js';
 
 
 
@@ -43,9 +43,9 @@ function initListsIndex() {
         });
 }
 
-function initFeesByDate(){
-    const feesByDate = new FeesByDate();
-    feesByDate.init()
+function initFeesBydate(){
+    const feesBydate = new FeesBydate();
+    feesBydate.init()
         .then(() => {
 
         })
@@ -86,5 +86,5 @@ document.getElementById('button3').textContent = "Histórico inactivo/a(s)";
 
 
 
-export { initActivityIndex, initListsIndex, initMemberIndex, initConfigIndex, initFeesByDate };
+export { initActivityIndex, initListsIndex, initMemberIndex, initConfigIndex, initFeesBydate };
 

@@ -46,9 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const { initListsIndex } = await import('/js/main.js');
             initListsIndex();
         },
-        FeesByDate: async () => {
-            const { initFeesByDate } = await import('/js/main.js');
-            initFeesByDate();
+        FeesBydate: async () => {
+            const { initFeesBydate } = await import('/js/main.js');
+            initFeesBydate();
         },
         configIndex: async () => {
             const { initConfigIndex } = await import('/js/main.js');
