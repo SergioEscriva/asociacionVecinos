@@ -1,5 +1,7 @@
 package com.asociacion.services;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +16,8 @@ public interface FeeService {
     List<Fee> findLastFeeByMemberId(Long id);
 
     List<Fee> getFees();
+
+    List<Fee> findFeesByDate(LocalDate date);
 
     void delFeeById(Long id);
 

@@ -21,8 +21,9 @@
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <style>
-        #sortByNamePayList, #sortByMemberNumberPayList {
-            cursor: pointer; 
+        #sortByNamePayList,
+        #sortByMemberNumberPayList {
+            cursor: pointer;
         }
     </style>
 
@@ -43,14 +44,25 @@
 
 
 
+
+
                 <!-- Begin Page Content -->
                 <div class="container">
                     <img src="img/mislata.png" alt="Valencia Street" class="background-image">
 
                     <div class="text-center mb-3">
-                        <h1 id="txtTitleList" style="color: blue"></h1>
+                        <h1 id="txtTitleList" style="color: blue">Pagos por fecha</h1>
                     </div>
+                    <div>
+                        <form id="dateForm">
+                            <label for="date">Fecha: </label>
+                            <input type="date" id="date" name="date" required>
+                            <a class="btn btn-primary" id="sendDateBtn">Enviar</a>
+                        </form>
 
+
+
+                    </div>
                     <div class="mt-2">
                         <input type="hidden" name="id" id="txtId">
                         <table class="table table-hover">
@@ -58,15 +70,15 @@
                                 <tr>
                                     <th>NOMBRE</th>
                                     <th id="sortByNamePayList">APELLIDOS</th>
-                                    <th id="sortByMemberNumberPayList"></th>
-                                    <th id="year"></th>
+                                    <th id="sortByMemberNumberPayList">Nº MIEMBRO</th>
+                                    <th id="year">AÑO PAGADO</th>
                                 </tr>
 
                             </thead>
 
                             <tbody id="tbody-member">
                                 <tr>
-                                    <td> CARGANDO...</td>
+                                    <td> </td>
                                     <td> </td>
                                     <td> </td>
                                     <td> </td>
@@ -84,7 +96,7 @@
                 <footer>
                     <div>
                         <div class="copyright text-center my-auto">
-                            <span>Copyright &copy; SergioS 2024</span>
+                            <span>Copyright &copy; SergioS 2024-25</span>
                         </div>
                     </div>
                 </footer>
@@ -112,6 +124,9 @@
 
         <!-- Page level plugins -->
         <script src="vendor/chart.js/Chart.min.js"></script>
+
+
+
 
         <!-- Page level custom scripts 
     <script src="js/MembersManager.js"></script>
