@@ -22,4 +22,7 @@ public interface FeeRepository extends JpaRepository<Fee, Long> {
     List<Fee> findFeesByDate(LocalDate date);
 
 
+
+
+
 }

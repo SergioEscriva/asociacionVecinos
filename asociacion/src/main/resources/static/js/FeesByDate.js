@@ -1,4 +1,4 @@
-
+import { RequestGet } from './RequestGet.js';
 
 export class FeesByDate {
     constructor() {
@@ -9,30 +9,46 @@ export class FeesByDate {
     async init() {
 
         const sendDateBtn = document.getElementById("sendDateBtn")
-        console.log(sendDateBtn)
+        
         sendDateBtn.addEventListener("click", function () {
-            alert("Entrando al primer método")
-            FeesByDate.findByDate();
+            
+            const date = document.getElementById("date").value;
+
+            
+            
+            FeesByDate.findByDate(date);
         });
 
-        //buttonFeesBydate.textContent = "¿Deudas?"
-
-        // Asignamos la llamada al botón
-        /* const sendDateBtn = document.getElementById("sendDateBtn");
-         if (sendDateBtn) {
-             sendBtn.addEventListener("click", (event) => {  // Usamos función de flecha aquí
-                 event.preventDefault();  // Evitar el comportamiento predeterminado del formulario
-                 const date = document.getElementById("date").value;
-                 this.findByDate(date);  
-                 alert("Funciona el botón")
-             });
-         }*/
     }
 
-    static findByDate() {
-        alert("Entrando al segundo método")
+    static async findByDate(date) {
+        let response = await RequestGet.getFeesByDate(date)
+        FeesByDate.renderList(response)
 
     }
+    static async renderList(members) {
+        let html = '';
+        for (let member of members) {
+          html += await FeesByDate.getHtmlPayRowMembers(member);
+        }
+    
+        let tbody = document.getElementById('tbody-member');
+        tbody.innerHTML = html;
+      }
+    
+    static async getHtmlPayRowMembers(member) {
+    
+        const person = await RequestGet.getMemberById(member.memberId)
+        return `<tr>
+                    <td>${person.name} </td>
+                    <td>${person.lastName1} ${person.lastName2} </td>
+                    <td>${person.memberNumber}</td>
+                    <td>${member.year}</td>
+    
+                </tr>`;
+    
+      }
+
 
 
 
