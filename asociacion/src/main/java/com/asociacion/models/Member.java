@@ -31,6 +31,8 @@ public class Member {
     private String location;
     private Long phone;
     private String email;
+
+    @Column(unique = true)
     private String dni;
     private String gender;
     private Boolean active;

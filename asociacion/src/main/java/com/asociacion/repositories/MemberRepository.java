@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import com.asociacion.models.Member;
 
 @Repository
@@ -37,7 +38,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT m FROM Member m WHERE "
             + "CONCAT(LOWER(m.name), ' ', LOWER(m.lastName1), ' ', LOWER(m.lastName2)) LIKE LOWER(CONCAT('%', :query, '%')) OR "
-            + "CAST(m.memberNumber AS string) LIKE %:query%")
+            + "CAST(m.memberNumber AS string) LIKE %:query% OR " +
+       "LOWER(m.dni) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<Member> searchByMemberNumberContaining(@Param("query") String query);
 
     @Query("SELECT m FROM Member m ORDER BY m.lastName1, m.lastName2, m.name")
