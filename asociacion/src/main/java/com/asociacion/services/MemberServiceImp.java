@@ -83,4 +83,8 @@ public class MemberServiceImp implements MemberService {
         return memberRepository.searchByMemberNumberContaining(query);
     }
 
+    @Override
+    public boolean existsByDni(String dni) {
+        return memberRepository.existsByDni(dni);
+    }
 }

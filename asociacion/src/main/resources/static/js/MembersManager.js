@@ -54,6 +54,7 @@ export class MembersManager {
     document.getElementById("updateMember").addEventListener("click", function () { MembersManager.updateMember(); });
     document.getElementById("newMember").addEventListener("click", function () { MembersManager.newMember(); });
 
+
     const buttonFee = document.getElementById("updateFee")
     buttonFee.addEventListener("click", function () { MembersManager.updateFee(); });
     buttonFee.textContent = "¿Deudas?"
@@ -164,6 +165,26 @@ export class MembersManager {
   }
 
   static async updateMember() {
+    const name = document.getElementById('name').value
+    const dni = document.getElementById('dni').value
+
+    if (!name) {
+      alert("Obligatorio un nombre")
+    }
+
+    if (!dni) {
+      alert("Obligatorio un dni válido")
+    } else {
+      const resultado = MembersManager.validarDNI(dni);
+      if (!resultado) {
+        alert("Error, DNI NO válido")
+      } else {
+        MembersManager.updateMemberNameDniOk()
+      }
+    }
+  }
+
+  static async updateMemberNameDniOk() {
     try {
       const memberId = document.getElementById('memberId').value
       let memberNumber = document.getElementById('memberNumber').value
@@ -210,11 +231,17 @@ export class MembersManager {
 
       let request;
       if (!memberId) {
-        request = await RequestPost.newMember(memberUpdate);
-        memberNumber = request.memberNumber
-        const newMemberId = request.id
-        await FamilyManager.createFamily(memberNumber)
-        await RegistryManager.activeMemberStart(newMemberId)
+        const resultado = MembersManager.validarDNIYBaseDeDatos(dni);
+        if (!resultado.valido) {
+          alert("Error, " + resultado.mensaje)
+          return
+        } else {
+          request = await RequestPost.newMember(memberUpdate);
+          memberNumber = request.memberNumber
+          const newMemberId = request.id
+          await FamilyManager.createFamily(memberNumber)
+          await RegistryManager.activeMemberStart(newMemberId)
+        }
       } else {
         request = await RequestPut.editMember(memberId, memberUpdate);
         await FamilyManager.updateFamily(memberNumber)
@@ -260,6 +287,44 @@ export class MembersManager {
     }
     return text
   }
+
+  static validarDNIYBaseDeDatos(dni) {
+    if (!MembersManager.validarDNI(dni)) {
+      return { valido: false, mensaje: "DNI no válido" };
+    }
+
+    try {
+
+      const dniExiste = RequestGet.getMemberByDni(dni)
+
+      if (dniExiste) {
+        return { valido: false, mensaje: "El DNI ya existe en la base de datos" };
+      }
+
+      return { valido: true, mensaje: "DNI válido" };
+    } catch (error) {
+      console.error("Error al validar DNI:", error);
+      return { valido: false, mensaje: "Error al validar DNI" };
+    }
+  }
+
+  static validarDNI(dni) {
+    if (!dni || dni.length !== 9) {
+      return false;
+    }
+
+    const numero = parseInt(dni.substring(0, 8));
+    const letra = dni.charAt(8).toUpperCase();
+    const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+
+    if (isNaN(numero) || letras.charAt(numero % 23) !== letra) {
+      return false;
+    }
+
+    return true;
+  }
+
+
 }
 
 

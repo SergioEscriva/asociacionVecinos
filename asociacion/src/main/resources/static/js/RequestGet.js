@@ -131,6 +131,12 @@ export class RequestGet {
 
     }
 
+    static async getMemberByDni(dni) {
+        const url = "api/members/checkDni/" + dni
+        return await RequestGet._getRequest(url)
+
+    }
+
     static async getFamilyById(id) {
         const url = "api/family/" + id
         return await RequestGet._getRequest(url)

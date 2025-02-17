@@ -115,4 +115,9 @@ public class MemberController {
     public List<Member> searchMembers(@RequestParam String query) {
         return memberService.searchMembers(query);
     }
+
+    @GetMapping("/checkDni/{dni}")
+    public boolean checkDniExists(@PathVariable String dni) {
+        return memberService.existsByDni(dni);
+    }
 }

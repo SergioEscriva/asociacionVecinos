@@ -1,8 +1,9 @@
 package com.asociacion.services;
 
-import com.asociacion.models.Member;
 import java.util.List;
 import java.util.Optional;
+
+import com.asociacion.models.Member;
 
 public interface MemberService {
 
@@ -31,5 +32,7 @@ public interface MemberService {
     List<Member> getInactivesOrderedByMemberNumber();
 
     List<Member> searchMembers(String query);
+
+    boolean existsByDni(String dni);
 
 }
