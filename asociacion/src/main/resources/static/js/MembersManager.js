@@ -58,6 +58,10 @@ export class MembersManager {
     const buttonFee = document.getElementById("updateFee")
     buttonFee.addEventListener("click", function () { MembersManager.updateFee(); });
     buttonFee.textContent = "¿Deudas?"
+
+    const buttonCard = document.getElementById("updateCard")
+    buttonCard.addEventListener("click", function () { MembersManager.updateCard(); });
+    buttonCard.textContent = "Impreso"
   }
 
   static async limpiaCampos() {
@@ -286,6 +290,13 @@ export class MembersManager {
       text += " - " + listFees[x].year;
     }
     return text
+  }
+
+
+  static async updateCard() {
+    alert("Próximamente se imprimirá el Carnet desde este botón")
+    const buttonCard = document.getElementById("updateCard")
+    buttonCard.title = "Ya Impreso"
   }
 
   static validarDNIYBaseDeDatos(dni) {

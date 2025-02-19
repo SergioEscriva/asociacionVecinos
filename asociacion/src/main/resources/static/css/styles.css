@@ -238,6 +238,22 @@ button {
     margin-left: 50px;
 }
 
+.buttonCard {
+    background-color: green;
+    color: white;
+    width: 85px;
+    height: 40px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 5px;
+    border: none;
+    border-radius: 4px;
+    margin-left: 0px;
+}
+
 .buttonActivity {
     background-color: #053cf1;
     color: white;
