@@ -62,6 +62,17 @@ export class MembersManager {
     const buttonCard = document.getElementById("updateCard")
     buttonCard.addEventListener("click", function () { MembersManager.updateCardClick(); });
     buttonCard.textContent = "Impreso"
+
+
+    const inputFind = document.getElementById('input-find');
+    const clearButton = document.getElementById('clear-button');
+
+    clearButton.addEventListener('click', () => {
+      inputFind.value = ''; // Borra el texto del input
+      inputFind.focus(); // Devuelve el foco al input (opcional)
+    });
+
+
   }
 
   static async limpiaCampos() {

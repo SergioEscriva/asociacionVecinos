@@ -29,7 +29,7 @@ body {
     justify-content: space-between;
     align-items: center;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .input-group label {
@@ -39,6 +39,7 @@ body {
 
 .input-group input {
     /* flex: 2;*/
+
 }
 
 h2 {
@@ -59,9 +60,8 @@ h2 {
     gap: 0px;
 
     padding: 10px;
-
-
 }
+
 
 .background-image {
     position: absolute;
@@ -120,7 +120,7 @@ input[type="text"] {
 
 input[type="input-find"] {
     font-size: 18px;
-    width: 300px;
+    width: 255px;
     height: 30px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -385,7 +385,7 @@ input[type="checkbox-small"] {
     padding: 0;
     margin: 0;
     border: 1px solid #ccc;
-    max-height: 200px;
+    max-height: 1200px;
 }
 
 .input-activity {
