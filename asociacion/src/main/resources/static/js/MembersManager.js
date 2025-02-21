@@ -60,7 +60,7 @@ export class MembersManager {
     buttonFee.textContent = "¿Deudas?"
 
     const buttonCard = document.getElementById("updateCard")
-    buttonCard.addEventListener("click", function () { MembersManager.updateCard(); });
+    buttonCard.addEventListener("click", function () { MembersManager.updateCardClick(); });
     buttonCard.textContent = "Impreso"
   }
 
@@ -134,7 +134,12 @@ export class MembersManager {
       FeeManager.checkFee()
       const buttonFee = document.getElementById("updateFee")
       buttonFee.title = await MembersManager.updateFeeTitle(member.id)
+
+      const buttonCard = document.getElementById("updateCard")
+      buttonCard.title = await MembersManager.updateCard(member.cardPrint)
+
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
+
 
     }
   }
@@ -214,6 +219,14 @@ export class MembersManager {
         activate = 1
       }
 
+      var printed = 0
+      const buttonCard = document.getElementById('updateCard')
+      const buttonContent = buttonCard.textContent
+      if (buttonContent == "Impreso") {
+        printed = 1
+      }
+
+
       const memberUpdate = {
 
         memberNumber: memberNumber,
@@ -230,6 +243,7 @@ export class MembersManager {
         dni: dni,
         gender: gender,
         active: activate,
+        cardPrint: printed,
         notes: notes
       }
 
@@ -292,12 +306,28 @@ export class MembersManager {
     return text
   }
 
+  static async updateCard(cardPrint) {
 
-  static async updateCard() {
+    const buttonCard = document.getElementById('updateCard')
+    if (cardPrint) {
+      buttonCard.classList = 'buttonCard button-green'
+      buttonCard.textContent = "Impreso"
+
+    } else {
+      buttonCard.classList = 'buttonCard button-red'
+      buttonCard.textContent = "No Impreso"
+
+    }
+  }
+
+
+  static async updateCardClick() {
     let memberNumber = document.getElementById('memberNumber').value
     await RequestGet.getPrintCard(memberNumber)
     const buttonCard = document.getElementById("updateCard")
-    buttonCard.title = "Ya Impreso"
+    buttonCard.classList = 'buttonCard button-green'
+    buttonCard.textContent = "Impreso"
+    MembersManager.updateMember()
     alert("Carnet N.º " + memberNumber + ", guardado en el escritorio en pdf para imprimir.")
   }
 
