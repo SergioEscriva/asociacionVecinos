@@ -26,35 +26,35 @@ public class CardMemberServiceImp implements CardMemberService {
 
     @Override
     public void generarPdf(Long id) throws IOException{
-        // 1. Leer la plantilla
+        //Lee la plantilla
         File plantillaFile = ResourceUtils.getFile("classpath:templates/tarjeta.html");
         String plantillaHtml = Files.readString(plantillaFile.toPath(), StandardCharsets.UTF_8);
 
-        // 2. Obtener los datos del socio
+        //Obtener los datos del socio
         Member socio = memberRepository.findByMemberNumber(id).orElseThrow(() -> new RuntimeException("Socio no encontrado"));
-
-        // 3. Reemplazar los marcadores de posición
+        
         String htmlConDatos = plantillaHtml
                 .replace("${nombre}", socio.getName())
                 .replace("${apellidos}", socio.getLastName1() + " " + socio.getLastName2())
                 .replace("${numeroSocio}", String.valueOf(socio.getMemberNumber()))
                 .replace("${dni}", socio.getDni());
 
-// 4. Generar el PDF (iText 5)
-        File pdfFile = new File("carnet_socio_" + id + ".pdf");
+        //Generar el PDF (iText 5)
+        String rutaEscritorio = System.getProperty("user.home") + "/Escritorio";
+        File pdfFile = new File(rutaEscritorio, id + "_carnet_socio" + ".pdf");
         try (FileOutputStream outputStream = new FileOutputStream(pdfFile)) {
-            Document document = new Document(); // Crea el documento iText 5
-            PdfWriter.getInstance(document, outputStream); // Obtiene la instancia de PdfWriter
+            Document document = new Document();
+            PdfWriter.getInstance(document, outputStream);
             document.open();
 
-            // Convertir HTML a PDF (iText 5 - Limitado)
+            //Convertir HTML a PDF (iText 5 - Limitado)
             HTMLWorker worker = new HTMLWorker(document);
-            worker.parse(new StringReader(htmlConDatos)); // htmlConDatos contiene el HTML con los datos
+            worker.parse(new StringReader(htmlConDatos));
             worker.close();
 
             document.close(); // Cierra el documento
         } catch (Exception ex) {
-            ex.printStackTrace(); // Imprime la excepción para depuración. ¡No lo dejes vacío en producción!
+            ex.printStackTrace();
            // throw ex; // Re-lanza la excepción para que se propague y se maneje en otro lugar si es necesario
         }
         System.out.println("PDF generado correctamente en: " + pdfFile.getAbsolutePath());

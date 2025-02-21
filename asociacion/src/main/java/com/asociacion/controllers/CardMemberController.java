@@ -17,7 +17,7 @@ public class CardMemberController {
     @Autowired
     private CardMemberService cardMemberService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/card/{id}")
     public void generarPdf(@PathVariable Long id) throws IOException{
         cardMemberService.generarPdf(id);
     }

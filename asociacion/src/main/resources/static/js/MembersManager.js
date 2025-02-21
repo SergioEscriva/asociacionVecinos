@@ -294,9 +294,11 @@ export class MembersManager {
 
 
   static async updateCard() {
-    alert("Próximamente se imprimirá el Carnet desde este botón")
+    let memberNumber = document.getElementById('memberNumber').value
+    await RequestGet.getPrintCard(memberNumber)
     const buttonCard = document.getElementById("updateCard")
     buttonCard.title = "Ya Impreso"
+    alert("Carnet N.º " + memberNumber + ", guardado en el escritorio en pdf para imprimir.")
   }
 
   static validarDNIYBaseDeDatos(dni) {

@@ -96,7 +96,11 @@ export class RequestGet {
         return await RequestGet._getRequest(url)
     }
 
+    static async getPrintCard(memberNumber) {
+        const url = "api/pdf/card/" + memberNumber
+        return await RequestGet._getRequest(url)
 
+    }
 
 
     static async getAllConfigs() {
