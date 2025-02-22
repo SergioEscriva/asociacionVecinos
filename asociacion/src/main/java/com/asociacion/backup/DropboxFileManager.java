@@ -28,7 +28,7 @@ public class DropboxFileManager {
     public void manageFiles(DbxClientV2 client) {
         try {
             Optional<Config> dropboxPathConfig = configServiceImp.findById(6L);
-
+            
             if (!dropboxPathConfig.isPresent()) {
                 throw new RuntimeException("No se encontró la configuración de Dropbox");
             }

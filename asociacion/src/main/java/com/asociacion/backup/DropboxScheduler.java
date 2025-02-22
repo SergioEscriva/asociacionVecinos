@@ -28,16 +28,16 @@ public class DropboxScheduler {
     public void scheduleDropboxBackup() {
         Optional<Config> dropboxPathConfig = configServiceImp.findById(6L);
         Optional<Config> dropboxTokenConfig = configServiceImp.findById(5L);
+        String dropboxPathString = dropboxPathConfig.get().getAttribute();
+        String dropboxTokenString = dropboxTokenConfig.get().getAttribute();
         
-        if (dropboxPathConfig.isPresent() && dropboxTokenConfig.isPresent()) {
-            String dropboxPathString = dropboxPathConfig.get().getAttribute();
-            String dropboxTokenString = dropboxTokenConfig.get().getAttribute();
+        if (!dropboxPathString.equals("") && !dropboxTokenString.equals("")) {
             
             String localFilePath = "./backup/backupSQL.sql";
             String dropboxPath = dropboxPathString + System.currentTimeMillis() + "_archivo.sql";
             dropboxUploader.uploadFile(localFilePath, dropboxPath, dropboxTokenString);
         } else {
-            System.err.println("No se encontraron configuraciones de Dropbox");
+            System.out.println("No se encontraron configuraciones de Dropbox.");
         }
     }
 }
