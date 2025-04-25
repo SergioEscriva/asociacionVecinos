@@ -140,14 +140,17 @@ export class MembersManager {
       const activeCheckbox = document.getElementById('active')
       this.checkActive(activeCheckbox, member)
 
+      console.log(member.cardPrint);
+      console.log("Sergiooooooo");
+
+      const buttonCard = document.getElementById("updateCard")
+      buttonCard.title = await MembersManager.updateCard(member.cardPrint)
 
       document.getElementById('notes').value = member.notes;
       FeeManager.checkFee()
       const buttonFee = document.getElementById("updateFee")
       buttonFee.title = await MembersManager.updateFeeTitle(member.id)
 
-      const buttonCard = document.getElementById("updateCard")
-      buttonCard.title = await MembersManager.updateCard(member.cardPrint)
 
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
 
@@ -230,11 +233,12 @@ export class MembersManager {
         activate = 1
       }
 
-      var printed = 0
+      /// Se cambia 0 para impreso y 1 para no impreso para poder importar base de datos de acces
+      var printed = 1
       const buttonCard = document.getElementById('updateCard')
       const buttonContent = buttonCard.textContent
       if (buttonContent == "Impreso") {
-        printed = 1
+        printed = 0
       }
 
 
@@ -321,12 +325,11 @@ export class MembersManager {
 
     const buttonCard = document.getElementById('updateCard')
     if (cardPrint) {
-      buttonCard.classList = 'buttonCard button-green'
-      buttonCard.textContent = "Impreso"
-
-    } else {
       buttonCard.classList = 'buttonCard button-red'
       buttonCard.textContent = "No Impreso"
+    } else {
+      buttonCard.classList = 'buttonCard button-green'
+      buttonCard.textContent = "Impreso"
 
     }
   }
