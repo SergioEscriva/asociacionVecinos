@@ -12,6 +12,9 @@ export class RegistryManager {
             if (confirm("¿Estás seguro de actualizar el estado a ACTIVO?")) {
                 this.activeMemberStart(memberId)
             }
+            else {
+                activeCheckbox.checked = false
+            }
         } else {
             alert("No se puede activar con deudas")
             activeCheckbox.checked = false
