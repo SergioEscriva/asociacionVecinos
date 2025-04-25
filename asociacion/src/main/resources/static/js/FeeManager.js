@@ -2,6 +2,7 @@ import { RequestPost } from './RequestPost.js';
 import { RequestPut } from './RequestPut.js';
 import { RequestDel } from './RequestDel.js';
 import { RequestGet } from './RequestGet.js';
+import { MembersManager } from './MembersManager.js';
 
 
 export class FeeManager {
@@ -18,7 +19,7 @@ export class FeeManager {
         const feesMember = await RequestGet.getFeeByMemberId(memberId)
 
         const member = await RequestGet.getMemberById(memberId);
-        const checkFee = document.getElementById('active');
+        //const checkFee = document.getElementById('active'); // quitamos que sea activo o no de forma automática por pagar.
 
 
         const exist = feesMember.some(item => item.year === currentYear); // || item.date.startsWith('2023'));
@@ -26,11 +27,12 @@ export class FeeManager {
         if (exist) {
             button.classList = 'buttonFee button-green'
             button.textContent = "Sin Deudas"
-            checkFee.checked = member.active === true;
+            //checkFee.checked = member.active === true;
+
         } else {
             button.classList = 'buttonFee button-red'
             button.textContent = "Con Deudas"
-            checkFee.checked = member.active === false;
+            // checkFee.checked = member.active === false;
         }
     }
     static async paidFee() {
@@ -85,7 +87,7 @@ export class FeeManager {
                     };
 
                     await RequestPost.newFee(feeUpdate);
-                    this.checkFee()
+                    FeeManager.checkFee()
 
                 }
             } catch (error) {

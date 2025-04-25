@@ -22,6 +22,7 @@ export class RegistryManager {
     }
 
     static async checkActivityFalse(memberId) {
+        const activeCheckbox = document.getElementById('active')
         let reason = "Personal"
         if (confirm("¿Estás seguro de actualizar el estado a INACTIVO?")) {
             let newReason = reason
@@ -31,6 +32,9 @@ export class RegistryManager {
                 newReason = prompt("Introduce el motivo de la baja:", reason);
             }
             this.activeMemberEnd(memberId, newReason)
+        }
+        else {
+            activeCheckbox.checked = true
         }
     }
 
