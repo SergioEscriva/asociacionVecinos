@@ -140,8 +140,7 @@ export class MembersManager {
       const activeCheckbox = document.getElementById('active')
       this.checkActive(activeCheckbox, member)
 
-      console.log(member.cardPrint);
-      console.log("Sergiooooooo");
+
 
       const buttonCard = document.getElementById("updateCard")
       buttonCard.title = await MembersManager.updateCard(member.cardPrint)
@@ -200,7 +199,8 @@ export class MembersManager {
     } else {
       const resultado = MembersManager.validarDNI(dni);
       if (!resultado) {
-        alert("Error, DNI NO válido")
+        const letra = MembersManager.letraDNI(dni);
+        alert("Error, DNI no válido, se espera la letra: " + letra);
       } else {
         MembersManager.updateMemberNameDniOk()
       }
@@ -347,6 +347,7 @@ export class MembersManager {
 
   static validarDNIYBaseDeDatos(dni) {
     if (!MembersManager.validarDNI(dni)) {
+      const letra = MembersManager.letraDNI(dni)
       return { valido: false, mensaje: "DNI no válido" };
     }
 
@@ -371,14 +372,26 @@ export class MembersManager {
     }
 
     const numero = parseInt(dni.substring(0, 8));
+    console.log(numero)
     const letra = dni.charAt(8).toUpperCase();
-    const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+    console.log(letra)
+    const letraValida = MembersManager.letraDNI(dni)
 
-    if (isNaN(numero) || letras.charAt(numero % 23) !== letra) {
+    if (isNaN(numero) || letraValida !== letra) {
       return false;
     }
 
     return true;
+  }
+
+  static letraDNI(dni) {
+
+    const numero = parseInt(dni.substring(0, 8));
+    const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+    const letraValida = letras.charAt(numero % 23);
+
+    return letraValida;
+
   }
 
 
