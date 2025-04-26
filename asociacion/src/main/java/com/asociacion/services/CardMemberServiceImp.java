@@ -32,12 +32,18 @@ public class CardMemberServiceImp implements CardMemberService {
 
         //Obtener los datos del socio
         Member socio = memberRepository.findByMemberNumber(id).orElseThrow(() -> new RuntimeException("Socio no encontrado"));
-        
+
+               
         String htmlConDatos = plantillaHtml
                 .replace("${nombre}", socio.getName())
                 .replace("${apellidos}", socio.getLastName1() + " " + socio.getLastName2())
                 .replace("${numeroSocio}", String.valueOf(socio.getMemberNumber()))
-                .replace("${dni}", socio.getDni());
+                .replace("${dni}", socio.getDni())
+                .replace("${address}", socio.getAddress())
+                .replace("${address_number}", socio.getAddressNumber())
+                .replace("${address_door}", socio.getAddressDoor())
+                .replace("${location}", socio.getLocation())
+                .replace("${phone}", String.valueOf(socio.getPhone()));
 
         //Generar el PDF (iText 5)
         String rutaEscritorio = System.getProperty("user.home") + "/Escritorio";
