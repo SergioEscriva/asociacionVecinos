@@ -12,6 +12,8 @@ public interface ActivityService {
 
     public List<Activity> getActivities();
 
+    public List<Activity> getActivitiesOrderByName();
+
      List<Activity> findActivityByName(String name);
 
 

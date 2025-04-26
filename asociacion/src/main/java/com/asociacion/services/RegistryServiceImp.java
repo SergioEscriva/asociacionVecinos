@@ -32,6 +32,11 @@ public class RegistryServiceImp implements RegistryService {
     }
 
     @Override
+    public List<Registry> getRegistriesOrderByMemberId() {
+        return registryRepository.getRegistriesOrderByMemberId();
+    }
+
+    @Override
     public void delRegistryById(Long id) {
         registryRepository.deleteById(id);
     }

@@ -64,10 +64,32 @@ export class RequestGet {
 
 
 
+    static async getListMembersActivesByName() {
+        const url = "/api/members/actives/byName"
+        return await RequestGet._getRequest(url)
+    }
+
+    static async getListMembersActivesByMemberNumber() {
+        const url = "/api/members/actives/byMemberNumber"
+        return await RequestGet._getRequest(url)
+    }
+
+
+
     static async getListMembersInactives() {
         const url = "/api/members/inactives"
         return await RequestGet._getRequest(url)
 
+    }
+
+    static async getListMembersInactivesByName() {
+        const url = "/api/members/inactives/byName"
+        return await RequestGet._getRequest(url)
+    }
+
+    static async getListMembersInactivesByMemberNumber() {
+        const url = "/api/members/inactives/byMemberNumber"
+        return await RequestGet._getRequest(url)
     }
 
     static async getListMembersInactivesByName() {
@@ -123,7 +145,7 @@ export class RequestGet {
     }
 
     static async getActivitys() {
-        const url = "/api/activity"
+        const url = "/api/activity/byName"
         return await RequestGet._getRequest(url)
 
     }

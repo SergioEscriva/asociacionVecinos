@@ -1,5 +1,7 @@
 package com.asociacion.services;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +36,11 @@ public class FeeServiceImp implements FeeService {
     public List<Fee> getFees() {
 
         return feeRepository.findAll();
+    }
+
+    @Override
+    public List<Fee> findFeesByDate(LocalDate date) {
+        return feeRepository.findFeesByDate(date);
     }
 
     @Override

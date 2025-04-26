@@ -29,6 +29,11 @@ public class RegistryController {
         return registryService.getRegistriesOrderByMemberId();
     }
 
+    @GetMapping()
+    public List<Registry> getAllRegistries(){
+        return registryService.getRegistriesOrderByMemberId();
+    }
+
     @GetMapping("/{id}")
     public Optional<Registry> getRegistryById(@PathVariable Long id) {
         return registryService.findRegistryById(id);

@@ -19,21 +19,46 @@ export class ListsManager {
     switch (id) {
       case 'button1':
         title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Completo'
-        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        document.getElementById('sortByMemberNumber').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         response = await RequestGet.getAllMembers()
         this.renderList(response)
+
+        document.getElementById('sortByName').addEventListener('click', async () => {
+          const sortedByName = await RequestGet.getAllMemberOrderByName();
+          this.renderList(sortedByName);
+        });
+        document.getElementById('sortByMemberNumber').addEventListener('click', async () => {
+          const sortedByMemberNumber = await RequestGet.getAllMemberOrderByMemberNumber();
+          this.renderList(sortedByMemberNumber);
+        });
         break;
       case 'button2':
         title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Activos'
-        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        document.getElementById('sortByMemberNumber').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         response = await RequestGet.getListMembersActives()
         this.renderList(response)
+
+        document.getElementById('sortByName').addEventListener('click', async () => {
+          const sortedByName = await RequestGet.getListMembersActivesByName();
+          this.renderList(sortedByName);
+        });
+        document.getElementById('sortByMemberNumber').addEventListener('click', async () => {
+          const sortedByMemberNumber = await RequestGet.getListMembersActivesByMemberNumber();
+          this.renderList(sortedByMemberNumber);
+        });
+
         break;
       case 'button3':
-        title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Inactivos'
-        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        title.textContent = 'Histórico Inactivo/a(s)'
+        document.getElementById('sortByMemberNumber').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('reason').textContent = "MOTIVO INACTIVIDAD"
-        response = await RequestGet.getListMembersInactives()
+        document.getElementById('date').textContent = "FECHA BAJA"
+
+        document.getElementById('sortByName').style.cursor = 'text'; 
+        document.getElementById('sortByMemberNumber').style.cursor = 'text';
+
+        //response = await RequestGet.getListMembersInactives()   Da todos los miembros inactivos
+        response = await RequestGet.getResgistries()
         this.renderInactivesList(response)
         break;
       case 'button4':
@@ -44,17 +69,35 @@ export class ListsManager {
         break;
       case 'button5':
         title.textContent = 'Listado de Pagos'
-        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        document.getElementById('sortByMemberNumberPayList').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('year').textContent = "AÑO PAGADO"
         response = await RequestGet.getAllMembers()
         this.renderPayList(response)
+
+        document.getElementById('sortByNamePayList').addEventListener('click', async () => {
+          const sortedByName = await RequestGet.getAllMemberOrderByName();
+          this.renderPayList(sortedByName);
+        });
+        document.getElementById('sortByMemberNumberPayList').addEventListener('click', async () => {
+          const sortedByMemberNumber = await RequestGet.getAllMemberOrderByMemberNumber();
+          this.renderPayList(sortedByMemberNumber);
+        });
         break;
       case 'button6':
         title.textContent = 'Listado de Impagos'
-        document.getElementById('listSocio').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
+        document.getElementById('sortByMemberNumberPayList').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
         document.getElementById('year').textContent = "ÚLTIMO AÑO PAGADO"
         response = await RequestGet.getAllMembers()
         this.renderUnpayList(response)
+
+        document.getElementById('sortByNamePayList').addEventListener('click', async () => {
+          const sortedByName = await RequestGet.getAllMemberOrderByName();
+          this.renderUnpayList(sortedByName);
+        });
+        document.getElementById('sortByMemberNumberPayList').addEventListener('click', async () => {
+          const sortedByMemberNumber = await RequestGet.getAllMemberOrderByMemberNumber();
+          this.renderUnpayList(sortedByMemberNumber);
+        });
         break;
 
     }
@@ -86,22 +129,27 @@ export class ListsManager {
 
   }
 
-  async renderInactivesList(members) {
+  async renderInactivesList(registries) {
     let html = '';
-    for (let member of members) {
-      html += await this.getHtmlInactivesRowMembers(member);
+    for (let registry of registries) {
+      html += await this.getHtmlInactivesRowMembers(registry);
     }
 
     let tbody = document.getElementById('tbody-member');
     tbody.innerHTML = html;
   }
 
-  async getHtmlInactivesRowMembers(member) {
+  async getHtmlInactivesRowMembers(registry) {
+
+    const member = await RequestGet.getMemberById(registry.memberId)
 
     const activeStatus = member.active ? '✓' : 'X';
     const lastPaidYear = await this.getLastPaidYear(member.id)
-    const reason = await this.getReason(member.id)
+    const registro = await RequestGet.getRegistryById(registry.id);
 
+    const startData = registro.startData
+    const dateObj = new Date(startData)
+    const dateOnly = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
     return `<tr>
                 <td>${member.name} </td>
@@ -109,7 +157,8 @@ export class ListsManager {
                 <td>${member.memberNumber}</td>
                 <td>${activeStatus}</td>
                 <td>${lastPaidYear}</td>
-                <td>${reason}</td>
+                <td>${registro.reasonEnd}</td>
+                <td>${dateOnly}
 
             </tr>`;
 
@@ -175,32 +224,10 @@ export class ListsManager {
 
   }
 
-  async getReason(memberid) {
-
-    let response = await RequestGet.getRegistryByMemberId(memberid);
-
-
-    if (Array.isArray(response) && response.length > 0) {
-
-      const reason = response.find(record => record.memberId === memberid);
-
-
-      if (reason && reason.reasonEnd) {
-        return reason.reasonEnd;
-      } else {
-        return "-";
-      }
-    } else {
-      return "-";
-    }
-
-
-  }
-
 
   async getLastPaidYear(memberid) {
 
-    let response = await RequestGet.getFeeByMemberId(memberid);
+    let response = await RequestGet.getLastFeeByMemberId(memberid);
 
 
 

@@ -1,10 +1,12 @@
 package com.asociacion.controllers;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,7 @@ public class FeeController {
     @Autowired
     private MemberServiceImp memberService;
 
+
     @GetMapping()
     public List<Fee> getFees() {
         return feeService.getFees();
@@ -48,6 +51,9 @@ public class FeeController {
     public List<Fee> findLastFeeByMemberId(@PathVariable Long id) {
         return feeService.findLastFeeByMemberId(id);
     }
+
+    @GetMapping("/member/FeesByDate/{date}")
+    public List<Fee> findFeesByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date){return feeService.findFeesByDate(date);}
 
     @PostMapping
     public ResponseEntity<Fee> createFee(@RequestBody Fee fee) {
