@@ -5,6 +5,7 @@ import { FeeManager } from './FeeManager.js';
 import { RequestGet } from './RequestGet.js';
 import { RequestPost } from './RequestPost.js';
 import { RequestPut } from './RequestPut.js';
+import { Utility } from './Utility.js';
 
 export class MembersManager {
   constructor() {
@@ -78,7 +79,7 @@ export class MembersManager {
   static async limpiaCampos() {
     document.getElementById('memberId').value = "";
     document.getElementById('memberNumber').value = "";
-    document.getElementById("familyMasterNumber").value = "";
+    document.getElementById("familyMasterNumber").value = "0";
     document.getElementById('name').value = "";
     document.getElementById('lastName1').value = "";
     document.getElementById('lastName2').value = "";
@@ -241,22 +242,25 @@ export class MembersManager {
         printed = 0
       }
 
+      const numeroDni = parseInt(dni.substring(0, 8));
+      const letraDni = dni.charAt(8).toUpperCase();
+      const dniUp = numeroDni + letraDni;
 
       const memberUpdate = {
 
         memberNumber: memberNumber,
-        name: name,
-        lastName1: lastName1,
-        lastName2: lastName2,
-        address: address,
+        name: await Utility.capitalizarString(name),
+        lastName1: await Utility.capitalizarString(lastName1),
+        lastName2: await Utility.capitalizarString(lastName2),
+        address: await Utility.capitalizarString(address),
         addressNumber: addressNumber,
         addressDoor: addressDoor,
         addressStaircase: addressStaircase,
-        location: location,
+        location: await Utility.capitalizarString(location),
         phone: phone,
         email: email,
-        dni: dni,
-        gender: gender,
+        dni: dniUp,
+        gender: await Utility.capitalizarString(gender),
         active: activate,
         cardPrint: printed,
         notes: notes
@@ -372,9 +376,7 @@ export class MembersManager {
     }
 
     const numero = parseInt(dni.substring(0, 8));
-    console.log(numero)
     const letra = dni.charAt(8).toUpperCase();
-    console.log(letra)
     const letraValida = MembersManager.letraDNI(dni)
 
     if (isNaN(numero) || letraValida !== letra) {

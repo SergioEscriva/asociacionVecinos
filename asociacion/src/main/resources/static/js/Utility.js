@@ -48,4 +48,13 @@ export class Utility {
         }
     }
 
+    static async capitalizarString(str) {
+        if (!str) {
+            return "";
+        }
+        return str.toLowerCase().split(' ').map(function (palabra) {
+            return palabra.charAt(0).toUpperCase() + palabra.slice(1);
+        }).join(' ');
+
+    }
 }
