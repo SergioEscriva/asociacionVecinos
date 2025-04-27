@@ -17,7 +17,7 @@ public interface FeeService {
 
     List<Fee> getFees();
 
-    List<Fee> findFeesByDate(LocalDate date);
+    List<Fee> findFeesByDate(LocalDate startDate, LocalDate endDate);
 
     void delFeeById(Long id);
 

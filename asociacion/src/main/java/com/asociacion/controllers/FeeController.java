@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,8 +54,12 @@ public class FeeController {
         return feeService.findLastFeeByMemberId(id);
     }
 
-    @GetMapping("/member/FeesByDate/{date}")
-    public List<Fee> findFeesByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date){return feeService.findFeesByDate(date);}
+     @GetMapping("/member/FeesByDate/{startDate}/{endDate}")
+    public List<Fee> getFeesByDate(@PathVariable LocalDate startDate, @PathVariable LocalDate endDate) {
+        return feeService.findFeesByDate(startDate, endDate);
+    }
+
+
 
     @PostMapping
     public ResponseEntity<Fee> createFee(@RequestBody Fee fee) {

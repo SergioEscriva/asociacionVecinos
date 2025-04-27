@@ -18,14 +18,17 @@ export class FeesByDate {
         const dia = String(fechaActual.getDate()).padStart(2, '0');
         const fechaFormateada = `${año}-${mes}-${dia}`;
 
-        document.getElementById('date').value = fechaFormateada;
+        document.getElementById('startDate').value = fechaFormateada;
+        document.getElementById('endDate').value = fechaFormateada;
 
         const sendDateBtn = document.getElementById("sendDateBtn")
         if (sendDateBtn) {
             sendDateBtn.addEventListener("click", (event) => {
                 event.preventDefault();
-                const date = document.getElementById("date").value;
-                FeesByDate.findByDate(date);
+                const startDate = document.getElementById("startDate").value;
+                const endDate = document.getElementById("endDate").value;
+
+                FeesByDate.findByDate(startDate, endDate);
             });
 
         }
@@ -43,10 +46,12 @@ export class FeesByDate {
 
     }
 
-    static async findByDate(date) {
+    static async findByDate(startDate, endDate) {
         const memberAttribute = await RequestGet.getConfigById(3);
         const id = document.body.getAttribute("data-page-selection");
-        const listFeeDate = await RequestGet.getFeeByDate(date);
+        const listFeeDate = await RequestGet.getFeeByDate(startDate, endDate);
+
+        console.log(listFeeDate)
 
         let html = "";
         let costeTotal = 0;

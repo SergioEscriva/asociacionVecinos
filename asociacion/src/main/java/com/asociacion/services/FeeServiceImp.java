@@ -39,8 +39,8 @@ public class FeeServiceImp implements FeeService {
     }
 
     @Override
-    public List<Fee> findFeesByDate(LocalDate date) {
-        return feeRepository.findFeesByDate(date);
+    public List<Fee> findFeesByDate(LocalDate startDate, LocalDate endDate) {
+        return feeRepository.findFeesByDate(startDate, endDate);
     }
 
     @Override

@@ -42,8 +42,8 @@ export class RequestGet {
         return await RequestGet._getRequest(url)
     }
 
-    static async getFeeByDate(date) {
-        const url = "/api/fee/member/FeesByDate/" + date
+    static async getFeeByDate(startDate, endDate) {
+        const url = "/api/fee/member/FeesByDate/" + startDate + "/" + endDate
         return await RequestGet._getRequest(url)
     }
 
