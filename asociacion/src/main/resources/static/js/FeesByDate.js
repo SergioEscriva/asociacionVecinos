@@ -37,7 +37,7 @@ export class FeesByDate {
         document.getElementById('printExcell').addEventListener('click', function () {
             let table = document.getElementById('tbody-fee-date').parentNode;
             let workbook = XLSX.utils.table_to_book(table, { sheet: "Pagos" });
-            XLSX.writeFile(workbook, 'pagos - ' + fechaFormateada + '.xlsx');
+            XLSX.writeFile(workbook, 'pagos del ' + startDate.value + ' al ' + endDate.value + '.xlsx');
         });
 
 
@@ -50,8 +50,6 @@ export class FeesByDate {
         const memberAttribute = await RequestGet.getConfigById(3);
         const id = document.body.getAttribute("data-page-selection");
         const listFeeDate = await RequestGet.getFeeByDate(startDate, endDate);
-
-        console.log(listFeeDate)
 
         let html = "";
         let costeTotal = 0;
