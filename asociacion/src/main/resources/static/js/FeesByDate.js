@@ -34,49 +34,59 @@ export class FeesByDate {
         const memberAttribute = await RequestGet.getConfigById(3);
         const id = document.body.getAttribute("data-page-selection");
         const listFeeDate = await RequestGet.getFeeByDate(date);
-        console.log(listFeeDate);
-        let html = "";
 
+        let html = "";
+        let costeTotal = 0;
+        let position = 1;
         for (const feesDate of listFeeDate) {
             const member = await RequestGet.getMemberById(feesDate.memberId);
             const fees = await RequestGet.getFeeByMemberId(feesDate.memberId);
-            console.log(fees);
 
             // Calcula el costo del año actual
-            const cost = this.calculateFees(fees, feesDate.year);
-
+            const cost = await this.calculateFees(fees, feesDate.year);
+            costeTotal += cost;
             html += `<tr>
+                        <td>${position}</td>
                         <td>${member.name}</td>
                         <td>${member.lastName1} ${member.lastName2}</td>
                         <td>${member.memberNumber}</td>
                         <td>${feesDate.year}</td>
                         <td>${cost}</td>
                     </tr>`;
+            position += 1
         }
 
+        document.getElementById("totalsPay").textContent = ("Total Recaudado, en " + (position - 1) + " pagos: " + costeTotal + "€");
         let tbody = document.getElementById("tbody-fee-date");
         tbody.innerHTML = html;
     }
 
-    static calculateFees(yearsFees, currentYear) {
+    static async calculateFees(yearsFees, currentYear) {
+        const costAnual = await RequestGet.getConfigById(7);
+        const costNuevo = await RequestGet.getConfigById(8);
+
+        if (!costAnual || !costNuevo) throw new Error("Configuraciones no encontradas");
+
+        // costAnual.attribute es un string ("7"), lo convertimos a número:
+        const costeAnual = parseFloat(costAnual.attribute);
+        const costeNuevo = parseFloat(costNuevo.attribute);
+
         let years = yearsFees.map(item => item.year).sort((a, b) => a - b);
 
         for (let i = 0; i < years.length; i++) {
             if (years[i] === currentYear) {
                 if (i === 0) {
-                    // El primer año siempre es 12€
-                    return 12;
+                    return costeNuevo;
                 } else if (years[i] - years[i - 1] === 1) {
-                    // Si el año es consecutivo, el costo es 7€
-                    return 7;
+                    return costeAnual;
                 } else if (years[i] - years[i - 1] > 2) {
-                    // Si han pasado más de 2 años, el costo es 12€
-                    return 12;
+                    return costeNuevo;
                 }
             }
         }
         return 0;
     }
+
 
 
 
