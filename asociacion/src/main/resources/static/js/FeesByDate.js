@@ -1,4 +1,5 @@
 import { RequestGet } from './RequestGet.js';
+import * as XLSX from 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm';
 
 
 export class FeesByDate {
@@ -28,6 +29,18 @@ export class FeesByDate {
             });
 
         }
+
+
+        document.getElementById('printExcell').addEventListener('click', function () {
+            let table = document.getElementById('tbody-fee-date').parentNode;
+            let workbook = XLSX.utils.table_to_book(table, { sheet: "Pagos" });
+            XLSX.writeFile(workbook, 'pagos - ' + fechaFormateada + '.xlsx');
+        });
+
+
+
+
+
     }
 
     static async findByDate(date) {
