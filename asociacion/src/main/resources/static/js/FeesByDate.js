@@ -64,7 +64,7 @@ export class FeesByDate {
             html += `<tr>
                         <td>${position}</td>
                         <td>${member.name}</td>
-                        <td>${member.lastName1} ${member.lastName2}</td>
+                        <td>${member.lastName1.replace(/null/gi, '').trim()} ${member.lastName2 || ''}</td>
                         <td>${member.memberNumber}</td>
                         <td>${feesDate.year}</td>
                         <td>${cost}</td>
