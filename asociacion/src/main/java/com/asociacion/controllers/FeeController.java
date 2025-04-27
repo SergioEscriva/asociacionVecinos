@@ -74,6 +74,7 @@ public class FeeController {
         return new ResponseEntity<>(feeService.saveFee(fee), HttpStatus.OK);
     }
 
+
     public void inactiveNotFee() {
         List<Member> members = memberService.getMembers();
         for (Member member : members) {
@@ -104,4 +105,7 @@ public class FeeController {
             throw new IllegalStateException("No se encontró la configuración con ID 4L.");
         }
     }
+
+
+
 }

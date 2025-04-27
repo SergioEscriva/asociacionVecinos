@@ -58,7 +58,11 @@
                             <label for="date">Fecha: </label>
                             <input type="date" id="date" name="date" required>
                             <a class="btn btn-primary" id="sendDateBtn">Enviar</a>
+                            <a class="btn btn-primary" id="printExcell">Imprimir</a>
                         </form>
+                        <th>Total Recaudado:</th>
+                        <th id="totalPays">0€</th>
+
 
 
 
@@ -69,15 +73,17 @@
                             <thead>
                                 <tr>
                                     <th>NOMBRE</th>
-                                    <th id="sortByNamePayList">APELLIDOS</th>
-                                    <th id="sortByMemberNumberPayList">Nº MIEMBRO</th>
-                                    <th id="year">AÑO PAGADO</th>
+                                    <th>APELLIDOS</th>
+                                    <th>Nº MIEMBRO</th>
+                                    <th>AÑO PAGADO</th>
+                                    <th>€</th>
                                 </tr>
 
                             </thead>
 
-                            <tbody id="tbody-member">
+                            <tbody id="tbody-fee-date">
                                 <tr>
+                                    <td> </td>
                                     <td> </td>
                                     <td> </td>
                                     <td> </td>
@@ -90,9 +96,10 @@
 
                     </div>
                 </div>
-                <!-- End of Main Content -->
+                <tr>
 
-                <!-- Footer -->
+
+                </tr>
                 <footer>
                     <div>
                         <div class="copyright text-center my-auto">
