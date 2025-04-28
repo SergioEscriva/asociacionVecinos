@@ -1,311 +1,297 @@
 import { RequestGet } from './RequestGet.js';
-
+// Importa la clase para exportar a Excel
+import * as XLSX from 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm';
 
 export class ListsManager {
 
   constructor() {
-
+    this.actividadesConMiembros = []; // Almacenará la información de actividades con sus miembros
   }
 
   async init() {
-    //Obtener el parámetro activityId de la URL
-    //const urlParams = new URLSearchParams(window.location.search);
-    // let id = urlParams.get('id');
-    const memberAttribute = await RequestGet.getConfigById(3)
-    const id = document.body.getAttribute('data-page-selection');
+    const memberAttribute = await RequestGet.getConfigById(3);
+    const pageSelection = document.body.getAttribute('data-page-selection');
+    const titleElement = document.getElementById('txtTitleList');
 
-    const title = document.getElementById('txtTitleList');
-    let response = "";
-    switch (id) {
+    switch (pageSelection) {
       case 'button1':
-        title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Completo'
-        document.getElementById('sortByMemberNumber').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
-        response = await RequestGet.getAllMembers()
-        this.renderList(response)
-
-        document.getElementById('sortByName').addEventListener('click', async () => {
-          const sortedByName = await RequestGet.getAllMemberOrderByName();
-          this.renderList(sortedByName);
-        });
-        document.getElementById('sortByMemberNumber').addEventListener('click', async () => {
-          const sortedByMemberNumber = await RequestGet.getAllMemberOrderByMemberNumber();
-          this.renderList(sortedByMemberNumber);
-        });
+        titleElement.textContent = `Listado de ${memberAttribute.attribute}(s) Completo`;
+        document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+        const allMembers = await RequestGet.getAllMembers();
+        this.renderList(allMembers);
+        this.setupMemberSorting(allMembers);
         break;
       case 'button2':
-        title.textContent = 'Listado de ' + memberAttribute.attribute + '(s) Activos'
-        document.getElementById('sortByMemberNumber').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
-        response = await RequestGet.getListMembersActives()
-        this.renderList(response)
-
-        document.getElementById('sortByName').addEventListener('click', async () => {
-          const sortedByName = await RequestGet.getListMembersActivesByName();
-          this.renderList(sortedByName);
-        });
-        document.getElementById('sortByMemberNumber').addEventListener('click', async () => {
-          const sortedByMemberNumber = await RequestGet.getListMembersActivesByMemberNumber();
-          this.renderList(sortedByMemberNumber);
-        });
-
+        titleElement.textContent = `Listado de ${memberAttribute.attribute}(s) Activos`;
+        document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+        const activeMembers = await RequestGet.getListMembersActives();
+        this.renderList(activeMembers);
+        this.setupMemberSorting(activeMembers);
         break;
       case 'button3':
-        title.textContent = 'Histórico Inactivo/a(s)'
-        document.getElementById('sortByMemberNumber').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
-        document.getElementById('reason').textContent = "MOTIVO INACTIVIDAD"
-        document.getElementById('date').textContent = "FECHA BAJA"
-
-        document.getElementById('sortByName').style.cursor = 'text'; 
-        document.getElementById('sortByMemberNumber').style.cursor = 'text';
-
-        //response = await RequestGet.getListMembersInactives()   Da todos los miembros inactivos
-        response = await RequestGet.getResgistries()
-        this.renderInactivesList(response)
+        titleElement.textContent = 'Histórico Inactivo/a(s)';
+        document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+        document.getElementById('reason').textContent = 'MOTIVO INACTIVIDAD';
+        document.getElementById('date').textContent = 'FECHA BAJA';
+        const inactiveRegistries = await RequestGet.getResgistries();
+        this.renderInactivesList(inactiveRegistries);
         break;
       case 'button4':
-        response = await RequestGet.getActivitys()
-        const responseCount = ListsManager.countActivities(response)
-        document.getElementById('activitiesListMemberConfig').textContent = memberAttribute.attribute.toUpperCase() + "(s) REGISTRADO/A(S)"
-        this.renderActivityList(responseCount)
+        //document.getElementById('activitiesListMemberConfig').textContent = `${memberAttribute.attribute.toUpperCase()}(s) REGISTRADO/A(S)`;
+        const allActivities = await RequestGet.getActivitys();
+        this.actividadesConMiembros = await this.getActividadesConMiembros(allActivities);
+        this.renderActivityListWithMembers(this.actividadesConMiembros);
         break;
       case 'button5':
-        title.textContent = 'Listado de Pagos'
-        document.getElementById('sortByMemberNumberPayList').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
-        document.getElementById('year').textContent = "AÑO PAGADO"
-        response = await RequestGet.getAllMembers()
-        this.renderPayList(response)
-
-        document.getElementById('sortByNamePayList').addEventListener('click', async () => {
-          const sortedByName = await RequestGet.getAllMemberOrderByName();
-          this.renderPayList(sortedByName);
-        });
-        document.getElementById('sortByMemberNumberPayList').addEventListener('click', async () => {
-          const sortedByMemberNumber = await RequestGet.getAllMemberOrderByMemberNumber();
-          this.renderPayList(sortedByMemberNumber);
-        });
+        titleElement.textContent = 'Listado de Pagos';
+        document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+        document.getElementById('year').textContent = 'AÑO PAGADO';
+        const allMembersPay = await RequestGet.getAllMembers();
+        this.renderPayList(allMembersPay);
+        this.setupPaySorting(allMembersPay);
         break;
       case 'button6':
-        title.textContent = 'Listado de Impagos'
-        document.getElementById('sortByMemberNumberPayList').textContent = "Nº " + memberAttribute.attribute.toUpperCase()
-        document.getElementById('year').textContent = "ÚLTIMO AÑO PAGADO"
-        response = await RequestGet.getAllMembers()
-        this.renderUnpayList(response)
-
-        document.getElementById('sortByNamePayList').addEventListener('click', async () => {
-          const sortedByName = await RequestGet.getAllMemberOrderByName();
-          this.renderUnpayList(sortedByName);
-        });
-        document.getElementById('sortByMemberNumberPayList').addEventListener('click', async () => {
-          const sortedByMemberNumber = await RequestGet.getAllMemberOrderByMemberNumber();
-          this.renderUnpayList(sortedByMemberNumber);
-        });
+        titleElement.textContent = 'Listado de Impagos';
+        document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+        document.getElementById('year').textContent = 'ÚLTIMO AÑO PAGADO';
+        const unpayMembers = await RequestGet.getAllMembers();
+        this.renderUnpayList(unpayMembers);
+        this.setupUnpaySorting(unpayMembers);
         break;
-
     }
+  }
+
+  setupMemberSorting(members) {
+    document.getElementById('sortByName').addEventListener('click', async () => {
+      const sortedByName = [...members].sort((a, b) => a.name.localeCompare(b.name));
+      this.renderList(sortedByName);
+    });
+    document.getElementById('sortByMemberNumber').addEventListener('click', async () => {
+      const sortedByMemberNumber = [...members].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
+      this.renderList(sortedByMemberNumber);
+    });
+  }
+
+  setupPaySorting(members) {
+    document.getElementById('sortByNamePayList').addEventListener('click', async () => {
+      const sortedByName = [...members].sort((a, b) => a.name.localeCompare(b.name));
+      this.renderPayList(sortedByName);
+    });
+    document.getElementById('sortByMemberNumberPayList').addEventListener('click', async () => {
+      const sortedByMemberNumber = [...members].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
+      this.renderPayList(sortedByMemberNumber);
+    });
+  }
+
+  setupUnpaySorting(members) {
+    document.getElementById('sortByNamePayList').addEventListener('click', async () => {
+      const sortedByName = [...members].sort((a, b) => a.name.localeCompare(b.name));
+      this.renderUnpayList(sortedByName);
+    });
+    document.getElementById('sortByMemberNumberPayList').addEventListener('click', async () => {
+      const sortedByMemberNumber = [...members].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
+      this.renderUnpayList(sortedByMemberNumber);
+    });
   }
 
   async renderList(members) {
     let html = '';
-    for (let member of members) {
+    for (const member of members) {
       html += await this.getHtmlRowMembers(member);
     }
-
-    let tbody = document.getElementById('tbody-member');
-    tbody.innerHTML = html;
+    document.getElementById('tbody-member').innerHTML = html;
   }
 
   async getHtmlRowMembers(member) {
-
     const activeStatus = member.active ? '✓' : 'X';
-    const lastPaidYear = await this.getLastPaidYear(member.id)
-
+    const lastPaidYear = await this.getLastPaidYear(member.id);
     return `<tr>
-                <td>${member.name} </td>
-                <td>${member.lastName1} ${member.lastName2} </td>
+                <td>${member.name}</td>
+                <td>${member.lastName1} ${member.lastName2}</td>
                 <td>${member.memberNumber}</td>
                 <td>${activeStatus}</td>
                 <td>${lastPaidYear}</td>
-
             </tr>`;
-
   }
 
   async renderInactivesList(registries) {
     let html = '';
-    for (let registry of registries) {
+    for (const registry of registries) {
       html += await this.getHtmlInactivesRowMembers(registry);
     }
-
-    let tbody = document.getElementById('tbody-member');
-    tbody.innerHTML = html;
+    document.getElementById('tbody-member').innerHTML = html;
   }
 
   async getHtmlInactivesRowMembers(registry) {
-
-    const member = await RequestGet.getMemberById(registry.memberId)
-
+    const member = await RequestGet.getMemberById(registry.memberId);
     const activeStatus = member.active ? '✓' : 'X';
-    const lastPaidYear = await this.getLastPaidYear(member.id)
+    const lastPaidYear = await this.getLastPaidYear(member.id);
     const registro = await RequestGet.getRegistryById(registry.id);
-
-    const startData = registro.startData
-    const dateObj = new Date(startData)
-    const dateOnly = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-
+    const startDate = new Date(registro.startData).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
     return `<tr>
-                <td>${member.name} </td>
-                <td>${member.lastName1} ${member.lastName2} </td>
+                <td>${member.name}</td>
+                <td>${member.lastName1} ${member.lastName2}</td>
                 <td>${member.memberNumber}</td>
                 <td>${activeStatus}</td>
                 <td>${lastPaidYear}</td>
                 <td>${registro.reasonEnd}</td>
-                <td>${dateOnly}
-
+                <td>${startDate}</td>
             </tr>`;
-
   }
 
   async renderPayList(members) {
     let html = '';
-    for (let member of members) {
+    for (const member of members) {
       html += await this.getHtmlPayRowMembers(member);
     }
-
-    let tbody = document.getElementById('tbody-member');
-    tbody.innerHTML = html;
+    document.getElementById('tbody-member').innerHTML = html;
   }
 
   async getHtmlPayRowMembers(member) {
-
-    const PaidYears = await this.getPaidYears(member.id)
-
-
-
-
+    const paidYears = await this.getPaidYears(member.id);
     return `<tr>
-                <td>${member.name} </td>
-                <td>${member.lastName1} ${member.lastName2} </td>
+                <td>${member.name}</td>
+                <td>${member.lastName1} ${member.lastName2}</td>
                 <td>${member.memberNumber}</td>
-                <td>${PaidYears}</td>
-
+                <td>${paidYears.join(', ')}</td>
             </tr>`;
-
   }
 
   async renderUnpayList(members) {
     let html = '';
     const currentYear = new Date().getFullYear();
-
-
-    for (let member of members) {
-      const PaidYears = await this.getPaidYears(member.id);
-      const hasPaidThisYear = PaidYears.includes(currentYear);
-
+    for (const member of members) {
+      const paidYears = await this.getPaidYears(member.id);
+      const hasPaidThisYear = paidYears.includes(currentYear);
       if (!hasPaidThisYear) {
         html += await this.getHtmlUnpayRowMembers(member);
       }
-
     }
-
-    let tbody = document.getElementById('tbody-member');
-    tbody.innerHTML = html;
+    document.getElementById('tbody-member').innerHTML = html;
   }
 
   async getHtmlUnpayRowMembers(member) {
-
-    const lastPaidYear = await this.getLastPaidYear(member.id)
-
+    const lastPaidYear = await this.getLastPaidYear(member.id);
     return `<tr>
-                <td>${member.name} </td>
-                <td>${member.lastName1} ${member.lastName2} </td>
+                <td>${member.name}</td>
+                <td>${member.lastName1} ${member.lastName2}</td>
                 <td>${member.memberNumber}</td>
                 <td>${lastPaidYear}</td>
-
             </tr>`;
-
   }
 
-
   async getLastPaidYear(memberid) {
-
-    let response = await RequestGet.getLastFeeByMemberId(memberid);
-
-
-
-
+    const response = await RequestGet.getLastFeeByMemberId(memberid);
     if (Array.isArray(response) && response.length > 0) {
-
       const memberRecord = response.find(record => record.memberId === memberid);
-
-
-      if (memberRecord && memberRecord.year) {
-        return memberRecord.year;
-      } else {
-        return "-";
-      }
-    } else {
-      return "-";
+      return memberRecord?.year || "-";
     }
-
-
-
+    return "-";
   }
 
   async getPaidYears(memberid) {
-
-    let response = await RequestGet.getFeeByMemberId(memberid);
-
+    const response = await RequestGet.getFeeByMemberId(memberid);
     if (Array.isArray(response) && response.length > 0) {
       const memberRecords = response.filter(record => record.memberId === memberid);
-      if (memberRecords.length > 0) {
-        const years = memberRecords.map(record => record.year);
-        return years;
-      } else {
-        return ["-"];
-      }
-    } else {
-      return ["-"];
+      return memberRecords.map(record => record.year);
     }
+    return ["-"];
   }
 
+  async renderActivityListWithMembers(actividadesConMiembros) {
+    const memberAttribute = await RequestGet.getConfigById(3);
 
-  renderActivityList(activities) {
-    let html = '';
+    // Agregar el contenedor para la lista de miembros y el botón de imprimir
+    const activitiesListContainer = document.getElementById('activities-list-container') || document.createElement('div');
+    activitiesListContainer.id = 'activities-list-container';
+    document.getElementById('list-container').appendChild(activitiesListContainer);
+    activitiesListContainer.innerHTML = `<ul id="actividades-lista"></ul><div id="miembros-detalle" style="display: none;"><h2>${memberAttribute.attribute}/s de la Actividad: <span id="nombre-actividad"></span></h2><ul id="miembros-lista"></ul><button id="boton-imprimir">Imprimir a Excel</button></div>`;
 
-    Object.entries(activities).forEach(([activity, repetitions]) => {
+    const actividadesListaElement = document.getElementById("actividades-lista");
+    const miembrosDetalleElement = document.getElementById("miembros-detalle");
+    const miembrosListaElement = document.getElementById("miembros-lista");
+    const nombreActividadElement = document.getElementById("nombre-actividad");
+    const botonImprimirElement = document.getElementById("boton-imprimir");
 
-      html += this.getHtmlRowActivities(activity, repetitions);
+    actividadesConMiembros.forEach(actividad => {
+      const listItem = document.createElement("li");
+      listItem.textContent = `${actividad.nombre} (${actividad.miembros.length} ${memberAttribute.attribute}/s)`;
+      listItem.style.cursor = 'pointer';
+      listItem.style.padding = '8px';
+      listItem.style.borderBottom = '1px solid #eee';
+      listItem.addEventListener("click", () => {
+        nombreActividadElement.textContent = actividad.nombre;
+        miembrosListaElement.innerHTML = "";
+        if (actividad.miembros.length > 0) {
+          actividad.miembros.forEach(miembro => {
+            const miembroItem = document.createElement("li");
+            miembroItem.innerHTML = `<strong>${miembro.memberNumber}</strong> - ${miembro.name} ${miembro.lastName1} ${miembro.lastName2}`;
+            miembrosListaElement.appendChild(miembroItem);
+          });
+          botonImprimirElement.onclick = () => this.imprimirMiembrosAExcel(actividad.nombre, actividad.miembros);
+        } else {
+          miembrosListaElement.innerHTML = "<li>No hay miembros en esta actividad.</li>";
+          botonImprimirElement.onclick = null;
+        }
+        miembrosDetalleElement.style.display = "block";
+      });
+      actividadesListaElement.appendChild(listItem);
     });
-
-    let tbody = document.getElementById('tbody-activity');
-    tbody.innerHTML = html;
   }
 
-  getHtmlRowActivities(activity, repetitions) {
+  getHtmlRowActivityWithMembers(activity) {
     return `<tr>
-                <td>${activity}</td>
-                <td>${repetitions}</td>
+                <td>${activity.nombre}</td>
+                <td>${activity.miembros.length}</td>
             </tr>`;
   }
 
-  static countActivities(activities) {
+  async getActividadesConMiembros(activities) {
 
-    const contador = {};
-
-    activities.forEach(activity => {
-      const name = activity.name;
-      // Si la actividad ya existe en el contador, aumentamos el contador, si no, la inicializamos en 1
-      contador[name] = (contador[name] || 0) + 1;
-    });
-
-    return contador;
+    const actividadesConInfo = [];
+    for (const activity of activities) {
+      const miembros = await RequestGet.getMembersActivityId(activity.id);
+      console.log(miembros)
+      actividadesConInfo.push({
+        nombre: activity.name,
+        miembros: miembros.map(member => ({
+          memberNumber: member.numberMember,
+          name: member.memberName,
+          lastName1: member.memberApellido1,
+          lastName2: member.memberApellido2
+        })),
+      });
+    }
+    return actividadesConInfo;
   }
 
+  imprimirMiembrosAExcel(nombreActividad, miembros) {
+    if (!miembros || miembros.length === 0) {
+      alert("No hay miembros para imprimir en Excel.");
+      return;
+    }
+    console.log(miembros)
+    const headers = ["Número de Socio", "Nombre", "Apellidos"];
+    const data = miembros.map(miembro => [
+      miembro.numberMember,
+      miembro.name,
+      `${miembro.lastName1} ${miembro.lastName2}`,
+    ]);
+
+    ExcelUtils.exportToExcel(data, headers, `Miembros de ${nombreActividad}.xlsx`);
+  }
 }
 
+// Clase utilitaria para la exportación a Excel (puedes crear un archivo aparte llamado ExcelUtils.js)
+class ExcelUtils {
+  static exportToExcel(data, headers, filename = '') {
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, filename);
+  }
+}
 
-/* function onClickLogOut(){
-     sessionStorage.token = null;
-     window.location.href = 'login.html';
- }*/
-
-
+// Asegúrate de tener la librería xlsx.js incluida en tu HTML
+// Puedes incluirla mediante un CDN como:
+// <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>

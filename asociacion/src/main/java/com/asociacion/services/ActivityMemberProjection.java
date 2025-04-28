@@ -7,9 +7,13 @@ public interface ActivityMemberProjection {
 
     Long getMemberId();
 
+    Long getNumberMember();
+    
     String getActivityName();
 
     String getMemberName();
 
-    String getMemberApellido();
+    String getMemberApellido1();
+
+    String getMemberApellido2();
 }
