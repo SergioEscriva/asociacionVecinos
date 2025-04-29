@@ -85,7 +85,7 @@ export class ActivityManager {
         activitySel.innerHTML += `
                 <li id="li-activitys-member-${activity.memberId}" data-activity-id="${activity.memberId}">
                     <button class="delete-button" id="li-button-${activity.memberId}" title="Eliminar Socio de la Actividad"><i class="fas fa-trash"></i></button>
-                    <label class="text-activity" for="option${activity.memberId}" id="li-label-${activity.memberId}" title="Pulsar para abrir seleccionado">${activity.memberName} ${activity.memberApellido}</label>
+                    <label class="text-activity" for="option${activity.memberId}" id="li-label-${activity.memberId}" title="Pulsar para abrir seleccionado">${activity.memberName} ${activity.memberApellido1} ${activity.memberApellido2}</label>
                 </li>`;
       });
     } catch (error) {
@@ -165,7 +165,6 @@ export class ActivityManager {
     const memberHtml = document.getElementById('name')
     memberHtml.value = member.name
     memberHtml.dataset.familyType = member.id
-
     document.getElementById('lastName1').value = member.lastName1
     document.getElementById('lastName2').value = member.lastName2
   }

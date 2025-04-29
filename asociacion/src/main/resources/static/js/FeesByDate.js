@@ -58,7 +58,7 @@ export class FeesByDate {
             const member = await RequestGet.getMemberById(feesDate.memberId);
             const fees = await RequestGet.getFeeByMemberId(feesDate.memberId);
 
-            // Calcula el costo del año actual
+
             const cost = await this.calculateFees(fees, feesDate.year);
             costeTotal += cost;
             html += `<tr>
@@ -83,7 +83,7 @@ export class FeesByDate {
 
         if (!costAnual || !costNuevo) throw new Error("Configuraciones no encontradas");
 
-        // costAnual.attribute es un string ("7"), lo convertimos a número:
+
         const costeAnual = parseFloat(costAnual.attribute);
         const costeNuevo = parseFloat(costNuevo.attribute);
 
