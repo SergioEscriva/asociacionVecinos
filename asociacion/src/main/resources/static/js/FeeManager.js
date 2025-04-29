@@ -57,45 +57,48 @@ export class FeeManager {
     }
 
     static async updatePaidFee(memberId, feesMember) {
-
-        const currentYear = new Date().getFullYear();
-        const currentDate = new Date();
-
         if (confirm("¿Estás seguro de actualizar el pago?")) {
-            let yearToUpdate = currentYear;
-            const changeYear = confirm("¿Deseas mantener el año en curso (" + currentYear + ")?\nPresiona 'Aceptar' para mantener, o 'Cancelar' para cambiar.");
+            // Crear un input de tipo date dinámicamente
+            const dateInput = document.createElement('input');
+            dateInput.type = 'date';
+            dateInput.valueAsDate = new Date(); // Establecer la fecha actual por defecto
 
-            if (!changeYear) {
-                const newYear = prompt("Introduce el nuevo año:", currentYear);
-                if (newYear && !isNaN(newYear)) {
-                    yearToUpdate = parseInt(newYear);
-                } else {
-                    alert("Año no válido. Se mantendrá el año en curso.");
+            // Mostrar el input en un diálogo (puedes usar un alert personalizado si prefieres)
+            const result = prompt("Selecciona la fecha del pago:", dateInput.valueAsDate.toISOString().split('T')[0]);
+
+            if (result !== null) {
+                const selectedDate = new Date(result);
+
+                if (isNaN(selectedDate)) {
+                    alert("Fecha no válida. Se utilizará la fecha actual.");
+                    selectedDate.setDate(new Date().getDate());
                 }
-            }
 
-            try {
-                const exist = feesMember.some(item => item.year === yearToUpdate);
-                if (exist) {
-                    alert("Ya existe un pago para el año " + yearToUpdate);
-                    return;
-                } else {
-                    const feeUpdate = {
-                        memberId: memberId,
-                        date: currentDate,
-                        year: yearToUpdate
-                    };
+                const selectedYear = selectedDate.getFullYear();
 
-                    await RequestPost.newFee(feeUpdate);
-                    FeeManager.checkFee()
+                try {
+                    const exist = feesMember.some(item => item.year === selectedYear);
+                    if (exist) {
+                        alert(`Ya existe un pago para el año ${selectedYear}`);
+                        return;
+                    } else {
+                        const feeUpdate = {
+                            memberId: memberId,
+                            date: selectedDate,
+                            year: selectedYear // Aunque ahora tenemos la fecha completa, 'year' podría seguir siendo útil
+                        };
 
+                        await RequestPost.newFee(feeUpdate);
+                        FeeManager.checkFee(); // Asumo que esta función recarga o actualiza la lista de cuotas
+                    }
+                } catch (error) {
+                    console.error("Error al actualizar el pago:", error);
+                    alert("Error al actualizar el pago. Por favor, intente de nuevo.");
                 }
-            } catch (error) {
-                console.error("Error al actualizar el pago:", error);
-                alert("Error al actualizar el pago. Por favor, intente de nuevo.");
+            } else {
+                alert("Actualización de pago cancelada.");
             }
         }
-
     }
 
     static async delPaidFee(feesMember) {

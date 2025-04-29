@@ -251,7 +251,6 @@ export class ListsManager {
     const actividadesConInfo = [];
     for (const activity of activities) {
       const miembros = await RequestGet.getMembersActivityId(activity.id);
-      console.log(miembros)
       actividadesConInfo.push({
         nombre: activity.name,
         miembros: miembros.map(member => ({
@@ -270,7 +269,6 @@ export class ListsManager {
       alert("No hay miembros para imprimir en Excel.");
       return;
     }
-    console.log(miembros)
     const headers = ["Número de Socio", "Nombre", "Apellidos"];
     const data = miembros.map(miembro => [
       miembro.numberMember,
