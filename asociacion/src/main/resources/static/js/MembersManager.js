@@ -254,7 +254,7 @@ export class MembersManager {
         lastName2: await Utility.capitalizarString(lastName2),
         address: await Utility.capitalizarString(address),
         addressNumber: addressNumber,
-        addressDoor: addressDoor,
+        addressDoor: await Utility.capitalizarString(addressDoor),
         addressStaircase: addressStaircase,
         location: await Utility.capitalizarString(location),
         phone: phone,

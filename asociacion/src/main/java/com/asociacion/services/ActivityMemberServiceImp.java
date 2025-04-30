@@ -17,9 +17,11 @@ public class ActivityMemberServiceImp implements ActivityMemberService {
     @Autowired
     private ActivityMemberRepository activityMemberRepository;
 
+    int currentYear = Year.now().getValue();
+
     @Override
     public List<ActivityMemberProjection> getActivityMemberDetailsByMemberId(Long memberId) {
-        int currentYear = Year.now().getValue();
+      
          
         return activityMemberRepository.findActivityMemberDetailsByMemberId(memberId, currentYear);
      
@@ -32,7 +34,8 @@ public class ActivityMemberServiceImp implements ActivityMemberService {
 
     @Override
     public List<ActivityMemberProjection> findByActivityId(Long activityId) {
-        return activityMemberRepository.findByActivityId(activityId);
+        
+        return activityMemberRepository.findByActivityId(activityId, currentYear);
     }
 
     @Override

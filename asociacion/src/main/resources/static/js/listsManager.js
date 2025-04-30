@@ -6,6 +6,7 @@ export class ListsManager {
 
   constructor() {
     this.actividadesConMiembros = []; // Almacenará la información de actividades con sus miembros
+    this.currentYear = new Date().getFullYear();
   }
 
   async init() {
@@ -37,8 +38,7 @@ export class ListsManager {
         this.renderInactivesList(inactiveRegistries);
         break;
       case 'button4':
-        //document.getElementById('activitiesListMemberConfig').textContent = `${memberAttribute.attribute.toUpperCase()}(s) REGISTRADO/A(S)`;
-        const allActivities = await RequestGet.getActivitys();
+        const allActivities = await RequestGet.getActivitys(this.currentYear);
         this.actividadesConMiembros = await this.getActividadesConMiembros(allActivities);
         this.renderActivityListWithMembers(this.actividadesConMiembros);
         break;
@@ -159,10 +159,10 @@ export class ListsManager {
 
   async renderUnpayList(members) {
     let html = '';
-    const currentYear = new Date().getFullYear();
+
     for (const member of members) {
       const paidYears = await this.getPaidYears(member.id);
-      const hasPaidThisYear = paidYears.includes(currentYear);
+      const hasPaidThisYear = paidYears.includes(this.currentYear);
       if (!hasPaidThisYear) {
         html += await this.getHtmlUnpayRowMembers(member);
       }
