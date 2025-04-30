@@ -216,6 +216,7 @@ export class ListsManager {
     actividadesConMiembros.forEach(actividad => {
       const listItem = document.createElement("li");
       listItem.textContent = `${actividad.nombre} (${actividad.miembros.length} ${memberAttribute.attribute}/s)`;
+      listItem.style.fontSize = "1.5rem";
       listItem.style.cursor = 'pointer';
       listItem.style.padding = '8px';
       listItem.style.borderBottom = '1px solid #eee';
@@ -226,6 +227,7 @@ export class ListsManager {
           actividad.miembros.forEach(miembro => {
             const miembroItem = document.createElement("li");
             miembroItem.innerHTML = `<strong>${miembro.memberNumber}</strong> - ${miembro.name} ${miembro.lastName1} ${miembro.lastName2}`;
+            miembroItem.style.fontSize = "1.5rem";
             miembrosListaElement.appendChild(miembroItem);
           });
           botonImprimirElement.onclick = () => this.imprimirMiembrosAExcel(actividad.nombre, actividad.miembros);
@@ -271,7 +273,7 @@ export class ListsManager {
     }
     const headers = ["Número de Socio", "Nombre", "Apellidos"];
     const data = miembros.map(miembro => [
-      miembro.numberMember,
+      miembro.memberNumber,
       miembro.name,
       `${miembro.lastName1} ${miembro.lastName2}`,
     ]);

@@ -127,6 +127,7 @@ export class ActivityManager {
 
 
   static async inyectOption(year) {
+
     if (!year) {
       year = new Date().getFullYear();
     }
