@@ -12,9 +12,9 @@ public interface ActivityService {
 
     public List<Activity> getActivities();
 
-    public List<Activity> getActivitiesOrderByName();
+    public List<Activity> getActivitiesOrderByName(Integer year);
 
-     List<Activity> findActivityByName(String name);
+    //public List<Activity> findActivityByName(String name, Integer year);
 
 
 }

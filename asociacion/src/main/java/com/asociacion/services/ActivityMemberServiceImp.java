@@ -1,11 +1,13 @@
 package com.asociacion.services;
 
+import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.asociacion.models.Activity;
 import com.asociacion.models.ActivityMember;
 import com.asociacion.repositories.ActivityMemberRepository;
 
@@ -17,7 +19,10 @@ public class ActivityMemberServiceImp implements ActivityMemberService {
 
     @Override
     public List<ActivityMemberProjection> getActivityMemberDetailsByMemberId(Long memberId) {
-        return activityMemberRepository.findActivityMemberDetailsByMemberId(memberId);
+        int currentYear = Year.now().getValue();
+         
+        return activityMemberRepository.findActivityMemberDetailsByMemberId(memberId, currentYear);
+     
     }
 
     @Override

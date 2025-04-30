@@ -20,12 +20,14 @@ public interface ActivityMemberRepository extends JpaRepository<ActivityMember, 
     // "WHERE am.memberId = :memberId")
 
     @Query("SELECT am.activity.id AS activityId, am.memberId AS memberId, am.id AS idLong, " +
-            "a.name AS activityName, m.name AS memberName,m.lastName1 AS memberApellido1, m.lastName2 AS memberApellido2 " +
-            "FROM ActivityMember am " +
-            "JOIN am.activity a " +
-            "JOIN Member m ON m.id = am.memberId " +
-            "WHERE am.memberId = :memberId")
-    List<ActivityMemberProjection> findActivityMemberDetailsByMemberId(@Param("memberId") Long memberId);
+    "a.name AS activityName, m.name AS memberName, m.lastName1 AS memberApellido1, m.lastName2 AS memberApellido2 " +
+    "FROM ActivityMember am " +
+    "JOIN am.activity a " +
+    "JOIN Member m ON m.id = am.memberId " +
+    "WHERE am.memberId = :memberId AND a.year = :year")
+List<ActivityMemberProjection> findActivityMemberDetailsByMemberId(@Param("memberId") Long memberId,
+                                                                       @Param("year") Integer year);
+
 
     @Query("SELECT am.activity.id AS activityId, am.memberId AS memberId, am.id AS idLong, " +
             "a.name AS activityName, m.name AS memberName, m.lastName1 AS memberApellido1, m.lastName2 AS memberApellido2, m.memberNumber AS numberMember " +

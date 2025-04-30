@@ -63,7 +63,7 @@ export class FeeManager {
             dateInput.type = 'date';
             dateInput.valueAsDate = new Date(); // Establecer la fecha actual por defecto
 
-            // Mostrar el input en un diálogo (puedes usar un alert personalizado si prefieres)
+
             const result = prompt("Selecciona la fecha del pago:", dateInput.valueAsDate.toISOString().split('T')[0]);
 
             if (result !== null) {

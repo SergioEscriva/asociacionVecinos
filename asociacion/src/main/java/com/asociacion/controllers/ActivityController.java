@@ -29,9 +29,9 @@ public class ActivityController {
         return activityService.getActivities();
     }
 
-    @GetMapping("/byName")
-    public List<Activity> getActivitiesOrderByName(){
-        return activityService.getActivitiesOrderByName();
+    @GetMapping("/byName/{year}")
+    public List<Activity> getActivitiesOrderByName(@PathVariable Integer year){
+        return activityService.getActivitiesOrderByName(year);
     }
 
 

@@ -36,7 +36,7 @@ export class MembersManager {
     MembersManager.memberAttribute = await RequestGet.getConfigById(3)
     let memberNumber = null
 
-    // Cuando se redirecciona memberIndex desde activityIndex
+
     const memberLink = document.querySelector('a[data-section="memberIndex"]');
     const memberIdByLink = memberLink.getAttribute('data-member-id');
 
@@ -293,11 +293,12 @@ export class MembersManager {
 
   static async inyectOption() {
 
+    const currentYear = new Date().getFullYear();
     const activitySel = document.getElementById("activity-select")
     activitySel.innerHTML = "";
     activitySel.innerHTML = `<option selected value="0">Lista de Actividades</option>`
     try {
-      const activities = await RequestGet.getActivitys()
+      const activities = await RequestGet.getActivitys(currentYear)
 
       activities.forEach((activity) => {
 

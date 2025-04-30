@@ -15,10 +15,10 @@ import java.util.List;
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
-    @Query ("SELECT a FROM Activity a WHERE name LIKE %:name%")
-    List<Activity> findActivityByName(@Param("name") String name);
+    //@Query ("SELECT a FROM Activity a WHERE name LIKE %:name%")
+    //List<Activity> findActivityByName(@Param("name") String name);
 
-    @Query ("SELECT a FROM Activity a ORDER BY a.name")
-    List<Activity> getActivitiesOrderByName();
+    @Query("SELECT a FROM Activity a WHERE a.year = :year ORDER BY a.name")
+    List<Activity> getActivitiesOrderByName(@Param("year") Integer year);
 
 }

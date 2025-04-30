@@ -18,18 +18,15 @@ export class ActivityManager {
   }
 
   async init() {
-    // Cuando se redirecciona memberIndex desde activityIndex
+
     const activityLink = document.querySelector('a[data-section="activityIndex"]');
     const activityIdByLink = activityLink.getAttribute('data-activity-id');
     let activityId = 0
     if (activityIdByLink) {
       const activity = await RequestGet.getActivityById(activityIdByLink)
-      //ActivityManager.getMemberByNumber(activityNumber.id);
       activityId = activity.id
 
     }
-
-
 
     document.getElementById("updateActivity").addEventListener("click", function () { ActivityManager.updateActivity(); });
     document.getElementById("getElementByIdSelected").addEventListener("click", function () { ActivityManager.getMemberByNumber(); });
@@ -39,6 +36,17 @@ export class ActivityManager {
     document.getElementById('placeholderActivity').placeholder = "Añadir " + memberAttribute.attribute;
     document.getElementById('h2ActivityMembers').textContent = "Lista de " + memberAttribute.attribute + "(s)";
 
+    const yearInput = document.getElementById("year-select");
+    const yearNow = new Date().getFullYear();
+
+    if (yearInput) {
+      yearInput.value = yearNow;
+
+      yearInput.addEventListener('change', function () {
+        const selectedYear = this.value;
+        ActivityManager.inyectOption(selectedYear);
+      });
+    }
 
 
     Listeners.setupActivityListeners();
@@ -49,7 +57,6 @@ export class ActivityManager {
 
   static async limpiaCampos() {
     document.getElementById('activityId').value = "";
-    //document.getElementById('activityActive').value = this.getActivo(activity.active);
     document.getElementById('activityName').value = "";
     document.getElementById('managerName').value = "";
     document.getElementById('notes').value = "";
@@ -67,7 +74,6 @@ export class ActivityManager {
     }
     if (activity) {
       document.getElementById('activityId').value = activityId;
-      //document.getElementById('activityActive').value = this.getActivo(activity.active);
       document.getElementById('activityName').value = activity.name;
       document.getElementById('managerName').value = activity.managerName;
       document.getElementById('notes').value = activity.notes;
@@ -97,15 +103,16 @@ export class ActivityManager {
 
   static async updateActivity() {
     const activityId = document.getElementById('activityId').value
-    //const activityActive = document.getElementById('activityActive').value
     const activityName = document.getElementById('activityName').value
     const managerName = document.getElementById('managerName').value
     const notes = document.getElementById('notes').value
+    const year = document.getElementById("year-select").value;
 
     const updateActivity = {
       name: activityName,
       managerName: managerName,
-      notes: notes
+      notes: notes,
+      year: year
     }
 
     let request;
@@ -119,43 +126,36 @@ export class ActivityManager {
 
 
 
-  static async inyectOption(activityId) {
+  static async inyectOption(year) {
+    if (!year) {
+      year = new Date().getFullYear();
+    }
 
     const activitySel = document.getElementById("activity-select");
-    activitySel.innerHTML = "";
-    activitySel.innerHTML = `<option value="0">Selecciona Actividad</option>`
-    try {
+    activitySel.innerHTML = `<option value="0">Selecciona Actividad</option>`;
 
-      const activities = await RequestGet.getActivitys()
+    try {
+      const activities = await RequestGet.getActivitys(year);
       activities.forEach((activity) => {
-        if (activity.id == activityId) {
-          activitySel.innerHTML += `<option selected value="${activity.id}">${activity.name}</option>`
-        } else {
-          activitySel.innerHTML += `<option value="${activity.id}">${activity.name}</option>`;
-        }
+        activitySel.innerHTML += `<option value="${activity.id}">${activity.name}</option>`;
       });
     } catch (error) {
       console.error('Error:', error);
       activitySel.innerHTML = '<p>Error al cargar las actividades.</p>';
     }
 
+    // Quitar listeners anteriores antes de agregar uno nuevo
+    const newSelect = activitySel.cloneNode(true); // limpia listeners
+    activitySel.parentNode.replaceChild(newSelect, activitySel); // añade limpios
 
-
-    // Listening desplegable Option
-    const select1 = document.getElementById('activity-select')
-    let selectedURL = ''
-    const handleChange1 = (event) => {
-      const { value } = event.target
-      this.getActivityById(value);
-    }
-    select1.addEventListener('change', handleChange1)
-
+    newSelect.addEventListener('change', function (event) {
+      const { value } = event.target;
+      ActivityManager.getActivityById(value);
+    });
   }
 
   static async getMemberByNumber() {
     const memberNumber = document.getElementById('placeholderActivity').value
-    //ActivityManager.limpiaCampos()
-
     const member = await RequestGet.getMemberByNumber(memberNumber)
     if (!member) {
       alert("El socio " + memberNumber + " no existe")
