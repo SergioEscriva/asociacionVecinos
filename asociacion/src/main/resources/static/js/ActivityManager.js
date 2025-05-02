@@ -28,6 +28,9 @@ export class ActivityManager {
 
     }
 
+    const backImage = await RequestGet.getConfigById(9);
+    document.getElementById('backImage').src = backImage.attribute;
+
     document.getElementById("updateActivity").addEventListener("click", function () { ActivityManager.updateActivity(); });
     document.getElementById("getElementByIdSelected").addEventListener("click", function () { ActivityManager.getMemberByNumber(); });
     document.getElementById("updateActivityMember").addEventListener("click", function () { ActivityManager.updateActivityMember(); });

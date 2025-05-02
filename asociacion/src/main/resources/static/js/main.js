@@ -78,6 +78,8 @@ mostrarFecha()
 
 const memberAttribute = await RequestGet.getConfigById(3)
 const titleAttribute = await RequestGet.getConfigById(1)
+const backImage = await RequestGet.getConfigById(9);
+document.getElementById('backImage').src = backImage.attribute;
 document.getElementById('title').textContent = titleAttribute.attribute;
 document.getElementById('button1').textContent = "Todos los " + memberAttribute.attribute + "(s)";
 document.getElementById('button2').textContent = memberAttribute.attribute + "(s) activo/a(s)";

@@ -36,6 +36,9 @@ export class MembersManager {
     MembersManager.memberAttribute = await RequestGet.getConfigById(3)
     let memberNumber = null
 
+    const backImage = await RequestGet.getConfigById(9);
+    document.getElementById('backImage').src = backImage.attribute;
+
 
     const memberLink = document.querySelector('a[data-section="memberIndex"]');
     const memberIdByLink = memberLink.getAttribute('data-member-id');

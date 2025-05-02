@@ -21,6 +21,9 @@ export class FeesByDate {
         document.getElementById('startDate').value = fechaFormateada;
         document.getElementById('endDate').value = fechaFormateada;
 
+        const backImage = await RequestGet.getConfigById(9);
+        document.getElementById('backImage').src = backImage.attribute;
+
         const sendDateBtn = document.getElementById("sendDateBtn")
         if (sendDateBtn) {
             sendDateBtn.addEventListener("click", (event) => {

@@ -13,6 +13,8 @@ export class ListsManager {
     const memberAttribute = await RequestGet.getConfigById(3);
     const pageSelection = document.body.getAttribute('data-page-selection');
     const titleElement = document.getElementById('txtTitleList');
+    const backImage = await RequestGet.getConfigById(9);
+    document.getElementById('backImage').src = backImage.attribute;
 
     switch (pageSelection) {
       case 'button1':
