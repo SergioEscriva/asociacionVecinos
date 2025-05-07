@@ -21,18 +21,18 @@ export class ListsManager {
         titleElement.textContent = `Listado de ${memberAttribute.attribute}(s) Completo`;
         document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
         const allMembers = await RequestGet.getAllMembers();
-        this.renderList(allMembers);
+        this.renderList(allMembers, true);
         this.setupMemberSorting(allMembers);
         break;
       case 'button2':
-        titleElement.textContent = `Listado de ${memberAttribute.attribute}(s) Activos`;
+        titleElement.textContent = `Listado de ${memberAttribute.attribute}(s) Activos/as`;
         document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
         const activeMembers = await RequestGet.getListMembersActives();
-        this.renderList(activeMembers);
+        this.renderList(activeMembers, false);
         this.setupMemberSorting(activeMembers);
         break;
       case 'button3':
-        titleElement.textContent = 'Histórico Inactivo/a(s)';
+        titleElement.textContent = 'Histórico Inactivos/as';
         document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
         document.getElementById('reason').textContent = 'MOTIVO INACTIVIDAD';
         document.getElementById('date').textContent = 'FECHA BAJA';
@@ -96,18 +96,28 @@ export class ListsManager {
     });
   }
 
-  async renderList(members) {
+  async renderList(members, allMembers) {
     let html = '';
+    let lineNumber = 1;
+
     for (const member of members) {
-      html += await this.getHtmlRowMembers(member);
+      html += await this.getHtmlRowMembers(member, lineNumber);
+      lineNumber++
+    }
+
+    if (allMembers) {
+      document.getElementById('txtTitleList').textContent = "Listado Completo - Total " + (lineNumber - 1);
+    } else {
+      document.getElementById('txtTitleList').textContent = "Listado Activos/as - Total " + (lineNumber - 1);
     }
     document.getElementById('tbody-member').innerHTML = html;
   }
 
-  async getHtmlRowMembers(member) {
+  async getHtmlRowMembers(member, lineNumber) {
     const activeStatus = member.active ? '✓' : 'X';
     const lastPaidYear = await this.getLastPaidYear(member.id);
     return `<tr>
+                <td>${lineNumber}</td>
                 <td>${member.name}</td>
                 <td>${member.lastName1} ${member.lastName2}</td>
                 <td>${member.memberNumber}</td>
@@ -118,19 +128,26 @@ export class ListsManager {
 
   async renderInactivesList(registries) {
     let html = '';
+    let lineNumber = 1;
     for (const registry of registries) {
-      html += await this.getHtmlInactivesRowMembers(registry);
+      html += await this.getHtmlInactivesRowMembers(registry, lineNumber);
+      lineNumber++
     }
+    document.getElementById('txtTitleList').textContent = "Histórico Inactivos/as - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
   }
 
-  async getHtmlInactivesRowMembers(registry) {
+  async getHtmlInactivesRowMembers(registry, lineNumber) {
     const member = await RequestGet.getMemberById(registry.memberId);
+    if (member === null) {
+      return
+    }
     const activeStatus = member.active ? '✓' : 'X';
     const lastPaidYear = await this.getLastPaidYear(member.id);
     const registro = await RequestGet.getRegistryById(registry.id);
     const startDate = new Date(registro.startData).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
     return `<tr>
+                <td>${lineNumber}</td>
                 <td>${member.name}</td>
                 <td>${member.lastName1} ${member.lastName2}</td>
                 <td>${member.memberNumber}</td>
@@ -143,15 +160,20 @@ export class ListsManager {
 
   async renderPayList(members) {
     let html = '';
+    let lineNumber = 1;
+
     for (const member of members) {
-      html += await this.getHtmlPayRowMembers(member);
+      html += await this.getHtmlPayRowMembers(member, lineNumber);
+      lineNumber++
     }
+    document.getElementById('txtTitleList').textContent = "Lista de Pagos - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
   }
 
-  async getHtmlPayRowMembers(member) {
+  async getHtmlPayRowMembers(member, lineNumber) {
     const paidYears = await this.getPaidYears(member.id);
     return `<tr>
+                <td>${lineNumber}</td>
                 <td>${member.name}</td>
                 <td>${member.lastName1} ${member.lastName2}</td>
                 <td>${member.memberNumber}</td>
@@ -161,26 +183,31 @@ export class ListsManager {
 
   async renderUnpayList(members) {
     let html = '';
+    let lineNumber = 1;
 
     for (const member of members) {
       const paidYears = await this.getPaidYears(member.id);
       const hasPaidThisYear = paidYears.includes(this.currentYear);
       if (!hasPaidThisYear) {
-        html += await this.getHtmlUnpayRowMembers(member);
+        html += await this.getHtmlUnpayRowMembers(member, lineNumber);
+        lineNumber++;
       }
     }
+    document.getElementById('txtTitleList').textContent = "Lista de Impagados - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
   }
 
-  async getHtmlUnpayRowMembers(member) {
+  async getHtmlUnpayRowMembers(member, lineNumber) {
     const lastPaidYear = await this.getLastPaidYear(member.id);
     return `<tr>
+                <td>${lineNumber}</td>
                 <td>${member.name}</td>
                 <td>${member.lastName1} ${member.lastName2}</td>
                 <td>${member.memberNumber}</td>
                 <td>${lastPaidYear}</td>
             </tr>`;
   }
+
 
   async getLastPaidYear(memberid) {
     const response = await RequestGet.getLastFeeByMemberId(memberid);
