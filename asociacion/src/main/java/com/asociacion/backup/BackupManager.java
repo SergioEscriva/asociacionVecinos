@@ -7,9 +7,9 @@ public class BackupManager {
     public static boolean backupDatabase() throws IOException, InterruptedException {
         //TODO extraer estos datos a lugar seguro
         String dbUsername = "root";
-        String dbPassword = "000000";
+        String dbPassword = System.getenv("DB_PASSWORD");
         String dbName = "asociacion";
-        String outputFile = "./backup/backupSQL.sql";
+        String outputFile = "asociacion/backup/backupSQL.sql";
         
         ProcessBuilder pb = new ProcessBuilder(
             "mysqldump",
@@ -27,5 +27,7 @@ public class BackupManager {
         Process process = pb.start();
         int exitCode = process.waitFor();
         return exitCode == 0;
+
+
     }
 }
