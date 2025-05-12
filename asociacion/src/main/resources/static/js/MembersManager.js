@@ -9,64 +9,75 @@ import { Utility } from './Utility.js';
 
 export class MembersManager {
   constructor() {
-    this.scheduleBackupConsolidation();
+    this.scheduleInactiveRedirect();
   }
 
-  scheduleBackupConsolidation() {
-    const now = new Date();
-    const night = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() + 1, // mañana
-      23, 59, 0 // 23:59:00
-    );
-    const msUntilMidnight = night.getTime() - now.getTime();
+  scheduleInactiveRedirect() {
+    const inactiveTimeout = 180000; //180000 3 minutos en milisegundos
+    let inactivityTimer;
+    let isMembersPage = false;
 
-    setTimeout(() => {
-      BackupManager.consolidateBackups();
-      // Programar la próxima consolidación
-      this.scheduleBackupConsolidation();
-    }, msUntilMidnight);
+    const checkMembersPage = () => {
+      isMembersPage = window.location.hash.includes('memberIndex');
+      if (isMembersPage) {
+        resetInactivityTimer();
+      } else {
+        clearTimeout(inactivityTimer);
+      }
+    };
+
+    const redirectToInicio = () => {
+      console.log('Redirigiendo a inicio por inactividad en la página de miembros.');
+      window.location.hash = window.location.reload();
+    };
+
+    const resetInactivityTimer = () => {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(redirectToInicio, inactiveTimeout);
+    };
+
+    // Escuchar eventos que indican actividad
+    window.addEventListener('mousemove', resetInactivityTimer);
+    window.addEventListener('keypress', resetInactivityTimer);
+    window.addEventListener('click', resetInactivityTimer);
+    window.addEventListener('scroll', resetInactivityTimer);
+
+    // Comprobar la página al cargar y en cambios de hash (para SPAs)
+    window.addEventListener('load', checkMembersPage);
+    window.addEventListener('hashchange', checkMembersPage);
   }
-
 
   async init() {
-
     // Variables Config
-    MembersManager.memberAttribute = await RequestGet.getConfigById(3)
-    let memberNumber = null
+    MembersManager.memberAttribute = await RequestGet.getConfigById(3);
+    let memberNumber = null;
 
     const backImage = await RequestGet.getConfigById(9);
     document.getElementById('backImage').src = backImage.attribute;
-
 
     const memberLink = document.querySelector('a[data-section="memberIndex"]');
     const memberIdByLink = memberLink.getAttribute('data-member-id');
 
     if (memberIdByLink) {
-      memberNumber = await RequestGet.getMemberById(memberIdByLink)
+      memberNumber = await RequestGet.getMemberById(memberIdByLink);
       MembersManager.getMemberByNumber(memberNumber.memberNumber);
     }
-
 
     if (!memberNumber) {
       MembersManager.getMemberByNumber(10002); //TODO solo para pruebas, debe ser 0
     }
 
-
     document.getElementById("findMemberXS").addEventListener("click", function () { MembersManager.findMember("xs"); });
     document.getElementById("updateMember").addEventListener("click", function () { MembersManager.updateMember(); });
     document.getElementById("newMember").addEventListener("click", function () { MembersManager.newMember(); });
 
-
-    const buttonFee = document.getElementById("updateFee")
+    const buttonFee = document.getElementById("updateFee");
     buttonFee.addEventListener("click", function () { MembersManager.updateFee(); });
-    buttonFee.textContent = "¿Deudas?"
+    buttonFee.textContent = "¿Deudas?";
 
-    const buttonCard = document.getElementById("updateCard")
+    const buttonCard = document.getElementById("updateCard");
     buttonCard.addEventListener("click", function () { MembersManager.updateCardClick(); });
-    buttonCard.textContent = "Impreso"
-
+    buttonCard.textContent = "Impreso";
 
     const inputFind = document.getElementById('input-find');
     const clearButton = document.getElementById('clear-button');
@@ -75,8 +86,6 @@ export class MembersManager {
       inputFind.value = ''; // Borra el texto del input
       inputFind.focus(); // Devuelve el foco al input (opcional)
     });
-
-
   }
 
   static async limpiaCampos() {
