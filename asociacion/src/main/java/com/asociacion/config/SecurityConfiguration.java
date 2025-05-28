@@ -4,13 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 //Clase que se inicia al princpio del proyecto y debe contener un método que devuelve un SecurityFilterChain y tiene
 //que recibir un HttpSecurity.
 @Configuration
-//@EnableWebSecurity
+@EnableWebSecurity
 public class SecurityConfiguration {
 
     @Autowired
@@ -23,7 +25,7 @@ public class SecurityConfiguration {
                 .anyRequest().permitAll()
             );
     
-        // http.addFilterBefore(customAccessFilter, UsernamePasswordAuthenticationFilter.class);
+         http.addFilterBefore(customAccessFilter, UsernamePasswordAuthenticationFilter.class);
         // NO queremos el filtro personalizado ahora, porque depende de seguridad activa
     
         return http.build();
