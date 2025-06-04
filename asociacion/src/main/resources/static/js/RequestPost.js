@@ -4,13 +4,13 @@ export class RequestPost {
 
   static async newFamily(familyUpdate) {
     try {
-      const response = {
+      /*const response = {
         method: "POST",
         body: JSON.stringify(familyUpdate),
         headers: {
           'Content-Type': 'application/json'
         }
-      };
+      };*/
       // Devuelve la respuesta en formato JSON
       return await RequestPost._postRequest(`/api/family`, response);
     } catch (error) {
@@ -22,15 +22,15 @@ export class RequestPost {
   static async newActivity(activityUpdate) {
 
     try {
-      const response = {
+      /*const response = {
         method: "POST",
         body: JSON.stringify(activityUpdate),
         headers: {
           'Content-Type': 'application/json'
         }
-      };
+      };*/
       // Devuelve la respuesta en formato JSON
-      return await RequestPost._postRequest(`/api/activity`, response);
+      return await RequestPost._postRequest(`/api/activity`, activityUpdate);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
       throw error;
@@ -41,15 +41,15 @@ export class RequestPost {
   static async newActivityMember(activityMemberUpdate) {
 
     try {
-      const response = {
+      /*const response = {
         method: "POST",
         body: JSON.stringify(activityMemberUpdate),
         headers: {
           'Content-Type': 'application/json'
         }
-      };
+      };*/
       // Devuelve la respuesta en formato JSON
-      return await RequestPost._postRequest(`/api/activitymember`, response);
+      return await RequestPost._postRequest(`/api/activitymember`, activityMemberUpdate);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
       throw error;
@@ -59,16 +59,16 @@ export class RequestPost {
   static async newMember(memberUpdate) {
 
     try {
-      const response = {
+      /*const response = {
         method: "POST",
         body: JSON.stringify(memberUpdate),
         headers: {
           'Content-Type': 'application/json'
         }
-      };
+      };*/
       // Devuelve la respuesta en formato JSON
       alert("Añadido")
-      return await RequestPost._postRequest(`/api/members`, response);
+      return await RequestPost._postRequest(`/api/members`, memberUpdate);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
       throw error;
@@ -78,15 +78,15 @@ export class RequestPost {
   static async newFee(feeUpdate) {
 
     try {
-      const response = {
+      /*const response = {
         method: "POST",
         body: JSON.stringify(feeUpdate),
         headers: {
           'Content-Type': 'application/json'
         }
-      };
+      };*/
       // Devuelve la respuesta en formato JSON
-      return await RequestPost._postRequest(`/api/fee`, response);
+      return await RequestPost._postRequest(`/api/fee`, feeUpdate);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
       throw error;
@@ -96,15 +96,15 @@ export class RequestPost {
   static async newRegistry(registryUpdate) {
 
     try {
-      const response = {
+      /*const response = {
         method: "POST",
         body: JSON.stringify(registryUpdate),
         headers: {
           'Content-Type': 'application/json'
         }
-      };
+      };*/
       // Devuelve la respuesta en formato JSON
-      return await RequestPost._postRequest(`/api/registry`, response);
+      return await RequestPost._postRequest(`/api/registry`, registryUpdate);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
       throw error;
@@ -113,7 +113,15 @@ export class RequestPost {
 
   static async _postRequest(url, data) {
     try {
-      const response = await fetch(url, data);
+      let config = {
+        method: 'POST',
+        headers: {
+            'Content-Type' : 'application/json',
+            'Authorization' : sessionStorage.token 
+        },
+        body: JSON.stringify(data)
+    }
+      const response = await fetch(url,config);
       const jsonMessage = await response.json();
       return jsonMessage;
     } catch (error) {

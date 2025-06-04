@@ -106,7 +106,13 @@ export class Listeners {
             const query = inputFind.value;
 
             if (query.length > 0) {
-                fetch(`/api/members/search-member?query=${query}`)
+                fetch(`/api/members/search-member?query=${query}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': sessionStorage.token
+                    }
+                })
                     .then(response => response.json())
                     .then(data => {
                         suggestionsList.innerHTML = '';
