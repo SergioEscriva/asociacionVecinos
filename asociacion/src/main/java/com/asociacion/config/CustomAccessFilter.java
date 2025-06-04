@@ -38,12 +38,11 @@ public class CustomAccessFilter extends OncePerRequestFilter {
         String currentUrl = request.getRequestURI();
         String[] availableUrl = new String[]{
                 "/api/auth/login",
-                "/api/auth/register",
-                "/api/*"
+                "/api/auth/register"
         };
 
         boolean authorized = Arrays.asList(availableUrl).contains(currentUrl);
-        boolean isAnApiResource = currentUrl.startsWith("/home/");
+        boolean isAnApiResource = currentUrl.startsWith("/api/");
 
         if (authorized || !isAnApiResource) {
             return true;

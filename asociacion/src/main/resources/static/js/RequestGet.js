@@ -211,7 +211,14 @@ export class RequestGet {
 
     static async _getRequest(url) {
         try {
-            const response = await fetch(url)
+            let config = {
+                method: 'GET',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : sessionStorage.token 
+        }
+    }
+            const response = await fetch(url, config)
             const jsonMessage = await response.json()
             //console.log(jsonMessage)
             return jsonMessage
