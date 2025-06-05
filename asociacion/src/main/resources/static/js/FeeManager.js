@@ -102,30 +102,41 @@ export class FeeManager {
     }
 
     static async delPaidFee(feesMember) {
-
         const currentYear = new Date().getFullYear();
 
-        if (confirm("¿Estás seguro de BORRAR el pago para el año " + currentYear + "?")) {
+        // Solicita el año al usuario, con el año actual como valor predeterminado
+        const inputYear = prompt("¿Qué año deseas borrar?", currentYear);
+
+        if (inputYear === null) {
+            alert("Operación cancelada.");
+            return;
+        }
+
+        const yearToDelete = parseInt(inputYear);
+
+        if (isNaN(yearToDelete)) {
+            alert("Año no válido.");
+            return;
+        }
+
+        const matchingItem = feesMember.find(item => item.year === yearToDelete);
+
+        if (!matchingItem) {
+            alert(`No se encontró un pago para el año ${yearToDelete}.`);
+            return;
+        }
+
+        if (confirm(`¿Estás seguro de BORRAR el pago para el año ${yearToDelete}?`)) {
             try {
-                const matchingItem = feesMember.find(item => item.year === currentYear); // || item.date.startsWith('2023'));
-                if (matchingItem) {
-                    const matchingId = matchingItem ? matchingItem.id : null;
-
-                    await RequestDel.delFee(matchingId)
-                    this.checkFee()
-
-                    return
-                } else {
-                    return
-                }
+                await RequestDel.delFee(matchingItem.id);
+                this.checkFee();
             } catch (error) {
                 console.error("Error al borrar el pago:", error);
                 alert("Error al borrar el pago. Por favor, intente de nuevo.");
             }
         }
-
-
     }
+
 
     static async paidFeeList(memberId) {
         return await RequestGet.getFeeByMemberId(memberId)

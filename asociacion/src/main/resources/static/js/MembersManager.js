@@ -289,11 +289,11 @@ export class MembersManager {
           memberNumber = request.memberNumber
           const newMemberId = request.id
           await FamilyManager.createFamily(memberNumber)
-          await RegistryManager.activeMemberStart(newMemberId)
+          //await RegistryManager.activeMemberStart(newMemberId)  DESACTIVADO
         }
       } else {
         request = await RequestPut.editMember(memberId, memberUpdate);
-        await FamilyManager.updateFamily(memberNumber)
+        //await FamilyManager.updateFamily(memberNumber)
       }
       MembersManager.getMemberByNumber(memberNumber);
       return request;
