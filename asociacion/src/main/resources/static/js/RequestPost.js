@@ -1,4 +1,4 @@
-
+import { RequestBase } from './RequestBase.js';
 
 export class RequestPost {
 
@@ -12,7 +12,7 @@ export class RequestPost {
         }
       };*/
       // Devuelve la respuesta en formato JSON
-      return await RequestPost._postRequest(`/api/family`, response);
+      return await RequestBase._postRequest(`/api/family`, response);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
       throw error;
@@ -30,7 +30,7 @@ export class RequestPost {
         }
       };*/
       // Devuelve la respuesta en formato JSON
-      return await RequestPost._postRequest(`/api/activity`, activityUpdate);
+      return await RequestBase._postRequest(`/api/activity`, activityUpdate);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
       throw error;
@@ -49,7 +49,7 @@ export class RequestPost {
         }
       };*/
       // Devuelve la respuesta en formato JSON
-      return await RequestPost._postRequest(`/api/activitymember`, activityMemberUpdate);
+      return await RequestBase._postRequest(`/api/activitymember`, activityMemberUpdate);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
       throw error;
@@ -68,7 +68,7 @@ export class RequestPost {
       };*/
       // Devuelve la respuesta en formato JSON
       alert("Añadido")
-      return await RequestPost._postRequest(`/api/members`, memberUpdate);
+      return await RequestBase._postRequest(`/api/members`, memberUpdate);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
       throw error;
@@ -86,7 +86,7 @@ export class RequestPost {
         }
       };*/
       // Devuelve la respuesta en formato JSON
-      return await RequestPost._postRequest(`/api/fee`, feeUpdate);
+      return await RequestBase._postRequest(`/api/fee`, feeUpdate);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
       throw error;
@@ -104,7 +104,7 @@ export class RequestPost {
         }
       };*/
       // Devuelve la respuesta en formato JSON
-      return await RequestPost._postRequest(`/api/registry`, registryUpdate);
+      return await RequestBase._postRequest(`/api/registry`, registryUpdate);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
       throw error;
@@ -116,12 +116,12 @@ export class RequestPost {
       let config = {
         method: 'POST',
         headers: {
-            'Content-Type' : 'application/json',
-            'Authorization' : sessionStorage.token 
+          'Content-Type': 'application/json',
+          'Authorization': sessionStorage.token
         },
         body: JSON.stringify(data)
-    }
-      const response = await fetch(url,config);
+      }
+      const response = await fetch(url, config);
       const jsonMessage = await response.json();
       return jsonMessage;
     } catch (error) {

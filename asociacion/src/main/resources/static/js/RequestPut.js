@@ -1,3 +1,5 @@
+import { RequestBase } from './RequestBase.js';
+
 
 export class RequestPut {
 
@@ -12,7 +14,7 @@ export class RequestPut {
         }
       };*/
       // Devuelve la respuesta en formato JSON
-      return await RequestPut._putRequest(`/api/family/${familyTypeId}`, familyUpdate);
+      return await RequestBase._putRequest(`/api/family/${familyTypeId}`, familyUpdate);
     } catch (error) {
       console.error('Error en la solicitud PUT:', error);
       throw error;
@@ -30,7 +32,7 @@ export class RequestPut {
         }
       };*/
       // Devuelve la respuesta en formato JSON
-      return await RequestPut._putRequest(`/api/activity/${activityId}`, activityUpdate);
+      return await RequestBase._putRequest(`/api/activity/${activityId}`, activityUpdate);
     } catch (error) {
       console.error('Error en la solicitud PUT:', error);
       throw error;
@@ -47,7 +49,7 @@ export class RequestPut {
           'Content-Type': 'application/json'
         }
       };*/
-      return await RequestPut._putRequest(`/api/members/${memberId}`, memberUpdate);
+      return await RequestBase._putRequest(`/api/members/${memberId}`, memberUpdate);
     } catch (error) {
       console.error('Error en la solicitud PUT:', error);
       throw error;
@@ -64,7 +66,7 @@ export class RequestPut {
           'Content-Type': 'application/json'
         }
       };*/
-      return await RequestPut._putRequest(`/api/configs/${configId}`, configUpdate);
+      return await RequestBase._putRequest(`/api/configs/${configId}`, configUpdate);
     } catch (error) {
       console.error('Error en la solicitud PUT:', error);
       throw error;
@@ -81,7 +83,7 @@ export class RequestPut {
           'Content-Type': 'application/json'
         }
       };*/
-      return await RequestPut._putRequest(`/api/registry/${registryId}`, registryUpdate);
+      return await RequestBase._putRequest(`/api/registry/${registryId}`, registryUpdate);
     } catch (error) {
       console.error('Error en la solicitud PUT:', error);
       throw error;
@@ -93,11 +95,11 @@ export class RequestPut {
       let config = {
         method: 'PUT',
         headers: {
-            'Content-Type' : 'application/json',
-            'Authorization' : sessionStorage.token 
+          'Content-Type': 'application/json',
+          'Authorization': sessionStorage.token
         },
         body: JSON.stringify(data)
-    }
+      }
       const response = await fetch(url, config);
       const jsonMessage = await response.json();
       return jsonMessage;

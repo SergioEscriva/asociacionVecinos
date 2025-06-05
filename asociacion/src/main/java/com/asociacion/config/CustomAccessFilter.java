@@ -30,7 +30,10 @@ public class CustomAccessFilter extends OncePerRequestFilter {
                     new UsernamePasswordAuthenticationToken(null, null, Collections.emptyList()));
             filterChain.doFilter(request, response);
         } else {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Token inválido o expirado\"}");
+
         }
     }
 

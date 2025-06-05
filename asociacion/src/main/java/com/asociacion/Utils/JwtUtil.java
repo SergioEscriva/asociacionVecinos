@@ -12,8 +12,7 @@ import java.util.Date;
 
 public class JwtUtil {
 
-    //TODO cambiar palabra secreta por variable
-
+    
     private static final Algorithm algorithm = Algorithm.HMAC256(System.getenv("Palabra_Secreta"));
 
     public static String generateToken(Admin admin){

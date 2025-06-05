@@ -1,3 +1,5 @@
+import { RequestBase } from './RequestBase.js';
+
 export class RequestDel {
 
     static async delActivityMember(idLong) {
@@ -10,7 +12,7 @@ export class RequestDel {
                 }
             };*/
             // Devuelve la respuesta en formato JSON
-            return await RequestDel._delRequest(`/api/activitymember/${idLong}`, idLong);
+            return await RequestBase._delRequest(`/api/activitymember/${idLong}`, idLong);
         } catch (error) {
             console.error('Error en la solicitud DEL:', error);
             throw error;
@@ -27,7 +29,7 @@ export class RequestDel {
                 }
             };*/
             // Devuelve la respuesta en formato JSON
-            return await RequestDel._delRequest(`/api/fee/${id}`, id);
+            return await RequestBase._delRequest(`/api/fee/${id}`, id);
         } catch (error) {
             console.error('Error en la solicitud DEL:', error);
             throw error;
@@ -41,11 +43,11 @@ export class RequestDel {
             let config = {
                 method: 'DELETE',
                 headers: {
-                    'Content-Type' : 'application/json; ; charset=UTF-8',
-                    'Authorization' : sessionStorage.token 
+                    'Content-Type': 'application/json; ; charset=UTF-8',
+                    'Authorization': sessionStorage.token
                 },
-                body: JSON.stringify({data})
-    }
+                body: JSON.stringify({ data })
+            }
             const response = await fetch(url, config)
             //const jsonMessage = await response.json()
             //return jsonMessage
