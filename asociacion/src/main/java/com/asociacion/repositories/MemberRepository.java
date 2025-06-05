@@ -48,6 +48,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("SELECT m FROM Member m ORDER BY m.memberNumber")
     List<Member> findAllOrderedByMemberNumber();
 
+   
     boolean existsByDni(String dni);
+
     
 }

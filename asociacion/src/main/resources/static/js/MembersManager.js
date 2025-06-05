@@ -280,9 +280,9 @@ export class MembersManager {
 
       let request;
       if (!memberId) {
-        const resultado = MembersManager.validarDNIYBaseDeDatos(dni);
+        const resultado = await MembersManager.validarDNIYBaseDeDatos(dni);
         if (!resultado.valido) {
-          alert("Error, " + resultado.mensaje)
+          alert("Error 285, " + resultado.mensaje)
           return
         } else {
           request = await RequestPost.newMember(memberUpdate);
@@ -362,7 +362,7 @@ export class MembersManager {
     alert("Carnet N.º " + memberNumber + ", guardado en el escritorio en pdf para imprimir.")
   }
 
-  static validarDNIYBaseDeDatos(dni) {
+  static async validarDNIYBaseDeDatos(dni) {
     if (!MembersManager.validarDNI(dni)) {
       const letra = MembersManager.letraDNI(dni)
       return { valido: false, mensaje: "DNI no válido" };
@@ -370,7 +370,8 @@ export class MembersManager {
 
     try {
 
-      const dniExiste = RequestGet.getMemberByDni(dni)
+      const dniExiste = await RequestGet.getMemberByDni(dni)
+      console.log(dniExiste);
 
       if (dniExiste) {
         return { valido: false, mensaje: "El DNI ya existe en la base de datos" };
