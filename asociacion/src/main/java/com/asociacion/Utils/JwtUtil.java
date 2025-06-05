@@ -21,16 +21,17 @@ public class JwtUtil {
         String token = JWT.create().withIssuer("Sergios")
                 .withClaim("adminId",admin.getId())
                 .withIssuedAt(new Date())
-                //.withExpiresAt(getExpiresDate())
+                .withExpiresAt(getExpiresDate())
                 .sign(algorithm);
 
         return token;
     }
-//Si queremos que el Token expire podemos descomentar la línea de arriba.
-    private static Date getExpiresDate(){
+
+    private static Date getExpiresDate() {
         return new Date(System.currentTimeMillis()
-                + (1000L * 60 * 60 * 24 * 14)); //14 días
+                + (1000L * 60 * 60 * 10)); // 10 horas
     }
+
 
     public static String getUserIdByToken(String token){
         JWTVerifier verifier = JWT.require(algorithm)
