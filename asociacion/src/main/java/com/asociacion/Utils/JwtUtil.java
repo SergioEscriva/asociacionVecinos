@@ -13,7 +13,7 @@ import java.util.Date;
 public class JwtUtil {
 
     
-    private static final Algorithm algorithm = Algorithm.HMAC256(System.getenv("Palabra_Secreta"));
+    private static final Algorithm algorithm = Algorithm.HMAC256(System.getenv("PALABRA_SECRETA"));
 
     public static String generateToken(Admin admin){
 

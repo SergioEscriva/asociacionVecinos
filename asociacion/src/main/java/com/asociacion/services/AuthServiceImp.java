@@ -20,7 +20,7 @@ public class AuthServiceImp implements AuthService{
     @Override
     public Admin login(String user, String password) {
         String hashPassword = Hashing.sha256()
-                .hashString(password + System.getenv("Palabra_Secreta"), StandardCharsets.UTF_8)
+                .hashString(password + System.getenv("PALABRA_SECRETA"), StandardCharsets.UTF_8)
                 .toString();
 
         List<Admin> result = adminRepository.findByUserAndPassword(user,hashPassword);
@@ -36,7 +36,7 @@ public class AuthServiceImp implements AuthService{
     @Override
     public void register(Admin admin) {
         String hashPassword = Hashing.sha256()
-                .hashString(admin.getPassword() + System.getenv("Palabra_Secreta"), StandardCharsets.UTF_8)
+                .hashString(admin.getPassword() + System.getenv("PALABRA_SECRETA"), StandardCharsets.UTF_8)
                 .toString();
 
         admin.setPassword(hashPassword);
