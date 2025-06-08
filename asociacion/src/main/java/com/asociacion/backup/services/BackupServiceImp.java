@@ -11,16 +11,7 @@ public class BackupServiceImp {
 
    
     public static void performBackup(){
-    try {
-        boolean success = BackupManager.backupDatabase();
-        if (success) {
-            System.out.println("Backup en local realizado con éxito");
-        } else {
-            System.err.println("Error al realizar el backup en local");
-        }
-    } catch (IOException | InterruptedException e) {
-        e.printStackTrace();
-    }
+
 }
 }
     

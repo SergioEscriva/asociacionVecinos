@@ -1,33 +1,65 @@
-package com.asociacion.backup;
+    package com.asociacion.backup;
 
-import java.io.File;
-import java.io.IOException;
+    import org.springframework.stereotype.Component;
+    import java.io.File;
+    import java.io.IOException;
+    import java.nio.file.Files; 
+    import java.nio.file.Paths; 
 
-public class BackupManager {
-    public static boolean backupDatabase() throws IOException, InterruptedException {
-        //TODO extraer estos datos a lugar seguro
-        String dbUsername = "root";
-        String dbPassword = System.getenv("DB_PASSWORD");
-        String dbName = "asociacion";
-        String outputFile = "./backup/backupSQL.sql";
-        
-        ProcessBuilder pb = new ProcessBuilder(
-            "mysqldump",
-            "--user=" + dbUsername,
-            "--password=" + dbPassword,
-            "--host=localhost",
-            "--port=3306",
-            "--add-drop-table",
-            "--databases",
-            dbName
-        );
-        pb.redirectOutput(new File(outputFile));
-        pb.redirectError(ProcessBuilder.Redirect.INHERIT);
-
-        Process process = pb.start();
-        int exitCode = process.waitFor();
-        return exitCode == 0;
+    @Component 
+    public class BackupManager {
 
 
+        private static final String BACKUP_FILE_PATH = "/app/backup/backupSQL.sql";
+
+
+        public void backupDatabase(String dbUser, String dbPassword, String dbDatabase, String dbHost, String dbPort) throws IOException, InterruptedException {
+            
+            File outputFile = new File(BACKUP_FILE_PATH);
+            if (!outputFile.getParentFile().exists()) {
+                Files.createDirectories(Paths.get(outputFile.getParent()));
+            }
+            if (!outputFile.exists()) {
+                outputFile.createNewFile();
+            }
+
+
+            String[] command = {
+                "mysqldump",
+                "-h", dbHost,      
+                "-P", dbPort,     
+                "-u", dbUser,
+                "-p" + dbPassword,
+                dbDatabase
+            };
+
+            ProcessBuilder processBuilder = new ProcessBuilder(command);
+            processBuilder.redirectOutput(outputFile);  
+            processBuilder.redirectErrorStream(true);  
+
+            System.out.println("Ejecutando comando mysqldump: " + String.join(" ", command));
+            Process process = processBuilder.start();
+
+            // Leer la salida de error
+            try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(process.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println("mysqldump output: " + line);
+                }
+            }
+
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("mysqldump ejecutado con éxito. Backup guardado en: " + BACKUP_FILE_PATH);
+            } else {
+                System.err.println("Error ejecutando mysqldump. Código de salida: " + exitCode);
+                
+                throw new RuntimeException("Error en mysqldump. Código de salida: " + exitCode);
+            }
+        }
+
+        public String getBackupFilePath() {
+            return BACKUP_FILE_PATH;
+        }
     }
-}
+    
