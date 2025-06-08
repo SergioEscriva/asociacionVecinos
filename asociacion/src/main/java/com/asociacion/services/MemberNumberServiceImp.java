@@ -7,7 +7,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import com.asociacion.models.Config;
-import com.asociacion.repositories.ConfigRepository;
 import com.asociacion.repositories.MemberRepository;
 
 import jakarta.annotation.PostConstruct;
