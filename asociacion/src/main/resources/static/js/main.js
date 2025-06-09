@@ -88,5 +88,6 @@ document.getElementById('button3').textContent = "Histórico inactivo/a(s)";
 
 
 
+
 export { initActivityIndex, initListsIndex, initMemberIndex, initConfigIndex, initFeesByDateIndex };
 

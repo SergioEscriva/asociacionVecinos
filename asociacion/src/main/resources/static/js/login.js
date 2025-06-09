@@ -2,6 +2,7 @@ async function login() {
     var user = document.getElementById("txtUser").value;
     var password = document.getElementById("txtPassword").value;
 
+
     var body = {
         "user": user,
         "password": password
