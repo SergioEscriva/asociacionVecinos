@@ -33,7 +33,7 @@ async function login() {
 }
 
 async function existe() {
-    let url = 'http://localhost:8585/api/' + 'auth/existeUsuario';
+    let url = '/api/auth/existeUsuario';
     let config = {
         method: 'GET',
         headers: {

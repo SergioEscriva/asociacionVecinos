@@ -288,8 +288,8 @@ export class MembersManager {
           request = await RequestPost.newMember(memberUpdate);
           memberNumber = request.memberNumber
           const newMemberId = request.id
-          await FamilyManager.createFamily(memberNumber)
-          //await RegistryManager.activeMemberStart(newMemberId)  DESACTIVADO
+          //await FamilyManager.createFamily(memberNumber) 
+          //await RegistryManager.activeMemberStart(newMemberId)  Por el momento no marcará activo al member por añadirlo, se prefiere manual.
         }
       } else {
         request = await RequestPut.editMember(memberId, memberUpdate);
