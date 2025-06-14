@@ -36,25 +36,33 @@ export class FeeManager {
         }
     }
     static async paidFee() {
-        const currentYear = new Date().getFullYear();
-        const currentDate = new Date();
+        const memberId = document.getElementById('memberId').value;
+        const feesMember = await RequestGet.getFeeByMemberId(memberId);
 
-        const memberId = document.getElementById('memberId').value
-        const feesMember = await RequestGet.getFeeByMemberId(memberId)
+        const choice = prompt(
+            "¿Qué deseas hacer con la cuota?\n\n" +
+            "1 - Añadir año de cobro\n" +
+            "2 - Borrar año de cobro\n" +
+            "Cancelar para salir"
+        );
 
-        try {
-            const exist = feesMember.some(item => item.year === currentYear); // || item.date.startsWith('2023'));
-            if (exist) {
-                this.delPaidFee(feesMember)
-                return
-            } else {
-                this.updatePaidFee(memberId, feesMember)
-            }
-        } catch (error) {
-            console.error("Error al actualizar el pago:", error);
-            alert("Error al actualizar el pago. Por favor, intente de nuevo.");
+        if (choice === null) {
+            alert("Operación cancelada.");
+            return;
+        }
+
+        switch (choice.trim()) {
+            case "1":
+                this.updatePaidFee(memberId, feesMember);
+                break;
+            case "2":
+                this.delPaidFee(feesMember);
+                break;
+            default:
+                alert("Opción no válida.");
         }
     }
+
 
     static async updatePaidFee(memberId, feesMember) {
         if (confirm("¿Estás seguro de actualizar el pago?")) {
