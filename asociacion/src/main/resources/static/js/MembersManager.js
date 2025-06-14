@@ -107,6 +107,7 @@ export class MembersManager {
     document.getElementById('active').value = "";
     document.getElementById('notes').value = "";
     document.getElementById("memberNumber").value = "";
+    this.updateCard(1);
     await this.limpiaCamposActividad();
   }
 
