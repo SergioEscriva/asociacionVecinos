@@ -53,7 +53,7 @@ export class RequestBase {
         return this.request('PUT', url, body);
     }
 
-    static _deleteRequest(url) {
+    static _delRequest(url) {
         return this.request('DELETE', url);
     }
 }
