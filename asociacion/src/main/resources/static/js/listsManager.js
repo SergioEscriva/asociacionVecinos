@@ -32,7 +32,7 @@ export class ListsManager {
         this.setupMemberSorting(activeMembers);
         break;
       case 'button3':
-        titleElement.textContent = 'Histórico Inactivos/as';
+        titleElement.textContent = 'Listado de ${memberAttribute.attribute}(s) Inactivos/as';
         document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
         document.getElementById('reason').textContent = 'MOTIVO INACTIVIDAD';
         document.getElementById('date').textContent = 'FECHA BAJA';
@@ -133,7 +133,7 @@ export class ListsManager {
       html += await this.getHtmlInactivesRowMembers(registry, lineNumber);
       lineNumber++
     }
-    document.getElementById('txtTitleList').textContent = "Histórico Inactivos/as - Total " + (lineNumber - 1);
+    document.getElementById('txtTitleList').textContent = "Listado Inactivos/as - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
   }
 
