@@ -255,7 +255,7 @@ export class ListsManager {
         if (actividad.miembros.length > 0) {
           actividad.miembros.forEach(miembro => {
             const miembroItem = document.createElement("li");
-            miembroItem.innerHTML = `<strong>${miembro.memberNumber}</strong> - ${miembro.name} ${miembro.lastName1} ${miembro.lastName2}`;
+            miembroItem.innerHTML = `<strong>${miembro.memberNumber}</strong> - ${miembro.name} ${miembro.lastName1} ${miembro.lastName2} ` + `( ` + `${miembro.notes}` + ` )`;
             miembroItem.style.fontSize = "1.5rem";
             miembrosListaElement.appendChild(miembroItem);
           });
@@ -282,13 +282,15 @@ export class ListsManager {
     const actividadesConInfo = [];
     for (const activity of activities) {
       const miembros = await RequestGet.getMembersActivityId(activity.id);
+      console.log(miembros)
       actividadesConInfo.push({
         nombre: activity.name,
         miembros: miembros.map(member => ({
           memberNumber: member.numberMember,
           name: member.memberName,
           lastName1: member.memberApellido1,
-          lastName2: member.memberApellido2
+          lastName2: member.memberApellido2,
+          notes: member.notes
         })),
       });
     }
@@ -300,11 +302,12 @@ export class ListsManager {
       alert("No hay miembros para imprimir en Excel.");
       return;
     }
-    const headers = ["Número de Socio", "Nombre", "Apellidos"];
+    const headers = ["Número de Socio", "Nombre", "Apellidos", "Notas"];
     const data = miembros.map(miembro => [
       miembro.memberNumber,
       miembro.name,
       `${miembro.lastName1} ${miembro.lastName2}`,
+      miembro.notes,
     ]);
 
     ExcelUtils.exportToExcel(data, headers, `Miembros de ${nombreActividad}.xlsx`);

@@ -13,14 +13,9 @@ import com.asociacion.services.ActivityMemberProjection;
 @Repository
 public interface ActivityMemberRepository extends JpaRepository<ActivityMember, Long> {
 
-    // @Query("SELECT am.activity.id AS activityId, am.memberId AS memberId, am.id
-    // AS idLong, a.name AS activityName " +
-    // "FROM ActivityMember am " +
-    // "JOIN am.activity a " +
-    // "WHERE am.memberId = :memberId")
 
     @Query("SELECT am.activity.id AS activityId, am.memberId AS memberId, am.id AS idLong, " +
-    "a.name AS activityName, m.name AS memberName, m.lastName1 AS memberApellido1, m.lastName2 AS memberApellido2 " +
+    "a.name AS activityName, m.name AS memberName, m.lastName1 AS memberApellido1, m.lastName2 AS memberApellido2, m.notes AS notes " +
     "FROM ActivityMember am " +
     "JOIN am.activity a " +
     "JOIN Member m ON m.id = am.memberId " +
@@ -30,7 +25,7 @@ public interface ActivityMemberRepository extends JpaRepository<ActivityMember, 
 
 
     @Query("SELECT am.activity.id AS activityId, am.memberId AS memberId, am.id AS idLong, " +
-            "a.name AS activityName, m.name AS memberName, m.lastName1 AS memberApellido1, m.lastName2 AS memberApellido2, m.memberNumber AS numberMember " +
+            "a.name AS activityName, m.name AS memberName, m.lastName1 AS memberApellido1, m.lastName2 AS memberApellido2, m.memberNumber AS numberMember, m.notes AS notes " +
             "FROM ActivityMember am " +
             "JOIN am.activity a " +
             "JOIN Member m ON m.id = am.memberId " +

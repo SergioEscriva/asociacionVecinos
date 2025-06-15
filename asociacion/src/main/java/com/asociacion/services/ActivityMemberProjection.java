@@ -16,4 +16,6 @@ public interface ActivityMemberProjection {
     String getMemberApellido1();
 
     String getMemberApellido2();
+
+    String getNotes();
 }
