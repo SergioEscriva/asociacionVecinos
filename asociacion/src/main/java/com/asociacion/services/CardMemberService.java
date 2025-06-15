@@ -4,5 +4,5 @@ import java.io.IOException;
 
 public interface CardMemberService {
     
-    public void generarPdf(Long id) throws IOException;
+    public byte[] generarPdf(Long id) throws IOException;
 }

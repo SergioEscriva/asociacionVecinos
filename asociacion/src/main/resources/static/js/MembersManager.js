@@ -6,6 +6,7 @@ import { RequestGet } from './RequestGet.js';
 import { RequestPost } from './RequestPost.js';
 import { RequestPut } from './RequestPut.js';
 import { Utility } from './Utility.js';
+import { RequestFile } from './RequestFile.js';
 
 export class MembersManager {
   constructor() {
@@ -355,13 +356,20 @@ export class MembersManager {
 
   static async updateCardClick() {
     let memberNumber = document.getElementById('memberNumber').value
-    await RequestGet.getPrintCard(memberNumber)
+    //await RequestGet.getPrintCard(memberNumber) //No con docker
+    await this.downloadCarnet(memberNumber)
     const buttonCard = document.getElementById("updateCard")
     buttonCard.classList = 'buttonCard button-green'
     buttonCard.textContent = "Impreso"
     MembersManager.updateMember()
     alert("Carnet N.º " + memberNumber + ", guardado en el escritorio en pdf para imprimir.")
   }
+
+  static async downloadCarnet(memberId) {
+    RequestFile.downloadPdf(`/api/pdf/card/${memberId}`, `carnet_${memberId}.pdf`);
+  }
+
+
 
   static async validarDNIYBaseDeDatos(dni) {
     if (!MembersManager.validarDNI(dni)) {
