@@ -282,7 +282,6 @@ export class ListsManager {
     const actividadesConInfo = [];
     for (const activity of activities) {
       const miembros = await RequestGet.getMembersActivityId(activity.id);
-      console.log(miembros)
       actividadesConInfo.push({
         nombre: activity.name,
         miembros: miembros.map(member => ({

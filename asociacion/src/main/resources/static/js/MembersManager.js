@@ -362,7 +362,7 @@ export class MembersManager {
     buttonCard.classList = 'buttonCard button-green'
     buttonCard.textContent = "Impreso"
     MembersManager.updateMember()
-    alert("Carnet N.º " + memberNumber + ", guardado en el escritorio en pdf para imprimir.")
+    alert("Carnet N.º " + memberNumber + ", guardado en pdf para imprimir.")
   }
 
   static async downloadCarnet(memberId) {
