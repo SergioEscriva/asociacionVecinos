@@ -380,7 +380,6 @@ export class MembersManager {
     try {
 
       const dniExiste = await RequestGet.getMemberByDni(dni)
-      console.log(dniExiste);
 
       if (dniExiste) {
         return { valido: false, mensaje: "El DNI ya existe en la base de datos" };

@@ -83,8 +83,8 @@ document.getElementById('backImage').src = backImage.attribute;
 document.getElementById('title').textContent = titleAttribute.attribute;
 document.getElementById('button1').textContent = "Listado de " + memberAttribute.attribute + "(s)";
 document.getElementById('button2').textContent = "Listado de activo/a(s)";
-//document.getElementById('button3').textContent = memberAttribute.attribute + "(s) inactivo/a(s)";
-document.getElementById('button3').textContent = "Listado de inactivo/a(s)";
+///document.getElementById('button3').textContent = memberAttribute.attribute + "(s) inactivo/a(s)";
+document.getElementById('button3').textContent = "Histórico de Inactividad";
 
 
 
