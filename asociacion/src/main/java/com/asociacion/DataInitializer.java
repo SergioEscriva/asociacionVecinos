@@ -25,6 +25,7 @@ public class DataInitializer implements CommandLineRunner {
             configRepository.save(new Config("Coste Socio Anual", true, "7"));
             configRepository.save(new Config("Coste Socio Nuevo o Reactivado", true, "12"));
             configRepository.save(new Config("Imagen de Fondo", true, "/img/logo_a_v_m.png"));
+            configRepository.save(new Config("Carpeta plantilla carnet", true, "templates/tarjeta.html"));
         } else {
         }
     }

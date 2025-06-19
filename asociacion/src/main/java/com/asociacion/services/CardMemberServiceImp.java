@@ -1,3 +1,5 @@
+
+
 package com.asociacion.services;
 
 import java.io.BufferedReader;
@@ -5,12 +7,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import com.asociacion.models.Config;
 import com.asociacion.models.Member;
 import com.asociacion.repositories.MemberRepository;
 import com.itextpdf.text.Document;
@@ -22,11 +26,18 @@ public class CardMemberServiceImp implements CardMemberService {
 
     @Autowired
     private MemberRepository memberRepository;
+    
+    @Autowired
+    private ConfigServiceImp configServiceImp;
+    
 
     @Override
     public byte[] generarPdf(Long id) {
         try {
-            ClassPathResource resource = new ClassPathResource("templates/tarjeta.html");
+
+            Optional<Config> cardPathConfig = configServiceImp.findById(10L);
+            String cardPath = cardPathConfig.orElseThrow(() -> new RuntimeException("Configuración no encontrada")).getAttribute();
+            ClassPathResource resource = new ClassPathResource(cardPath);
             String plantillaHtml;
             try (BufferedReader reader = new BufferedReader(
                     new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
