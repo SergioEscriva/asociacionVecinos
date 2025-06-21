@@ -110,7 +110,6 @@ export class ListsManager {
             member.name,
             `${member.lastName1} ${member.lastName2}`,
             member.memberNumber,
-            member.active ? '✓' : 'X',
             lastPaidYear,
             registroCompleto.reasonEnd,
             startDate
@@ -118,7 +117,7 @@ export class ListsManager {
         }));
         this.setExportData(
           inactiveMembersData.filter(data => data !== null),
-          ["Nombre", "Apellidos", "Nº Socio", "Activo", "Último Año Pagado", "Motivo Inactividad", "Fecha Baja"],
+          ["Nombre", "Apellidos", "Nº Socio", "Último Año Pagado", "Motivo Inactividad", "Fecha Baja"],
           `Histórico de ${memberAttribute.attribute}s Inactivos.xlsx`
         );
         document.getElementById('generic-export-button').style.display = 'block';
@@ -315,7 +314,7 @@ export class ListsManager {
     if (member === null) {
       return ""
     }
-    const activeStatus = member.active ? '✓' : 'X';
+    const activeStatus = member.active ? 'O' : 'X';
     const lastPaidYear = await this.getLastPaidYear(member.id);
     const registro = await RequestGet.getRegistryById(registry.id);
     const startDate = new Date(registro.startData).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -324,7 +323,7 @@ export class ListsManager {
                 <td>${member.name}</td>
                 <td>${member.lastName1} ${member.lastName2}</td>
                 <td>${member.memberNumber}</td>
-                <td>${activeStatus}</td>
+                <td>-</td>
                 <td>${lastPaidYear}</td>
                 <td>${registro.reasonEnd}</td>
                 <td>${startDate}</td>
