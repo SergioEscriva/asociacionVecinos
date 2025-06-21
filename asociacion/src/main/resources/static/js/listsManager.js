@@ -91,9 +91,16 @@ export class ListsManager {
         document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
         document.getElementById('reason').textContent = 'MOTIVO INACTIVIDAD';
         document.getElementById('date').textContent = 'FECHA BAJA';
-        const inactiveRegistries = await RequestGet.getResgistries();
-        this.renderInactivesList(inactiveRegistries);
-        const inactiveMembersData = await Promise.all(inactiveRegistries.map(async (registry) => {
+
+        const allInactiveRegistries = await RequestGet.getResgistries();
+        const filteredInactiveRegistries = allInactiveRegistries.filter(registry => {
+
+          return registry.reasonEnd && registry.reasonEnd.trim() !== '';
+        });
+
+        this.renderInactivesList(filteredInactiveRegistries);
+
+        const inactiveMembersData = await Promise.all(filteredInactiveRegistries.map(async (registry) => {
           const member = await RequestGet.getMemberById(registry.memberId);
           if (!member) return null;
           const lastPaidYear = await this.getLastPaidYear(member.id);
