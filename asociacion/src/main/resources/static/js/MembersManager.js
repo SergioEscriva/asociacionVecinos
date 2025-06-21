@@ -256,9 +256,9 @@ export class MembersManager {
         printed = 0
       }
 
-      const numeroDni = parseInt(dni.substring(0, 8));
-      const letraDni = dni.charAt(8).toUpperCase();
-      const dniUp = numeroDni + letraDni;
+      const numeroDni = dni.substring(0, 8);
+      const letraEnMayuscula = dni.charAt(8).toUpperCase();
+      const dniUp = numeroDni + letraEnMayuscula;
 
       const memberUpdate = {
 
@@ -372,6 +372,7 @@ export class MembersManager {
 
 
   static async validarDNIYBaseDeDatos(dni) {
+
     if (!MembersManager.validarDNI(dni)) {
       const letra = MembersManager.letraDNI(dni)
       return { valido: false, mensaje: "DNI no válido" };
@@ -393,6 +394,7 @@ export class MembersManager {
   }
 
   static validarDNI(dni) {
+
     if (!dni || dni.length !== 9) {
       return false;
     }
@@ -409,7 +411,6 @@ export class MembersManager {
   }
 
   static letraDNI(dni) {
-
     const numero = parseInt(dni.substring(0, 8));
     const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
     const letraValida = letras.charAt(numero % 23);
