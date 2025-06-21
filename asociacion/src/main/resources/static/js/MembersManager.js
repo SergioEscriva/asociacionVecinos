@@ -65,7 +65,7 @@ export class MembersManager {
     }
 
     if (!memberNumber) {
-      MembersManager.getMemberByNumber(10002); //TODO solo para pruebas, debe ser 0
+      MembersManager.getMemberByNumber(0);
     }
 
     document.getElementById("findMemberXS").addEventListener("click", function () { MembersManager.findMember("xs"); });
@@ -173,19 +173,26 @@ export class MembersManager {
   }
 
   static async checkActive(element, member) {
-    const registrys = await RequestGet.getRegistryByMemberId(member.id)
-    const inActive = registrys.some(item => item.endData === null)
-    const feesMember = await RequestGet.getFeeByMemberId(member.id)
-    const actualYear = new Date().getFullYear()
-    const configYearsForInactive = await RequestGet.getConfigById(4)
-    const yearsForInactive = actualYear - configYearsForInactive.attribute;
-    const existActualFee = feesMember.some(item => item.year >= yearsForInactive);
+    const registrys = await RequestGet.getRegistryByMemberId(member.id);
+    const inActive = registrys.some(item => item.endData === null);
 
-    element.checked = false
-    if (inActive & existActualFee) {
-      element.checked = true
+    const feesMember = await RequestGet.getFeeByMemberId(member.id);
+    const actualYear = new Date().getFullYear();
+    const configYearsForInactive = await RequestGet.getConfigById(4);
+
+    const yearsForInactive = actualYear - configYearsForInactive.attribute;
+
+    const hasPaidRecently = feesMember.some(item => parseInt(item.year) >= yearsForInactive);
+
+    const hasPaidCurrentYear = feesMember.some(item => parseInt(item.year) === actualYear);
+
+
+    element.checked = false;
+    if ((inActive && hasPaidRecently) || hasPaidCurrentYear) {
+      element.checked = true;
     }
-    element.dataset.memberbyId = member.id
+
+    element.dataset.memberbyId = member.id;
   }
 
 
