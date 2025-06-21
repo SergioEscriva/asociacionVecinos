@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 public class RestoreService {
 
     public void restoreDatabase(String backupFilePath) throws IOException, InterruptedException {
-        //TODO extraer estos datos a lugar seguro
-        String dbUsername = "root";
-        String dbPassword = "000000";
-        String dbName = "asociacion";
+  
+        String dbUsername = "${DB_USER}";
+        String dbPassword = "${DB_ROOT_PASSWORD}";
+        String dbName = "asociacion_db";
 
         ProcessBuilder pb = new ProcessBuilder(
             "mysql",
