@@ -19,7 +19,7 @@ export class FeeManager {
         const feesMember = await RequestGet.getFeeByMemberId(memberId)
 
         const member = await RequestGet.getMemberById(memberId);
-        //const checkFee = document.getElementById('active'); // quitamos que sea activo o no de forma automática por pagar.
+        //const checkFee = document.getElementById('active'); // quitamos que sea activo o no de forma automática por tener pagado.
 
 
         const exist = feesMember.some(item => item.year === currentYear); // || item.date.startsWith('2023'));
@@ -27,12 +27,12 @@ export class FeeManager {
         if (exist) {
             button.classList = 'buttonFee button-green'
             button.textContent = "Sin Deudas"
-            //checkFee.checked = member.active === true;
+            //checkFee.checked = member.active === true; 
 
         } else {
             button.classList = 'buttonFee button-red'
             button.textContent = "Con Deudas"
-            // checkFee.checked = member.active === false;
+            //checkFee.checked = member.active === false; 
         }
     }
     static async paidFee() {
@@ -66,6 +66,7 @@ export class FeeManager {
 
     static async updatePaidFee(memberId, feesMember) {
 
+        const currentYear = new Date().getFullYear();
         const dateInput = document.createElement('input');
         dateInput.type = 'date';
         dateInput.valueAsDate = new Date();
@@ -96,7 +97,9 @@ export class FeeManager {
                     };
 
                     await RequestPost.newFee(feeUpdate);
-                    document.getElementById('active').checked = true;
+                    if (selectedYear == currentYear) {
+                        document.getElementById('active').checked = true;
+                    }
                     FeeManager.checkFee();
                 }
             } catch (error) {
@@ -135,7 +138,6 @@ export class FeeManager {
         if (confirm(`¿Estás seguro de BORRAR el pago para el año ${yearToDelete}?`)) {
             try {
                 await RequestDel.delFee(matchingItem.id);
-                document.getElementById('active').checked = false;
                 this.checkFee();
             } catch (error) {
                 console.error("Error al borrar el pago:", error);

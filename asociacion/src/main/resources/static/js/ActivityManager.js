@@ -111,6 +111,23 @@ export class ActivityManager {
     const notes = document.getElementById('notes').value
     const year = document.getElementById("year-select").value;
 
+    const activities = await RequestGet.getActivitys(year);
+    const existingActivity = activities.find(activity => activity.name === activityName && activity.id !== activityId);
+
+    if (existingActivity) {
+      alert(`Ya existe una actividad con el nombre "${activityName}" en el año ${year}. Por favor, elige un nombre diferente.`);
+      return;
+    }
+    if (!activityName) {
+      alert("Por favor, completa todos los campos obligatorios.");
+      return;
+    }
+    if (activityName.length < 3) {
+      alert("El nombre de la actividad debe tener al menos 3 caracteres.");
+      return;
+    }
+
+
     const updateActivity = {
       name: activityName,
       managerName: managerName,
