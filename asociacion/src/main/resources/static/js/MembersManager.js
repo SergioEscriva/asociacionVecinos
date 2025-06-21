@@ -188,7 +188,7 @@ export class MembersManager {
 
 
     element.checked = false;
-    if ((inActive && hasPaidRecently) || hasPaidCurrentYear) {
+    if ((inActive && hasPaidRecently) || (inActive && hasPaidCurrentYear)) {
       element.checked = true;
     }
 
