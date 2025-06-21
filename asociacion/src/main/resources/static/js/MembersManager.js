@@ -105,7 +105,7 @@ export class MembersManager {
     document.getElementById('email').value = "";
     document.getElementById('dni').value = "";
     document.getElementById('gender').value = "";
-    document.getElementById('active').value = "";
+    document.getElementById('active').checked = false;
     document.getElementById('notes').value = "";
     document.getElementById("memberNumber").value = "";
     this.updateCard(1);

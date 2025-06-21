@@ -96,6 +96,7 @@ export class FeeManager {
                     };
 
                     await RequestPost.newFee(feeUpdate);
+                    document.getElementById('active').checked = true;
                     FeeManager.checkFee();
                 }
             } catch (error) {
@@ -134,6 +135,7 @@ export class FeeManager {
         if (confirm(`¿Estás seguro de BORRAR el pago para el año ${yearToDelete}?`)) {
             try {
                 await RequestDel.delFee(matchingItem.id);
+                document.getElementById('active').checked = false;
                 this.checkFee();
             } catch (error) {
                 console.error("Error al borrar el pago:", error);
