@@ -1,0 +1,9 @@
+**[22 junio 2025]**: Ahora en el listado de actividades sólo muestra las Actividades de miembros activos.
+**[21 junio 2025]**: Ahora comprueba que no esté duplicado el nombre de la actividad al crear una nueva
+**[21 junio 2025]**: Fix al modificar pago se actualiza inmediatamente el check de Activo.
+**[21 junio 2025]**: Fix Si está pagado el año en curso, se marca como Activo.
+**[21 junio 2025]**: Eliminado "Género" de la ficha.
+**[21 junio 2025]**: Fix error al introducir Dni con 0 a la izquierda.
+**[21 junio 2025]**: Ahora no hace falta confirmar editar fecha de pago, hay botón cancelar
+**[20 junio 2025]**: Se implementó la funcionalidad de imprimir en fichero Excel en todos los listados.
+**[20 junio 2025]**: Añadido este recuadro de Actualizaciones.
