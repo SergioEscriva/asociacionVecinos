@@ -9,18 +9,17 @@ import org.springframework.stereotype.Service;
 public class RestoreService {
 
     public void restoreDatabase(String backupFilePath) throws IOException, InterruptedException {
-  
-        String dbUsername = "${DB_USER}";
-        String dbPassword = "${DB_ROOT_PASSWORD}";
-        String dbName = "asociacion_db";
+            String dbUsername = System.getenv("DB_USER");
+            String dbPassword = System.getenv("DB_PASSWORD");
+            String dbDatabase = System.getenv("DB_DATABASE");
 
         ProcessBuilder pb = new ProcessBuilder(
             "mysql",
             "--user=" + dbUsername,
             "--password=" + dbPassword,
             "--host=localhost",
-            "--port=3306",
-            dbName
+            "--port=3307",
+            dbDatabase
         );
         pb.redirectInput(new File(backupFilePath));
         pb.redirectError(ProcessBuilder.Redirect.INHERIT);

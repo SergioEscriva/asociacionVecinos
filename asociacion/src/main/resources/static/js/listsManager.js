@@ -447,7 +447,7 @@ export class ListsManager {
             const miembroItem = document.createElement("li");
             miembroItem.innerHTML = `<strong>${miembro.memberNumber}</strong> - ${miembro.name} ${miembro.lastName1} ${miembro.lastName2} ` + `( ` + `${miembro.notes}` + ` )`;
             miembroItem.style.fontSize = "1.5rem";
-            miembroListaElement.appendChild(miembroItem);
+            miembrosListaElement.appendChild(miembroItem);
           });
           botonImprimirElement.onclick = () => this.imprimirMiembrosAExcel(actividad.nombre, actividad.miembros);
         } else {

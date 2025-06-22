@@ -121,15 +121,4 @@ public class MemberController {
         return memberService.existsByDni(dni);
     }
 
-    @PutMapping("/activated/{id}")
-    public ResponseEntity<Member> putMemberActive(@PathVariable Long id, @RequestBody Member member) {
-        Optional<Member> existingMember = memberService.findById(id);
-        if (existingMember.isPresent()) {
-            member.setActive(1);
-            Member updatedMember = memberService.saveMember(member);
-            return new ResponseEntity<>(updatedMember, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 }
