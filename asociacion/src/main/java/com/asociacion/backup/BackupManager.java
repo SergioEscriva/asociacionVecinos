@@ -3,14 +3,14 @@
     import org.springframework.stereotype.Component;
     import java.io.File;
     import java.io.IOException;
-    import java.nio.file.Files; 
-    import java.nio.file.Paths; 
+    import java.nio.file.Files;
+    import java.nio.file.Paths;
 
-    @Component 
+    @Component
     public class BackupManager {
 
 
-        private static final String BACKUP_FILE_PATH = "/app/backup/backupSQL.sql";
+        private static final String BACKUP_FILE_PATH = "./backup/backupSQL.sql"; // /app
 
 
         public void backupDatabase(String dbUser, String dbPassword, String dbDatabase, String dbHost, String dbPort) throws IOException, InterruptedException {
@@ -26,25 +26,24 @@
 
             String[] command = {
                 "mysqldump",
-                "-h", dbHost,      
-                "-P", dbPort,     
+                "-h", dbHost,
+                "-P", dbPort,
                 "-u", dbUser,
                 "-p" + dbPassword,
                 dbDatabase
             };
-
+         
             ProcessBuilder processBuilder = new ProcessBuilder(command);
-            processBuilder.redirectOutput(outputFile);  
-            processBuilder.redirectErrorStream(true);  
+            processBuilder.redirectOutput(outputFile);
+            processBuilder.redirectErrorStream(true);
 
-            System.out.println("Ejecutando comando mysqldump: " + String.join(" ", command));
             Process process = processBuilder.start();
 
             // Leer la salida de error
             try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    System.out.println("mysqldump output: " + line);
+                   
                 }
             }
 
