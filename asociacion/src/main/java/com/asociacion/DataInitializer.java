@@ -20,12 +20,14 @@ public class DataInitializer implements CommandLineRunner {
             configRepository.save(new Config("Número Socio Inicial", true, "0"));
             configRepository.save(new Config("Atributo Socio", true, "Socio/a"));
             configRepository.save(new Config("Año/s impago para Inactivo", true, "1"));
-            configRepository.save(new Config("Token Dropbox Backup", true, "tu_token"));
+            configRepository.save(new Config("Carpeta plantilla carnet", true, "/templates/tarjeta.html"));
             configRepository.save(new Config("Directorio en Dropbox Backup", true, "/Aplicaciones/Asociacion/"));
             configRepository.save(new Config("Coste Socio Anual", true, "7"));
             configRepository.save(new Config("Coste Socio Nuevo o Reactivado", true, "12"));
             configRepository.save(new Config("Imagen de Fondo", true, "/img/logo_a_v_m.png"));
-            configRepository.save(new Config("Carpeta plantilla carnet", true, "templates/tarjeta.html"));
+            configRepository.save(new Config("app_key de Dropbox", true, ""));
+            configRepository.save(new Config("app_secret de Dropbox", true, ""));
+            configRepository.save(new Config("refresh_token de Dropbox", true, ""));
         } else {
         }
     }
