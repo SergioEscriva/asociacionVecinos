@@ -35,7 +35,7 @@ public class CardMemberServiceImp implements CardMemberService {
     public byte[] generarPdf(Long id) {
         try {
 
-            Optional<Config> cardPathConfig = configServiceImp.findById(10L);
+            Optional<Config> cardPathConfig = configServiceImp.findById(5L);
             String cardPath = cardPathConfig.orElseThrow(() -> new RuntimeException("Configuración no encontrada")).getAttribute();
             ClassPathResource resource = new ClassPathResource(cardPath);
             String plantillaHtml;
