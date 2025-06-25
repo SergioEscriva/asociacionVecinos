@@ -163,6 +163,7 @@ export class MembersManager {
 
       const buttonCard = document.getElementById("updateCard")
       buttonCard.title = await MembersManager.updateCard(member.cardPrint);
+      buttonCard.title = "Pulsa para imprimir";
       buttonCard.disabled = false;
 
       document.getElementById('notes').value = member.notes;
