@@ -288,6 +288,16 @@ button {
     margin-left: 50px;
 }
 
+button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+button:disabled span {
+    color: #666666;
+}
+
 .container-activity {
     display: flex;
     flex-direction: column;

@@ -74,11 +74,14 @@ export class MembersManager {
 
     const buttonFee = document.getElementById("updateFee");
     buttonFee.addEventListener("click", function () { MembersManager.updateFee(); });
-    buttonFee.textContent = "¿Deudas?";
+    buttonFee.textContent = "Pagos";
+    buttonFee.disabled = true;
+
 
     const buttonCard = document.getElementById("updateCard");
     buttonCard.addEventListener("click", function () { MembersManager.updateCardClick(); });
-    buttonCard.textContent = "Impreso";
+    buttonCard.textContent = "Imprimir";
+    buttonCard.disabled = true;
 
     const inputFind = document.getElementById('input-find');
     const clearButton = document.getElementById('clear-button');
@@ -109,6 +112,7 @@ export class MembersManager {
     document.getElementById('notes').value = "";
     document.getElementById("memberNumber").value = "";
     this.updateCard(1);
+
     await this.limpiaCamposActividad();
   }
 
@@ -158,12 +162,14 @@ export class MembersManager {
 
 
       const buttonCard = document.getElementById("updateCard")
-      buttonCard.title = await MembersManager.updateCard(member.cardPrint)
+      buttonCard.title = await MembersManager.updateCard(member.cardPrint);
+      buttonCard.disabled = false;
 
       document.getElementById('notes').value = member.notes;
       FeeManager.checkFee()
       const buttonFee = document.getElementById("updateFee")
-      buttonFee.title = await MembersManager.updateFeeTitle(member.id)
+      buttonFee.title = await MembersManager.updateFeeTitle(member.id);
+      buttonFee.disabled = false;
 
 
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
