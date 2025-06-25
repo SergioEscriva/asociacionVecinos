@@ -25,7 +25,7 @@ public class DropboxScheduler {
     private DropboxTokenService dropboxTokenService;
 
 
-    private static final String BACKUP_FILE_PATH_IN_CONTAINER = "/app/backup/backupSQL.sql";
+    //private static final String BACKUP_FILE_PATH_IN_CONTAINER = "/app/backup/backupSQL.sql";
 
 
     public DropboxScheduler(ConfigServiceImp configServiceImp, DropboxUploader dropboxUploader, BackupManager backupManager) {

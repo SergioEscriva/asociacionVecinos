@@ -10,7 +10,7 @@
     public class BackupManager {
 
 
-        private static final String BACKUP_FILE_PATH = "/app/backup/backupSQL.sql"; // /app
+        private static final String BACKUP_FILE_PATH = "/app/backup/backupSQL.sql"; // para pruebas sin docker hay que poner ./app/etc
 
 
         public void backupDatabase(String dbUser, String dbPassword, String dbDatabase, String dbHost, String dbPort) throws IOException, InterruptedException {
