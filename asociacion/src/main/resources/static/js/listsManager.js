@@ -452,13 +452,15 @@ export class ListsManager {
         if (actividad.miembros.length > 0) {
           actividad.miembros.forEach(miembro => {
             const miembroItem = document.createElement("li");
+            miembroItem.classList.add("clickable-row");
+            miembroItem.setAttribute("data-member-number", miembro.memberNumber);
             miembroItem.innerHTML = `<strong>${miembro.memberNumber}</strong> - ${miembro.name} ${miembro.lastName1} ${miembro.lastName2} ( ${miembro.notes} )`;
             miembroItem.style.fontSize = "1.5rem";
             miembroItem.style.cursor = "pointer";
             miembroItem.addEventListener("click", () => {
-              alert("Número de socio marcado: " + miembro.memberNumber);
             });
             miembrosListaElement.appendChild(miembroItem);
+            this.addRowClickListeners();
           });
           botonImprimirElement.onclick = () => this.imprimirMiembrosAExcel(actividad.nombre, actividad.miembros);
         } else {
@@ -536,24 +538,6 @@ export class ListsManager {
     });
   }
 
-  async renderList(members, allMembers) {
-    let html = '';
-    let lineNumber = 1;
-
-    for (const member of members) {
-      html += await this.getHtmlRowMembers(member, lineNumber);
-      lineNumber++
-    }
-
-    if (allMembers) {
-      document.getElementById('txtTitleList').textContent = "Listado Completo - Total " + (lineNumber - 1);
-    } else {
-      document.getElementById('txtTitleList').textContent = "Listado de Activos/as - Total " + (lineNumber - 1);
-    }
-    document.getElementById('tbody-member').innerHTML = html;
-
-    this.addRowClickListeners();
-  }
 }
 
 
