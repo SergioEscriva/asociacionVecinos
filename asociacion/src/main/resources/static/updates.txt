@@ -1,3 +1,6 @@
+**[26 junio 2025]**: NUEVO: Añadido en las listas clickar para abrir la ficha del socio seleccionado.
+**[25 junio 2025]**: Ahora no se puede añadir pagos hasta tener guardada la ficha del socio.
+**[23 junio 2025]**: Actualizado método de backup con DropBox después de los cambios de DropBox con los Token.
 **[22 junio 2025]**: Ahora en el listado de actividades sólo muestra las Actividades de miembros activos.
 **[21 junio 2025]**: Ahora comprueba que no esté duplicado el nombre de la actividad al crear una nueva
 **[21 junio 2025]**: Fix al modificar pago se actualiza inmediatamente el check de Activo.
@@ -6,4 +9,4 @@
 **[21 junio 2025]**: Fix error al introducir Dni con 0 a la izquierda.
 **[21 junio 2025]**: Ahora no hace falta confirmar editar fecha de pago, hay botón cancelar
 **[20 junio 2025]**: Se implementó la funcionalidad de imprimir en fichero Excel en todos los listados.
-**[20 junio 2025]**: Añadido este recuadro de Actualizaciones.
+**[20 junio 2025]**: NUEVO: Añadido este recuadro de Actualizaciones.

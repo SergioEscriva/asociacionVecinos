@@ -1,0 +1,14 @@
+asociacion/backup/backup*.*
+asociacion/src/main/java/com/asociacion/backup/backup*.*
+./backup*.*
+asociacion/.env
+asociacion/src/main/resources/static/updates.txt
+asociacion/backup/backupSQL.sql
+asociacion/app/backup/backupSQL.sql
+asociacion/miimagen_arm64.tar
+asociacion/import_and_run.sh
+asociacion/grant-remote-access.sql
+asociacion/Dockerfile
+asociacion/docker-compose.yml
+asociacion/docker-compose (copia).yml
+asociacion/build_and_export.sh
