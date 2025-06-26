@@ -17,6 +17,7 @@ export class ListsManager {
     const titleElement = document.getElementById('txtTitleList');
     const backImage = await RequestGet.getConfigById(9);
 
+
     let mainListContainer = document.getElementById('list-container');
     if (!mainListContainer) {
       console.error("Error: El elemento con ID 'list-container' no fue encontrado en el DOM. Creando dinámicamente...");
@@ -46,6 +47,8 @@ export class ListsManager {
         }
       });
     }
+
+
 
     document.getElementById('generic-export-button').style.display = 'none';
 
@@ -283,12 +286,13 @@ export class ListsManager {
       document.getElementById('txtTitleList').textContent = "Listado de Activos/as - Total " + (lineNumber - 1);
     }
     document.getElementById('tbody-member').innerHTML = html;
+    this.addRowClickListeners();
   }
 
   async getHtmlRowMembers(member, lineNumber) {
     const activeStatus = member.active ? '✓' : 'X';
     const lastPaidYear = await this.getLastPaidYear(member.id);
-    return `<tr>
+    return `<tr class="clickable-row" data-member-number="${member.memberNumber}">
                 <td>${lineNumber}</td>
                 <td>${member.name}</td>
                 <td>${member.lastName1} ${member.lastName2}</td>
@@ -307,6 +311,7 @@ export class ListsManager {
     }
     document.getElementById('txtTitleList').textContent = "Histórico de Inactividad - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
+    this.addRowClickListeners();
   }
 
   async getHtmlInactivesRowMembers(registry, lineNumber) {
@@ -318,7 +323,7 @@ export class ListsManager {
     const lastPaidYear = await this.getLastPaidYear(member.id);
     const registro = await RequestGet.getRegistryById(registry.id);
     const startDate = new Date(registro.startData).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    return `<tr>
+    return `<tr class="clickable-row" data-member-number="${member.memberNumber}">
                 <td>${lineNumber}</td>
                 <td>${member.name}</td>
                 <td>${member.lastName1} ${member.lastName2}</td>
@@ -341,11 +346,12 @@ export class ListsManager {
 
     document.getElementById('txtTitleList').textContent = "Lista de Pagos - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
+    this.addRowClickListeners();
   }
 
   async getHtmlPayRowMembers(member, lineNumber) {
     const paidYears = await this.getPaidYears(member.id);
-    return `<tr>
+    return `<tr class="clickable-row" data-member-number="${member.memberNumber}">
                 <td>${lineNumber}</td>
                 <td>${member.name}</td>
                 <td>${member.lastName1} ${member.lastName2}</td>
@@ -368,11 +374,12 @@ export class ListsManager {
     }
     document.getElementById('txtTitleList').textContent = "Lista de Impagados - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
+    this.addRowClickListeners();
   }
 
   async getHtmlUnpayRowMembers(member, lineNumber) {
     const lastPaidYear = await this.getLastPaidYear(member.id);
-    return `<tr>
+    return `<tr class="clickable-row" data-member-number="${member.memberNumber}">
                 <td>${lineNumber}</td>
                 <td>${member.name}</td>
                 <td>${member.lastName1} ${member.lastName2}</td>
@@ -445,8 +452,12 @@ export class ListsManager {
         if (actividad.miembros.length > 0) {
           actividad.miembros.forEach(miembro => {
             const miembroItem = document.createElement("li");
-            miembroItem.innerHTML = `<strong>${miembro.memberNumber}</strong> - ${miembro.name} ${miembro.lastName1} ${miembro.lastName2} ` + `( ` + `${miembro.notes}` + ` )`;
+            miembroItem.innerHTML = `<strong>${miembro.memberNumber}</strong> - ${miembro.name} ${miembro.lastName1} ${miembro.lastName2} ( ${miembro.notes} )`;
             miembroItem.style.fontSize = "1.5rem";
+            miembroItem.style.cursor = "pointer";
+            miembroItem.addEventListener("click", () => {
+              alert("Número de socio marcado: " + miembro.memberNumber);
+            });
             miembrosListaElement.appendChild(miembroItem);
           });
           botonImprimirElement.onclick = () => this.imprimirMiembrosAExcel(actividad.nombre, actividad.miembros);
@@ -500,7 +511,51 @@ export class ListsManager {
 
     ExcelUtils.exportToExcel(data, headers, `Miembros de ${nombreActividad}.xlsx`);
   }
+
+  addRowClickListeners() {
+    const rows = document.querySelectorAll('.clickable-row');
+
+    rows.forEach(row => {
+      row.addEventListener('click', function () {
+        const memberNumberFromRow = this.getAttribute('data-member-number');
+
+        if (memberNumberFromRow) {
+          sessionStorage.setItem('selectedMemberId', memberNumberFromRow);
+
+        } else {
+          sessionStorage.removeItem('selectedMemberId');
+          console.warn("ListsManager: No se encontró memberNumber en la fila, limpiando sessionStorage para 'selectedMemberId'.");
+        }
+
+        if (typeof window.App !== 'undefined' && window.App.loadContent) {
+          window.App.loadContent('memberIndex', 2, null);
+        } else {
+          console.error('ListsManager: Error: window.App.loadContent no está definido o accesible.');
+        }
+      });
+    });
+  }
+
+  async renderList(members, allMembers) {
+    let html = '';
+    let lineNumber = 1;
+
+    for (const member of members) {
+      html += await this.getHtmlRowMembers(member, lineNumber);
+      lineNumber++
+    }
+
+    if (allMembers) {
+      document.getElementById('txtTitleList').textContent = "Listado Completo - Total " + (lineNumber - 1);
+    } else {
+      document.getElementById('txtTitleList').textContent = "Listado de Activos/as - Total " + (lineNumber - 1);
+    }
+    document.getElementById('tbody-member').innerHTML = html;
+
+    this.addRowClickListeners();
+  }
 }
+
 
 class ExcelUtils {
   static exportToExcel(data, headers, filename = '') {

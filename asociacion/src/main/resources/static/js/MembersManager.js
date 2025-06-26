@@ -11,6 +11,7 @@ import { RequestFile } from './RequestFile.js';
 export class MembersManager {
   constructor() {
     this.scheduleInactiveRedirect();
+
   }
 
   scheduleInactiveRedirect() {
@@ -28,7 +29,6 @@ export class MembersManager {
     };
 
     const redirectToInicio = () => {
-      console.log('Redirigiendo a inicio por inactividad en la página de miembros.');
       window.location.hash = window.location.reload();
     };
 
@@ -37,27 +37,24 @@ export class MembersManager {
       inactivityTimer = setTimeout(redirectToInicio, inactiveTimeout);
     };
 
-    // Escuchar eventos que indican actividad
     window.addEventListener('mousemove', resetInactivityTimer);
     window.addEventListener('keypress', resetInactivityTimer);
     window.addEventListener('click', resetInactivityTimer);
     window.addEventListener('scroll', resetInactivityTimer);
 
-    // Comprobar la página al cargar y en cambios de hash (para SPAs)
     window.addEventListener('load', checkMembersPage);
     window.addEventListener('hashchange', checkMembersPage);
   }
 
   async init() {
-    // Variables Config
+
     MembersManager.memberAttribute = await RequestGet.getConfigById(3);
-    let memberNumber = null;
 
     const backImage = await RequestGet.getConfigById(9);
     document.getElementById('backImage').src = backImage.attribute;
 
     const memberLink = document.querySelector('a[data-section="memberIndex"]');
-    const memberIdByLink = memberLink.getAttribute('data-member-id');
+    let memberIdByLink = memberLink.getAttribute('data-member-id');
 
     if (memberIdByLink) {
       memberNumber = await RequestGet.getMemberById(memberIdByLink);
@@ -66,6 +63,9 @@ export class MembersManager {
 
     if (!memberNumber) {
       MembersManager.getMemberByNumber(0);
+    } else {
+      let memberIdSession = sessionStorage.getItem('selectedMemberId');
+      MembersManager.getMemberByNumber(memberIdSession);
     }
 
     document.getElementById("findMemberXS").addEventListener("click", function () { MembersManager.findMember("xs"); });
@@ -122,15 +122,13 @@ export class MembersManager {
 
   static async limpiaCamposActividad() {
     const activitySel = document.getElementById("ul-activity-member");
-    //const oldListener = activitySel.onclick;
-    //activitySel.removeEventListener('input', oldListener);
     activitySel.innerHTML = "";
   }
 
   static async getMemberByNumber(memberNumber) {
     await this.limpiaCampos()
     MembersManager.inyectOption()
-    // Variables config
+
     document.getElementById('labelMemberNumber').textContent = "N.º " + MembersManager.memberAttribute.attribute;
     document.getElementById('titleMemberPage').textContent = "Ficha " + MembersManager.memberAttribute.attribute;
 
@@ -174,6 +172,7 @@ export class MembersManager {
 
 
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
+      sessionStorage.setItem('selectedMemberId', '0');
 
 
     }

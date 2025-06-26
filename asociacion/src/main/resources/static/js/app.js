@@ -1,34 +1,13 @@
-
 document.addEventListener('DOMContentLoaded', () => {
+
     const content = document.getElementById('content');
     const links = document.querySelectorAll('#sidebar a[data-section]');
 
-    links.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-
-
-            const linkElement = e.currentTarget;
-            const section = linkElement.getAttribute('data-section');
-
-            if (section === 'index') {
-                window.location.reload();
-            }
-
-            const buttonList = linkElement.getAttribute('id')
-
-            if (section) {
-                loadContent(section, buttonList);
-            } else {
-                console.error("Error: 'data-section' no está definido en el enlace.");
-            }
-        });
-    });
-
     const pageInitializers = {
-        memberIndex: async () => {
+        memberIndex: async (memberId = null) => {
             const { initMemberIndex } = await import('/js/main.js');
-            initMemberIndex();
+            initMemberIndex(memberId);
+            document.body.removeAttribute('data-member-id');
         },
         activityIndex: async () => {
             const { initActivityIndex } = await import('/js/main.js');
@@ -54,10 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const { initConfigIndex } = await import('/js/main.js');
             initConfigIndex();
         }
-
     };
 
-    function loadContent(section, idList) {
+    function internalLoadContent(section, idList, memberId = null) {
         fetch(`${section}.html`)
             .then(response => response.text())
             .then(html => {
@@ -65,10 +43,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.setAttribute('data-page', section);
                 document.body.setAttribute('data-page-selection', idList);
 
+                if (memberId !== null) {
+                    document.body.setAttribute('data-member-number', memberId);
+                } else {
+                    document.body.removeAttribute('data-member-number');
+                }
+
                 updateActiveMenuIcons(section);
 
                 if (pageInitializers[section]) {
-                    pageInitializers[section]();
+
+                    if (section === 'memberIndex') {
+
+                        pageInitializers[section](memberId);
+                    } else {
+                        pageInitializers[section]();
+                    }
                 }
             })
             .catch(error => {
@@ -77,6 +67,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    window.App = window.App || {};
+    window.App.loadContent = internalLoadContent;
+
+
+    links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const linkElement = e.currentTarget;
+            const section = linkElement.getAttribute('data-section');
+
+            if (section === 'index') {
+                window.location.reload();
+            }
+
+            const buttonList = linkElement.getAttribute('id')
+
+            if (section) {
+
+                window.App.loadContent(section, buttonList);
+            } else {
+                console.error("Error: 'data-section' no está definido en el enlace.");
+            }
+        });
+    });
     function updateActiveMenuIcons(activeSection) {
         const menuItems = document.querySelectorAll('#sidebar .nav-item');
         menuItems.forEach(item => {
@@ -89,5 +104,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
 });

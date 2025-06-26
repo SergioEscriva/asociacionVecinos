@@ -4,13 +4,6 @@ import { RequestPost } from "./RequestPost.js";
 import { ActivityMemberManager } from "./ActivityMemberManager.js";
 import { Listeners } from "./Listeners.js";
 
-
-//window.onload = function () {
-
-
-
-//};
-
 export class ActivityManager {
 
   constructor() {
@@ -166,8 +159,8 @@ export class ActivityManager {
     }
 
     // Quitar listeners anteriores antes de agregar uno nuevo
-    const newSelect = activitySel.cloneNode(true); // limpia listeners
-    activitySel.parentNode.replaceChild(newSelect, activitySel); // añade limpios
+    const newSelect = activitySel.cloneNode(true);
+    activitySel.parentNode.replaceChild(newSelect, activitySel);
 
     newSelect.addEventListener('change', function (event) {
       const { value } = event.target;

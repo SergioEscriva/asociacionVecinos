@@ -27,190 +27,147 @@
 
     <!-- Page Wrapper -->
     <div id="wrapper">
-
-
-
-        <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
             <div id="content">
-
-                <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <!--  <input type="text" class="form-control border-0 small" placeholder="Buscar Socio..."
-                                aria-label="Search" aria-describedby="basic-addon2" id="memberIdInput"> -->
-
-                            <!-- Otros elementos del nav -->
-                            <div class="input-container">
-
-                                <button class="btn btn-primary" type="button" id="clear-button" title="Borrar búsqueda">
-                                    <i class="fas fa-eraser"></i>
-                                </button>
-                                <input type="input-find" id="input-find" class="input-find" placeholder="Buscar...">
-
-                            </div>
-
-                            <ul id="suggestions" class="suggestions-list"></ul>
-
-                            <div class="input-container">
-
-                                <button class="btn btn-primary" type="button" id="newMember" title="Nuevo Socio">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                                <button class="btn btn-primary" type="button" id="updateMember" title="Guardar Socio">
-                                    <i class="fas fa-download"></i>
-                                </button>
-
-                            </div>
-                        </div>
-                    </form>
-
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <i class="fas fa-search fa-fw"></i>
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar..."
-                                aria-label="Search" aria-describedby="basic-addon2" id="input-find-XS">
-                            <div class="input-group">
-                                <button class="btn btn-primary" type="button" id="findMemberXS">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                            <!-- Dropdown - Messages -->
-
-
                 </nav>
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
                 <div class="container">
-
-                    <img id="backImage" src="img/logo.png" alt="Valencia Street" class="background-image">
-
-                    <form method="post">
-                        <h2 id="titleMemberPage"></h2>
-
-                        <div class="input-group">
-                            <label for="active">Activo:</label>
-                            <input type="checkbox" id="active" name="active" data-memberby-id="">
-
-                            <button class="buttonFee" id="updateFee" type="button" title="Guardar ficha antes"></button>
-
-                            <label for="updateCard">Carnet:</label>
-                            <button class="buttonCard" id="updateCard" type="button"
-                                title="Guardar ficha antes"></button>
-
-                            <label for="memberId" style="display: none;">Member Id:</label>
-                            <input type="number" id="memberId" name="memberId" style="display: none;">
-
-                            <label id="labelMemberNumber" for="memberNumber"></label>
-                            <input type="number" id="memberNumber" name="memberNumber">
-
-                            <label for="familyMasterNumber" style="display: none;">Familia:</label>
-                            <input type="number" id="familyMasterNumber" name="familyMasterNumber"
-                                style="display: none;">
-                        </div>
-                        <div class="input-group">
-                            <label for="name">Nombre:</label>
-                            <input type="text" id="name" name="name">
-
-                            <label for="lastName1">Apellido 1:</label>
-                            <input type="text" id="lastName1" name="lastName1">
-
-                            <label for="lastName2">Apellido 2:</label>
-                            <input type="text" id="lastName2" name="lastName2">
-                        </div>
-                        <div class="input-group">
-                            <label for="phone">Teléfono:</label>
-                            <input type="phone" id="phone" name="phone">
-
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email">
-
-                            <label for="dni">DNI:</label>
-                            <input type="text" id="dni" name="dni">
-
-                        </div>
-                        <div class="input-group">
-                            <label for="address">Dirección:</label>
-                            <input type="address" id="address" name="address">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="addressNumber">Número:</label>
-                            <input type="number" id="addressNumber" name="addressNumber">
-
-                            <label for="addressDoor">Puerta:</label>
-                            <input type="text" id="addressDoor" name="addressDoor">
-
-                            <label for="addressStaircase">Escalera:</label>
-                            <input type="textPeque" id="addressStaircase" name="addressStaircase">
-
-                            <label for="location">Localidad:</label>
-                            <input type="text" id="location" name="location">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="notes">Notas:</label>
-                            <input type="notes" id="notes" name="notes" placeholder="Ingrese sus notas aquí">
-
-                            <label for="gender" style="display: none;"">Género:</label>
-                            <input type=" textPeque" id="gender" name="gender" style="display: none;">
-
-
-                        </div>
                 </div>
-                <div class="container">
-                    <h2><select class="activity-select" id="activity-select">
-                        </select></h2>
-                    <div class="list-group">
-                        <div class="list-group">
-                            <ul id="ul-activity-member" class="list-horizontal">
-
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- End of Main Content -->
-
-                <!-- Footer -->
                 <footer>
-                    <div class="container my-auto">
-                        <div class="copyright text-center my-auto">
-                            <span>Copyright &copy; SergioS 2024-2025</span>
-                        </div>
-                    </div>
                 </footer>
-                <!-- End of Footer -->
-
             </div>
-            <!-- End of Content Wrapper -->
-
         </div>
-        <!-- End of Page Wrapper -->
-
-        <!-- Scroll to Top Button-->
         <a class="scroll-to-top rounded" href="#page-top">
             <i class="fas fa-angle-up"></i>
         </a>
+    </div>
+    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+        </button>
 
-        <!-- Bootstrap core JavaScript-->
-        <script src="vendor/jquery/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+                <div class="input-container">
+                    <button class="btn btn-primary" type="button" id="clear-button" title="Borrar búsqueda">
+                        <i class="fas fa-eraser"></i>
+                    </button>
+                    <input type="input-find" id="input-find" class="input-find" placeholder="Buscar...">
+                </div>
+                <ul id="suggestions" class="suggestions-list"></ul>
+                <div class="input-container">
+                    <button class="btn btn-primary" type="button" id="newMember" title="Nuevo Socio">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                    <button class="btn btn-primary" type="button" id="updateMember" title="Guardar Socio">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown no-arrow d-sm-none">
+                <i class="fas fa-search fa-fw"></i>
+                <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar..."
+                    aria-label="Search" aria-describedby="basic-addon2" id="input-find-XS">
+                <div class="input-group">
+                    <button class="btn btn-primary" type="button" id="findMemberXS">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    <div class="container">
+        <img id="backImage" src="img/logo.png" alt="Valencia Street" class="background-image">
+        <form method="post">
+            <h2 id="titleMemberPage"></h2>
+            <div class="input-group">
+                <label for="active">Activo:</label>
+                <input type="checkbox" id="active" name="active" data-memberby-id="">
+                <button class="buttonFee" id="updateFee" type="button" title="Guardar ficha antes"></button>
+                <label for="updateCard">Carnet:</label>
+                <button class="buttonCard" id="updateCard" type="button" title="Guardar ficha antes"></button>
+                <label for="memberId" style="display: none;">Member Id:</label>
+                <input type="number" id="memberId" name="memberId" style="display: none;">
+                <label id="labelMemberNumber" for="memberNumber"></label>
+                <input type="number" id="memberNumber" name="memberNumber">
+                <label for="familyMasterNumber" style="display: none;">Familia:</label>
+                <input type="number" id="familyMasterNumber" name="familyMasterNumber" style="display: none;">
+            </div>
+            <div class="input-group">
+                <label for="name">Nombre:</label>
+                <input type="text" id="name" name="name">
+                <label for="lastName1">Apellido 1:</label>
+                <input type="text" id="lastName1" name="lastName1">
+                <label for="lastName2">Apellido 2:</label>
+                <input type="text" id="lastName2" name="lastName2">
+            </div>
+            <div class="input-group">
+                <label for="phone">Teléfono:</label>
+                <input type="phone" id="phone" name="phone">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+                <label for="dni">DNI:</label>
+                <input type="text" id="dni" name="dni">
+            </div>
+            <div class="input-group">
+                <label for="address">Dirección:</label>
+                <input type="address" id="address" name="address">
+            </div>
+            <div class="input-group">
+                <label for="addressNumber">Número:</label>
+                <input type="number" id="addressNumber" name="addressNumber">
+                <label for="addressDoor">Puerta:</label>
+                <input type="text" id="addressDoor" name="addressDoor">
+                <label for="addressStaircase">Escalera:</label>
+                <input type="textPeque" id="addressStaircase" name="addressStaircase">
+                <label for="location">Localidad:</label>
+                <input type="text" id="location" name="location">
+            </div>
+            <div class="input-group">
+                <label for="notes">Notas:</label>
+                <input type="notes" id="notes" name="notes" placeholder="Ingrese sus notas aquí">
+                <label for="gender" style="display: none;"">Género:</label>
+            <input type=" textPeque" id="gender" name="gender" style="display: none;">
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <h2><select class="activity-select" id="activity-select">
+            </select></h2>
+        <div class="list-group">
+            <div class="list-group">
+                <ul id="ul-activity-member" class="list-horizontal">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright &copy; SergioS 2024-2025</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
