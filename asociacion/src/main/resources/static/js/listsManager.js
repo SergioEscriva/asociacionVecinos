@@ -9,6 +9,8 @@ export class ListsManager {
     this.currentListData = [];
     this.currentListHeaders = [];
     this.currentListFilename = '';
+    // Bandera para asegurar que los listeners de fila se añaden una sola vez
+    this.rowClickListenersAdded = false;
   }
 
   async init() {
@@ -16,7 +18,6 @@ export class ListsManager {
     const pageSelection = document.body.getAttribute('data-page-selection');
     const titleElement = document.getElementById('txtTitleList');
     const backImage = await RequestGet.getConfigById(9);
-
 
     let mainListContainer = document.getElementById('list-container');
     if (!mainListContainer) {
@@ -34,8 +35,11 @@ export class ListsManager {
       exportButtonContainer.id = 'export-button-container';
       mainListContainer.appendChild(exportButtonContainer);
     }
-    if (!document.getElementById('generic-export-button')) {
-      const genericExportButton = document.createElement('button');
+
+    // Asegurarse de que el botón de exportar se cree una sola vez
+    let genericExportButton = document.getElementById('generic-export-button');
+    if (!genericExportButton) {
+      genericExportButton = document.createElement('button');
       genericExportButton.id = 'generic-export-button';
       genericExportButton.textContent = 'Imprimir a Excel';
       exportButtonContainer.appendChild(genericExportButton);
@@ -48,9 +52,21 @@ export class ListsManager {
       });
     }
 
+    // Ocultar el botón por defecto, se mostrará según el caso
+    genericExportButton.style.display = 'none';
 
+    // Limpiar el contenido previo del cuerpo de la tabla para evitar duplicados
+    const tbodyMember = document.getElementById('tbody-member');
+    if (tbodyMember) {
+      tbodyMember.innerHTML = '';
+    }
 
-    document.getElementById('generic-export-button').style.display = 'none';
+    // Limpiar el contenedor de actividades antes de renderizar nuevas
+    const activitiesListContainer = document.getElementById('activities-list-container');
+    if (activitiesListContainer) {
+      activitiesListContainer.innerHTML = '';
+    }
+
 
     switch (pageSelection) {
       case 'button1':
@@ -68,7 +84,7 @@ export class ListsManager {
           ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo", "Último Año Pagado"],
           `Listado Completo de ${memberAttribute.attribute}s.xlsx`
         );
-        document.getElementById('generic-export-button').style.display = 'block';
+        genericExportButton.style.display = 'block';
         break;
 
       case 'button2':
@@ -86,7 +102,7 @@ export class ListsManager {
           ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo", "Último Año Pagado"],
           `Listado de ${memberAttribute.attribute}s Activos.xlsx`
         );
-        document.getElementById('generic-export-button').style.display = 'block';
+        genericExportButton.style.display = 'block';
         break;
 
       case 'button3':
@@ -97,7 +113,6 @@ export class ListsManager {
 
         const allInactiveRegistries = await RequestGet.getResgistries();
         const filteredInactiveRegistries = allInactiveRegistries.filter(registry => {
-
           return registry.reasonEnd && registry.reasonEnd.trim() !== '';
         });
 
@@ -123,13 +138,22 @@ export class ListsManager {
           ["Nombre", "Apellidos", "Nº Socio", "Último Año Pagado", "Motivo Inactividad", "Fecha Baja"],
           `Histórico de ${memberAttribute.attribute}s Inactivos.xlsx`
         );
-        document.getElementById('generic-export-button').style.display = 'block';
+        genericExportButton.style.display = 'block';
         break;
 
       case 'button4':
+        // Asegúrate de que el contenedor de lista de actividades esté visible y el de la tabla principal oculto
+        const mainTableContainer = document.getElementById('main-table-container'); // Asumo que tienes un contenedor para la tabla principal
+        if (mainTableContainer) mainTableContainer.style.display = 'none';
+
+        const activitiesContainer = document.getElementById('activities-list-container');
+        if (activitiesContainer) activitiesContainer.style.display = 'block';
+
         const allActivities = await RequestGet.getActivitys(this.currentYear);
         this.actividadesConMiembros = await this.getActividadesConMiembros(allActivities);
         this.renderActivityListWithMembers(this.actividadesConMiembros);
+        // Ocultar el botón de exportar genérico para esta vista
+        genericExportButton.style.display = 'none';
         break;
 
       case 'button5':
@@ -153,7 +177,7 @@ export class ListsManager {
           ["Nombre", "Apellidos", "Nº Socio", "Años Pagados"],
           `Listado de Pagos de ${memberAttribute.attribute}s.xlsx`
         );
-        document.getElementById('generic-export-button').style.display = 'block';
+        genericExportButton.style.display = 'block';
         break;
 
       case 'button6':
@@ -182,8 +206,13 @@ export class ListsManager {
           ["Nombre", "Apellidos", "Nº Socio", "Último Año Pagado"],
           `Listado de Impagos de ${memberAttribute.attribute}s.xlsx`
         );
-        document.getElementById('generic-export-button').style.display = 'block';
+        genericExportButton.style.display = 'block';
         break;
+    }
+    // Añadir listeners de fila solo una vez después de que todo el contenido se haya renderizado
+    if (!this.rowClickListenersAdded) {
+      this.addRowClickListeners();
+      this.rowClickListenersAdded = true;
     }
   }
 
@@ -194,42 +223,70 @@ export class ListsManager {
   }
 
   setupMemberSorting(members) {
-    document.getElementById('sortByName').addEventListener('click', async () => {
-      const sortedByName = [...members].sort((a, b) => a.name.localeCompare(b.name));
-      this.renderList(sortedByName, document.body.getAttribute('data-page-selection') === 'button1');
-      this.updateExportDataAfterSorting(sortedByName, document.body.getAttribute('data-page-selection'));
-    });
-    document.getElementById('sortByMemberNumber').addEventListener('click', async () => {
-      const sortedByMemberNumber = [...members].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
-      this.renderList(sortedByMemberNumber, document.body.getAttribute('data-page-selection') === 'button1');
-      this.updateExportDataAfterSorting(sortedByMemberNumber, document.body.getAttribute('data-page-selection'));
-    });
+    // Es importante remover los listeners antes de añadir nuevos para evitar duplicados
+    const sortByNameBtn = document.getElementById('sortByName');
+    const sortByMemberNumberBtn = document.getElementById('sortByMemberNumber');
+
+    if (sortByNameBtn) {
+      sortByNameBtn.replaceWith(sortByNameBtn.cloneNode(true)); // Clonar para remover listeners
+      document.getElementById('sortByName').addEventListener('click', async () => {
+        const sortedByName = [...members].sort((a, b) => a.name.localeCompare(b.name));
+        this.renderList(sortedByName, document.body.getAttribute('data-page-selection') === 'button1');
+        this.updateExportDataAfterSorting(sortedByName, document.body.getAttribute('data-page-selection'));
+      });
+    }
+    if (sortByMemberNumberBtn) {
+      sortByMemberNumberBtn.replaceWith(sortByMemberNumberBtn.cloneNode(true));
+      document.getElementById('sortByMemberNumber').addEventListener('click', async () => {
+        const sortedByMemberNumber = [...members].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
+        this.renderList(sortedByMemberNumber, document.body.getAttribute('data-page-selection') === 'button1');
+        this.updateExportDataAfterSorting(sortedByMemberNumber, document.body.getAttribute('data-page-selection'));
+      });
+    }
   }
 
   setupPaySorting(members) {
-    document.getElementById('sortByNamePayList').addEventListener('click', async () => {
-      const sortedByName = [...members].sort((a, b) => a.name.localeCompare(b.name));
-      this.renderPayList(sortedByName);
-      this.updateExportDataAfterSorting(sortedByName, 'button5');
-    });
-    document.getElementById('sortByMemberNumberPayList').addEventListener('click', async () => {
-      const sortedByMemberNumber = [...members].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
-      this.renderPayList(sortedByMemberNumber);
-      this.updateExportDataAfterSorting(sortedByMemberNumber, 'button5');
-    });
+    const sortByNamePayListBtn = document.getElementById('sortByNamePayList');
+    const sortByMemberNumberPayListBtn = document.getElementById('sortByMemberNumberPayList');
+
+    if (sortByNamePayListBtn) {
+      sortByNamePayListBtn.replaceWith(sortByNamePayListBtn.cloneNode(true));
+      document.getElementById('sortByNamePayList').addEventListener('click', async () => {
+        const sortedByName = [...members].sort((a, b) => a.name.localeCompare(b.name));
+        this.renderPayList(sortedByName);
+        this.updateExportDataAfterSorting(sortedByName, 'button5');
+      });
+    }
+    if (sortByMemberNumberPayListBtn) {
+      sortByMemberNumberPayListBtn.replaceWith(sortByMemberNumberPayListBtn.cloneNode(true));
+      document.getElementById('sortByMemberNumberPayList').addEventListener('click', async () => {
+        const sortedByMemberNumber = [...members].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
+        this.renderPayList(sortedByMemberNumber);
+        this.updateExportDataAfterSorting(sortedByMemberNumber, 'button5');
+      });
+    }
   }
 
   setupUnpaySorting(members) {
-    document.getElementById('sortByNamePayList').addEventListener('click', async () => {
-      const sortedByName = [...members].sort((a, b) => a.name.localeCompare(b.name));
-      this.renderUnpayList(sortedByName);
-      this.updateExportDataAfterSorting(sortedByName, 'button6');
-    });
-    document.getElementById('sortByMemberNumberPayList').addEventListener('click', async () => {
-      const sortedByMemberNumber = [...members].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
-      this.renderUnpayList(sortedByMemberNumber);
-      this.updateExportDataAfterSorting(sortedByMemberNumber, 'button6');
-    });
+    const sortByNamePayListBtn = document.getElementById('sortByNamePayList'); // Comparten el mismo ID con la lista de pagos
+    const sortByMemberNumberPayListBtn = document.getElementById('sortByMemberNumberPayList');
+
+    if (sortByNamePayListBtn) {
+      sortByNamePayListBtn.replaceWith(sortByNamePayListBtn.cloneNode(true));
+      document.getElementById('sortByNamePayList').addEventListener('click', async () => {
+        const sortedByName = [...members].sort((a, b) => a.name.localeCompare(b.name));
+        this.renderUnpayList(sortedByName);
+        this.updateExportDataAfterSorting(sortedByName, 'button6');
+      });
+    }
+    if (sortByMemberNumberPayListBtn) {
+      sortByMemberNumberPayListBtn.replaceWith(sortByMemberNumberPayListBtn.cloneNode(true));
+      document.getElementById('sortByMemberNumberPayList').addEventListener('click', async () => {
+        const sortedByMemberNumber = [...members].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
+        this.renderUnpayList(sortedByMemberNumber);
+        this.updateExportDataAfterSorting(sortedByMemberNumber, 'button6');
+      });
+    }
   }
 
   async updateExportDataAfterSorting(sortedMembers, pageSelection) {
@@ -286,7 +343,7 @@ export class ListsManager {
       document.getElementById('txtTitleList').textContent = "Listado de Activos/as - Total " + (lineNumber - 1);
     }
     document.getElementById('tbody-member').innerHTML = html;
-    this.addRowClickListeners();
+    // No añadir addRowClickListeners aquí, se hará una sola vez al final de init()
   }
 
   async getHtmlRowMembers(member, lineNumber) {
@@ -311,7 +368,7 @@ export class ListsManager {
     }
     document.getElementById('txtTitleList').textContent = "Histórico de Inactividad - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
-    this.addRowClickListeners();
+    // No añadir addRowClickListeners aquí
   }
 
   async getHtmlInactivesRowMembers(registry, lineNumber) {
@@ -319,7 +376,7 @@ export class ListsManager {
     if (member === null) {
       return ""
     }
-    const activeStatus = member.active ? 'O' : 'X';
+    const activeStatus = member.active ? 'O' : 'X'; // Este 'O' no parece usarse en el HTML final, pero lo mantengo
     const lastPaidYear = await this.getLastPaidYear(member.id);
     const registro = await RequestGet.getRegistryById(registry.id);
     const startDate = new Date(registro.startData).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -346,7 +403,7 @@ export class ListsManager {
 
     document.getElementById('txtTitleList').textContent = "Lista de Pagos - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
-    this.addRowClickListeners();
+    // No añadir addRowClickListeners aquí
   }
 
   async getHtmlPayRowMembers(member, lineNumber) {
@@ -374,7 +431,7 @@ export class ListsManager {
     }
     document.getElementById('txtTitleList').textContent = "Lista de Impagados - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
-    this.addRowClickListeners();
+    // No añadir addRowClickListeners aquí
   }
 
   async getHtmlUnpayRowMembers(member, lineNumber) {
@@ -428,9 +485,18 @@ export class ListsManager {
       genericExportButton.style.display = 'none';
     }
 
-    const activitiesListContainer = document.getElementById('activities-list-container') || document.createElement('div');
-    activitiesListContainer.id = 'activities-list-container';
-    document.getElementById('list-container').appendChild(activitiesListContainer);
+    // Obtener o crear el contenedor principal de actividades
+    let activitiesListContainer = document.getElementById('activities-list-container');
+    if (!activitiesListContainer) {
+      activitiesListContainer = document.createElement('div');
+      activitiesListContainer.id = 'activities-list-container';
+      document.getElementById('list-container').appendChild(activitiesListContainer);
+    }
+
+    // Limpiar el contenido existente antes de añadir el nuevo para evitar duplicados
+    activitiesListContainer.innerHTML = '';
+
+    // Añadir la estructura interna solo una vez
     activitiesListContainer.innerHTML = `<ul id="actividades-lista"></ul><div id="miembros-detalle" style="display: none;"><h2>${memberAttribute.attribute}/s de la Actividad: <span id="nombre-actividad"></span></h2><ul id="miembros-lista"></ul><button id="boton-imprimir">Imprimir a Excel</button></div>`;
 
     const actividadesListaElement = document.getElementById("actividades-lista");
@@ -439,6 +505,7 @@ export class ListsManager {
     const nombreActividadElement = document.getElementById("nombre-actividad");
     const botonImprimirElement = document.getElementById("boton-imprimir");
 
+    // Llenar la lista de actividades
     actividadesConMiembros.forEach(actividad => {
       const listItem = document.createElement("li");
       listItem.textContent = `${actividad.nombre} (${actividad.miembros.length} ${memberAttribute.attribute}/s)`;
@@ -448,7 +515,7 @@ export class ListsManager {
       listItem.style.borderBottom = '1px solid #eee';
       listItem.addEventListener("click", () => {
         nombreActividadElement.textContent = actividad.nombre;
-        miembrosListaElement.innerHTML = "";
+        miembrosListaElement.innerHTML = ""; // Limpiar lista de miembros al seleccionar una actividad
         if (actividad.miembros.length > 0) {
           actividad.miembros.forEach(miembro => {
             const miembroItem = document.createElement("li");
@@ -457,10 +524,9 @@ export class ListsManager {
             miembroItem.innerHTML = `<strong>${miembro.memberNumber}</strong> - ${miembro.name} ${miembro.lastName1} ${miembro.lastName2} ( ${miembro.notes} )`;
             miembroItem.style.fontSize = "1.5rem";
             miembroItem.style.cursor = "pointer";
-            miembroItem.addEventListener("click", () => {
-            });
+            // Eliminar el listener directo aquí, ya se manejará con addRowClickListeners()
+            // miembroItem.addEventListener("click", () => {});
             miembrosListaElement.appendChild(miembroItem);
-            this.addRowClickListeners();
           });
           botonImprimirElement.onclick = () => this.imprimirMiembrosAExcel(actividad.nombre, actividad.miembros);
         } else {
@@ -468,11 +534,14 @@ export class ListsManager {
           botonImprimirElement.onclick = null;
         }
         miembrosDetalleElement.style.display = "block";
+        // Volver a aplicar los listeners a las filas de miembros de la actividad
+        this.addRowClickListeners();
       });
       actividadesListaElement.appendChild(listItem);
     });
   }
 
+  // Este método no parece usarse en el código original, lo mantengo por si acaso.
   getHtmlRowActivityWithMembers(activity) {
     return `<tr>
                 <td>${activity.nombre}</td>
@@ -515,15 +584,22 @@ export class ListsManager {
   }
 
   addRowClickListeners() {
+    // Eliminar listeners previos para evitar duplicados si esta función se llama múltiples veces
     const rows = document.querySelectorAll('.clickable-row');
-
     rows.forEach(row => {
+      // Clona el nodo para eliminar todos los listeners existentes
+      const newRow = row.cloneNode(true);
+      row.parentNode.replaceChild(newRow, row);
+    });
+
+    // Seleccionar de nuevo todos los elementos con la clase .clickable-row (ahora sin listeners)
+    const newRows = document.querySelectorAll('.clickable-row');
+    newRows.forEach(row => {
       row.addEventListener('click', function () {
         const memberNumberFromRow = this.getAttribute('data-member-number');
 
         if (memberNumberFromRow) {
           sessionStorage.setItem('selectedMemberId', memberNumberFromRow);
-
         } else {
           sessionStorage.removeItem('selectedMemberId');
           console.warn("ListsManager: No se encontró memberNumber en la fila, limpiando sessionStorage para 'selectedMemberId'.");
@@ -537,9 +613,7 @@ export class ListsManager {
       });
     });
   }
-
 }
-
 
 class ExcelUtils {
   static exportToExcel(data, headers, filename = '') {

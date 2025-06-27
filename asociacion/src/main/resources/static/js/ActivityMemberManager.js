@@ -7,7 +7,6 @@ import { RequestGet } from './RequestGet.js';
 export class ActivityMemberManager {
 
     static async getActivitiesByMemberId(memberId) {
-        this.clearActivityList();
         const activitySel = document.getElementById("ul-activity-member");
         activitySel.innerHTML = "";
 
@@ -15,14 +14,36 @@ export class ActivityMemberManager {
             const activities = await RequestGet.getActivitiesByMemberId(memberId);
             activities.forEach((activity) => {
                 activitySel.innerHTML += `
-                    <li id="li-activitys-member-${activity.idLong}" data-activity-id="${activity.activityId}">
-                        <button class="delete-button" id="li-button-${activity.activityId}" title="Eliminar Socio de la Actividad"><i class="fas fa-trash"></i></button>
-                        <label class="text-activity" for="option${activity.activityId}" id="li-label-${activity.activityId}" title="Pulsar para abrir Actividad">${activity.activityName}</label>
-                    </li>`;
+                <li id="li-activitys-member-${activity.idLong}" data-activity-id="${activity.activityId}">
+                    <button class="delete-button" id="li-button-${activity.activityId}" title="Eliminar Socio de la Actividad"><i class="fas fa-trash"></i></button>
+                    <label class="text-activity" for="option${activity.activityId}" id="li-label-${activity.activityId}" title="Pulsar para abrir Actividad">${activity.activityName}</label>
+                </li>`;
             });
         } catch (error) {
             console.error('Error al obtener actividades:', error);
         }
+    }
+
+    static async inyectOption() {
+        const currentYear = new Date().getFullYear();
+        const activitySel = document.getElementById("activity-select")
+
+        activitySel.innerHTML = "";
+        activitySel.innerHTML = `<option selected value="0">Lista de Actividades</option>`
+        try {
+            const activities = await RequestGet.getActivitys(currentYear)
+
+            activities.forEach((activity) => {
+
+                activitySel.innerHTML += `<option value="${activity.id}">${activity.name}</option>`;
+
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            activitySel.innerHTML = '<p>Error al cargar las actividades.</p>';
+        }
+
+
     }
 
 
@@ -81,12 +102,6 @@ export class ActivityMemberManager {
         }
     }
 
-    static clearActivityList() {
-        const activitySel = document.getElementById("ul-activity-member");
-        if (activitySel) {
-            activitySel.innerHTML = "";
-        }
-    }
 
     static extraerUltimoNumero(cadena) {
         const regex = /\d+$/;

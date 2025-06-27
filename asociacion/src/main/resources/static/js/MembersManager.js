@@ -1,6 +1,5 @@
 import { ActivityMemberManager } from './ActivityMemberManager.js';
 import { FamilyManager } from './FamilyManager.js';
-import { RegistryManager } from './RegistryManager.js';
 import { FeeManager } from './FeeManager.js';
 import { RequestGet } from './RequestGet.js';
 import { RequestPost } from './RequestPost.js';
@@ -53,18 +52,12 @@ export class MembersManager {
     const backImage = await RequestGet.getConfigById(9);
     document.getElementById('backImage').src = backImage.attribute;
 
-    const memberLink = document.querySelector('a[data-section="memberIndex"]');
-    let memberIdByLink = memberLink.getAttribute('data-member-id');
 
-    if (memberIdByLink) {
-      memberNumber = await RequestGet.getMemberById(memberIdByLink);
-      MembersManager.getMemberByNumber(memberNumber.memberNumber);
-    }
-
-    if (!memberNumber) {
+    // Recupera id del miembro de la sesión
+    let memberIdSession = sessionStorage.getItem('selectedMemberId');
+    if (!memberIdSession) {
       MembersManager.getMemberByNumber(0);
     } else {
-      let memberIdSession = sessionStorage.getItem('selectedMemberId');
       MembersManager.getMemberByNumber(memberIdSession);
     }
 
@@ -93,6 +86,7 @@ export class MembersManager {
   }
 
   static async limpiaCampos() {
+    await this.limpiaCamposActividad();
     document.getElementById('memberId').value = "";
     document.getElementById('memberNumber').value = "";
     document.getElementById("familyMasterNumber").value = "0";
@@ -113,7 +107,7 @@ export class MembersManager {
     document.getElementById("memberNumber").value = "";
     this.updateCard(1);
 
-    await this.limpiaCamposActividad();
+
   }
 
   static async newMember() {
@@ -127,7 +121,6 @@ export class MembersManager {
 
   static async getMemberByNumber(memberNumber) {
     await this.limpiaCampos()
-    MembersManager.inyectOption()
 
     document.getElementById('labelMemberNumber').textContent = "N.º " + MembersManager.memberAttribute.attribute;
     document.getElementById('titleMemberPage').textContent = "Ficha " + MembersManager.memberAttribute.attribute;
@@ -170,7 +163,7 @@ export class MembersManager {
       buttonFee.title = await MembersManager.updateFeeTitle(member.id);
       buttonFee.disabled = false;
 
-
+      await ActivityMemberManager.inyectOption()
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
       sessionStorage.setItem('selectedMemberId', '0');
 
@@ -318,27 +311,7 @@ export class MembersManager {
     }
   }
 
-  static async inyectOption() {
 
-    const currentYear = new Date().getFullYear();
-    const activitySel = document.getElementById("activity-select")
-    activitySel.innerHTML = "";
-    activitySel.innerHTML = `<option selected value="0">Lista de Actividades</option>`
-    try {
-      const activities = await RequestGet.getActivitys(currentYear)
-
-      activities.forEach((activity) => {
-
-        activitySel.innerHTML += `<option value="${activity.id}">${activity.name}</option>`;
-
-      });
-    } catch (error) {
-      console.error('Error:', error);
-      activitySel.innerHTML = '<p>Error al cargar las actividades.</p>';
-    }
-
-
-  }
 
   static async updateFee() {
     await FeeManager.paidFee()

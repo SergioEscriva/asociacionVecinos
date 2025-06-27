@@ -64,7 +64,7 @@ export class FeesByDate {
 
             const cost = await this.calculateFees(fees, feesDate.year);
             costeTotal += cost;
-            html += `<tr>
+            html += `<tr class="clickable-row" data-member-number="${member.memberNumber}">
                         <td>${position}</td>
                         <td>${member.name}</td>
                         <td>${member.lastName1.replace(/null/gi, '').trim()} ${member.lastName2 || ''}</td>
@@ -78,6 +78,8 @@ export class FeesByDate {
         document.getElementById("totalsPay").textContent = ("Total Recaudado, en " + (position - 1) + " pagos: " + costeTotal + "€");
         let tbody = document.getElementById("tbody-fee-date");
         tbody.innerHTML = html;
+        this.addRowClickListeners();
+
     }
 
     static async calculateFees(yearsFees, currentYear) {
@@ -106,10 +108,36 @@ export class FeesByDate {
         return 0;
     }
 
+    static addRowClickListeners() {
+        const rows = document.querySelectorAll('.clickable-row');
 
+        rows.forEach(row => {
+            row.addEventListener('click', function () {
+                const memberNumberFromRow = this.getAttribute('data-member-number');
 
+                if (memberNumberFromRow) {
+                    sessionStorage.setItem('selectedMemberId', memberNumberFromRow);
 
+                } else {
+                    sessionStorage.removeItem('selectedMemberId');
+                    console.warn("ListsManager: No se encontró memberNumber en la fila, limpiando sessionStorage para 'selectedMemberId'.");
+                }
 
-
+                if (typeof window.App !== 'undefined' && window.App.loadContent) {
+                    window.App.loadContent('memberIndex', 2, null);
+                } else {
+                    console.error('ListsManager: Error: window.App.loadContent no está definido o accesible.');
+                }
+            });
+        });
+    }
 
 }
+
+
+
+
+
+
+
+

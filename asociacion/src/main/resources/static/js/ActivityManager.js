@@ -46,7 +46,7 @@ export class ActivityManager {
 
 
     Listeners.setupActivityListeners();
-    ActivityManager.inyectOption(activityId)
+    ActivityManager.inyectOption(yearNow)
     ActivityManager.getActivityById(activityId);
 
   }
@@ -160,8 +160,9 @@ export class ActivityManager {
 
     // Quitar listeners anteriores antes de agregar uno nuevo
     const newSelect = activitySel.cloneNode(true);
-    activitySel.parentNode.replaceChild(newSelect, activitySel);
-
+    if (activitySel) {
+      activitySel.parentNode.replaceChild(newSelect, activitySel);
+    }
     newSelect.addEventListener('change', function (event) {
       const { value } = event.target;
       ActivityManager.getActivityById(value);
