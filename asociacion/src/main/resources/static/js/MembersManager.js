@@ -52,14 +52,22 @@ export class MembersManager {
     const backImage = await RequestGet.getConfigById(9);
     document.getElementById('backImage').src = backImage.attribute;
 
+    // Recupera id del miembro desde Actividades
+    const memberLink = document.querySelector('a[data-section="memberIndex"]')
+    let memberIdByLink = memberLink.getAttribute('data-member-id');
 
     // Recupera id del miembro de la sesión
     let memberIdSession = sessionStorage.getItem('selectedMemberId');
-    if (!memberIdSession) {
-      MembersManager.getMemberByNumber(0);
-    } else {
+
+    if (memberIdByLink) {
+      let memberNumber = await RequestGet.getMemberById(memberIdByLink);
+      MembersManager.getMemberByNumber(memberNumber.memberNumber);
+    } if (!memberIdByLink && memberIdSession) {
       MembersManager.getMemberByNumber(memberIdSession);
+    } else {
+      MembersManager.getMemberByNumber(0);
     }
+
 
     document.getElementById("findMemberXS").addEventListener("click", function () { MembersManager.findMember("xs"); });
     document.getElementById("updateMember").addEventListener("click", function () { MembersManager.updateMember(); });
