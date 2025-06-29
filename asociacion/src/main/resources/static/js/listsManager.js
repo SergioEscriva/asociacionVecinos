@@ -343,7 +343,7 @@ export class ListsManager {
       document.getElementById('txtTitleList').textContent = "Listado de Activos/as - Total " + (lineNumber - 1);
     }
     document.getElementById('tbody-member').innerHTML = html;
-    // No añadir addRowClickListeners aquí, se hará una sola vez al final de init()
+    this.addRowClickListeners(); //
   }
 
   async getHtmlRowMembers(member, lineNumber) {
@@ -368,7 +368,7 @@ export class ListsManager {
     }
     document.getElementById('txtTitleList').textContent = "Histórico de Inactividad - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
-    // No añadir addRowClickListeners aquí
+    this.addRowClickListeners(); //
   }
 
   async getHtmlInactivesRowMembers(registry, lineNumber) {
@@ -403,7 +403,7 @@ export class ListsManager {
 
     document.getElementById('txtTitleList').textContent = "Lista de Pagos - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
-    // No añadir addRowClickListeners aquí
+    this.addRowClickListeners(); //
   }
 
   async getHtmlPayRowMembers(member, lineNumber) {
@@ -431,7 +431,7 @@ export class ListsManager {
     }
     document.getElementById('txtTitleList').textContent = "Lista de Impagados - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
-    // No añadir addRowClickListeners aquí
+    this.addRowClickListeners(); //
   }
 
   async getHtmlUnpayRowMembers(member, lineNumber) {

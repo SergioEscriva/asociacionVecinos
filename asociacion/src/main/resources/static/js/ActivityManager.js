@@ -29,7 +29,7 @@ export class ActivityManager {
     document.getElementById("updateActivityMember").addEventListener("click", function () { ActivityManager.updateActivityMember(); });
 
     const memberAttribute = await RequestGet.getConfigById(3)
-    document.getElementById('placeholderActivity').placeholder = "Añadir " + memberAttribute.attribute;
+    document.getElementById('placeholderActivity').placeholder = "Añadir " + memberAttribute.attribute + " por número.";
     document.getElementById('h2ActivityMembers').textContent = "Lista de " + memberAttribute.attribute + "(s)";
 
     const yearInput = document.getElementById("year-select");

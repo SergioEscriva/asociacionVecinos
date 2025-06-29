@@ -1,507 +1,883 @@
+/* General */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-}
-
-.background-image {
-    pointer-events: none;
-}
-
-
-.container {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 30px;
-    width: 95%;
-    max-width: 1200px;
-    padding: 10px;
-    margin: 0 auto;
-    border-radius: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    justify-items: center;
-    justify-content: center;
-}
-
-.input-group {
-    display: flex;
-    justify-items: center;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-}
-
-.input-group label {
-    flex: 1;
-    text-align: right;
-}
-
-.input-group input {
-    /* flex: 2;*/
-
-}
-
-h2 {
-    text-align: left;
-    width: 100%;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
     margin: 0;
-
-    margin-bottom: -10px;
-
     padding: 0;
-
+    box-sizing: border-box;
+    color: #343a40;
 }
 
-.input-group-activity {
-
-    display: flex;
-    align-items: center;
-    gap: 0px;
-
-    padding: 10px;
-}
-
-
+/* Imagen de Fondo */
 .background-image {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.1;
+    opacity: 0.03;
+    z-index: -1;
+    pointer-events: none;
 }
 
-.image {
+/* Contenedor Principal de la Ficha */
+.container.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 90%;
+    max-width: 900px;
+    padding: 30px;
+    margin: 30px auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+}
+
+/* Contenedor de Actividades (distinto del principal) */
+.container.container-activity {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 900px;
+    margin: 15px auto 30px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+}
+
+/* Secciones dentro del formulario */
+.form-section {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 15px;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.form-section h3 {
+    font-size: 1.2em;
+    color: #495057;
+    margin-bottom: 15px;
+    border-left: 3px solid #007bff;
+    padding-left: 8px;
+}
+
+/* Títulos H2 (para "Ficha de Miembro" y "Actividades") */
+h2 {
+    text-align: center;
+    color: #212529;
+    font-size: 2em;
+    margin-bottom: 20px;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+h2::after {
+    content: '';
     position: absolute;
-    top: 75px;
-    left: 275px;
-    width: 80%;
-    height: 80%;
-    object-fit: cover;
-
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #007bff;
+    border-radius: 2px;
 }
 
-form {
-    margin-top: 20px;
+/* Grupos de Input (Filas del formulario) */
+.input-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 25px 15px;
+    /* Interlineado aumentado */
+    margin-bottom: 15px;
+    row-gap: 20px;
 }
 
-label {
-    display: block;
-    margin-bottom: 3px;
-    padding: 5px;
-
-
+.input-group label {
+    flex-basis: 100px;
+    text-align: right;
+    color: #555;
+    font-weight: 500;
+    font-size: 0.9em;
+    padding-right: 8px;
+    white-space: nowrap;
 }
 
-input[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+/* Ajuste para inputs de ancho completo */
+.input-group.full-width-input label {
+    flex-basis: 80px;
 }
 
-input[type="submit"]:hover {
-    background-color: #3e8e41;
+/* Estilos de Inputs Generales */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="search"],
+input[type="textPeque"],
+input[type="address"],
+input[type="notes"],
+.input-activity {
+    /* No incluimos #activity-select aquí para manejarlo específicamente */
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid #dcdfe4;
+    border-radius: 6px;
+    font-size: 0.95em;
+    background-color: #fdfefe;
+    transition: all 0.2s ease-in-out;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    color: #495057;
+    min-height: 38px;
 }
 
-input[type="text"] {
-    font-size: 18px;
-    width: 200px;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: rgba(48, 119, 226, 0.199);
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="search"]:focus,
+input[type="textPeque"]:focus,
+input[type="address"]:focus,
+input[type="notes"]:focus,
+#activity-select:focus,
+/* Apuntamos con el ID para ser más específico */
+.input-activity:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.2);
+    outline: none;
+    background-color: #fff;
 }
 
-input[type="input-find"] {
-    font-size: 18px;
-    width: 255px;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: rgba(48, 119, 226, 0.199);
-}
-
-input[type="input-config"] {
-    font-size: 18px;
-    width: 400px;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: rgba(48, 119, 226, 0.199);
+/* Ajustes de ancho para inputs específicos */
+input[type="textPeque"] {
+    width: 50px;
+    min-width: 50px;
+    max-width: 70px;
 }
 
 input[type="number"] {
-    font-size: 18px;
-    width: 90px;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: rgba(48, 119, 226, 0.199);
-
+    width: 80px;
+    min-width: 70px;
+    max-width: 100px;
 }
 
-input[type="textPeque"] {
-    font-size: 18px;
-    width: 50px;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: rgba(48, 119, 226, 0.199);
 
-}
-
-input[type="email"] {
-    font-size: 18px;
-    width: 400px;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: rgba(48, 119, 226, 0.199);
-}
-
-input[type="address"] {
-    font-size: 18px;
-    width: 90%;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: rgba(48, 119, 226, 0.199);
-}
-
-input[type="phone"] {
-    font-size: 18px;
-    width: 200px;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: rgba(48, 119, 226, 0.199);
-}
-
-input[type="notes"] {
-    font-size: 18px;
-    width: 850px;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: rgba(48, 119, 226, 0.199);
-}
-
+/* Checkbox */
 input[type="checkbox"] {
-    width: 30px;
-    height: 25px;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+    margin-right: 6px;
+    accent-color: #007bff;
+    cursor: pointer;
 }
 
-
-
-button {
-    background-color: #053cf1;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border: none;
-    border-radius:
-        4px;
+input[type="checkbox-small"] {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    min-height: 14px;
 }
 
-.buttonFee {
-    background-color: #053cf1;
-    color: white;
-    width: 110px;
-    height: 40px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 5px 10px;
+/* Botones Generales */
+button,
+input[type="submit"] {
+    padding: 10px 20px;
     border: none;
-    border-radius: 4px;
-    margin-left: 50px;
+    border-radius: 6px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 38px;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+button:active,
+input[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Colores y Estilos de Botones Específicos */
+/* Botones de la barra superior */
+.btn-primary {
+    background-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-success {
+    background-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* --- BOTONES IMPRIMIR EXCEL (Mantenidos en Azul) --- */
+#generic-export-button,
+#boton-imprimir {
+    background-color: #007bff !important;
+    border: 1px solid #007bff !important;
+    color: white !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.2s ease !important;
+}
+
+#generic-export-button:hover,
+#boton-imprimir:hover {
+    background-color: #0056b3 !important;
+    border-color: #0056b3 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+#generic-export-button:disabled,
+#boton-imprimir:disabled {
+    background-color: #cccccc !important;
+    color: #888888 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+    opacity: 0.7 !important;
+}
+
+/* --- FIN BOTONES IMPRIMIR EXCEL --- */
+
+
+/* Botones inferiores de la ficha */
+.action-buttons-bottom {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e9ecef;
+}
+
+.buttonFee,
+.buttonActivity,
+.button-add-member {
+    background-color: #007bff;
+    padding: 8px 16px;
+    width: auto;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .buttonCard {
-    background-color: green;
-    color: white;
-    width: 100px;
-    height: 40px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 5px 5px;
-    border: none;
-    border-radius: 4px;
-    margin-left: 0px;
-}
-
-.buttonActivity {
-    background-color: #053cf1;
-    color: white;
-    width: 100px;
-    height: 40px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    margin-left: 50px;
-    margin-top: 10px;
-
-}
-
-.button-add-member {
-    background-color: #053cf1;
-    color: white;
-    width: 55px;
-    height: 30px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    margin-left: 50px;
-}
-
-button:disabled {
-    background-color: #cccccc;
-    color: #666666;
-    cursor: not-allowed;
-}
-
-button:disabled span {
-    color: #666666;
-}
-
-.container-activity {
-    display: flex;
-    flex-direction: column;
-    width: 83%;
-    margin: 0 auto;
-    padding: 10px;
-    border-radius: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-}
-
-.list-horizontal {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    max-height: 200px;
-    overflow-y: auto;
-    padding: 5px;
-}
-
-.list-horizontal li {
-    font-size: 20px;
-    list-style-type: none;
-    margin: 1px 0;
-    /* Espacio entre items */
-    display: flex;
-    align-items: center;
-}
-
-.delete-button {
-    background-color: red;
-    width: 28px;
-    height: 29px;
-    color: white;
-    border: none;
-    padding: 1px 5px;
-    border-radius: 5px;
-    cursor: pointer;
-
-}
-
-.activity-select {
-    font-size: 20px;
-    width: 450px;
-    color: blue;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    padding: 10px;
-    background-color: #f0f0f0;
-}
-
-
-input[type="checkbox-small"] {
-    width: 20px;
-    height: 20px;
-}
-
-.text-activity {
-    font-size: 20px;
-    margin-top: 10px;
+    width: auto;
+    padding: 8px 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .button-red {
-    background-color: red;
+    background-color: #dc3545;
 }
 
 .button-green {
-    background-color: green;
+    background-color: #28a745;
 }
 
-#fecha {
-    color: #f0f0f0;
-    background-color: rgb(0, 47, 255);
-    font-family: Arial, sans-serif;
-    font-size: 16px;
+/* Color de los botones deshabilitados más visible */
+button:disabled {
+    background-color: #cccccc;
+    color: #888888;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+/* Contenedor de Actividades (input y botón) */
+.input-group-activity {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    margin-bottom: 15px;
+}
+
+.input-group-activity label {
+    font-size: 0.9em;
+}
+
+/* --- SOLUCIÓN AFINADA PARA EL ICONO DESPLEGABLE EN activity-select --- */
+#activity-select {
+    /* Usamos el ID para máxima especificidad */
+    flex-grow: 1;
+    /* Mantenemos el tamaño actual que te gusta para la barra de actividad */
+    max-width: 400px;
+    min-width: 300px;
+    min-height: 50px;
+
+    color: #007bff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23007bff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+    padding-right: 30px;
+
+    border: 1px solid #dcdfe4;
+    border-radius: 6px;
+    font-size: 0.95em;
+    background-color: #fdfefe;
+    transition: all 0.2s ease-in-out;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Ocultar cualquier elemento (como <i> o <span>) que pudiera estar añadiendo otro icono
+   directamente después del #activity-select o dentro del input-group-activity que no sea el select. */
+.input-group-activity *:not(#activity-select):not(label)>i,
+.input-group-activity *:not(#activity-select):not(label)>span,
+.input-group-activity i:not([class*="delete-button"]):not([class*="trash"]),
+.input-group-activity span:not([class*="delete-button"]):not([class*="trash"]) {
+    display: none !important;
+}
+
+/* Ocultar cualquier pseudo-elemento que pudiera añadir iconos a los contenedores */
+#activity-select::before,
+#activity-select::after,
+.input-group-activity::before,
+.input-group-activity::after {
+    content: none !important;
+}
+
+
+/* --- SOLUCIÓN AFINADA PARA EL ICONO DESPLEGABLE EN year-select --- */
+#year-select {
+    /* Usamos el ID para máxima especificidad */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Lo mantenemos grueso (alto) para que sea como el de actividad */
+    min-height: 50px;
+    /* Unifica con #activity-select */
+}
+
+/* Ocultar cualquier elemento (como <i> o <span>) que pudiera estar añadiendo otro icono
+   directamente después del #year-select o dentro de su contenedor (si lo tiene). */
+#year-select+i,
+#year-select+span,
+#year-select~i,
+#year-select~span,
+.input-group #year-select+*:not(label) i,
+.input-group #year-select+*:not(label) span,
+.input-group>i:not(#year-select):not(label),
+.input-group>span:not(#year-select):not(label) {
+    display: none !important;
+}
+
+/* Ocultar cualquier pseudo-elemento que pudiera añadir iconos al #year-select o su contenedor */
+#year-select::before,
+#year-select::after,
+.input-group::before,
+/* Si el input-group es el padre del año */
+.input-group::after {
+    content: none !important;
+}
+
+/* --- AJUSTE PARA EL BOTÓN "GUARDAR ACTIVIDAD" (#updateActivity) --- */
+#updateActivity {
+    background-color: #007bff !important;
+    /* Mantenemos su color azul */
+    color: white !important;
+    padding: 8px 16px !important;
+    min-height: 38px !important;
+    font-size: 1.1em !important;
+    /* *** Texto más grande aquí *** */
+    border-radius: 6px !important;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.2s ease !important;
+
+    /* *** Icono a la derecha y texto más grande *** */
+    display: flex !important;
+    /* Aseguramos que sea flexbox para ordenar */
+    flex-direction: row-reverse !important;
+    /* Mueve el icono a la derecha del texto */
+    justify-content: center;
+    /* Centra el contenido si hay espacio */
+    align-items: center;
+    /* Alinea verticalmente */
+}
+
+#updateActivity:hover {
+    background-color: #0056b3 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Icono dentro del botón #updateActivity */
+#updateActivity i {
+    font-size: 0.9em !important;
+    /* Mantenemos el tamaño del icono como el del otro botón */
+    color: white !important;
+    font-weight: normal !important;
+    /* Mantenemos el grosor */
+    margin-right: 0 !important;
+    /* Quitamos el margen a la derecha */
+    margin-left: 6px !important;
+    /* *** Añadimos margen a la izquierda del icono (que ahora está a la derecha del texto) *** */
+}
+
+/* --- AJUSTE DE TAMAÑO PARA EL BOTÓN DE LA IZQUIERDA (Limpiar o Buscar) --- */
+/* Asumo que es el botón con ID 'clear-button' por la descripción anterior */
+.input-container #clear-button {
+    padding: 6px 8px;
+    /* Reducimos el padding vertical y horizontal */
+    font-size: 0.85em;
+    /* Un poco más pequeño si se ve muy grande */
+    height: 38px;
+    /* Mantenemos la altura para que coincida con inputs */
+    /* Resto de estilos permanecen */
+    position: relative;
+    left: 0;
+    top: auto;
+    transform: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    z-index: 5;
+    background-color: #e9ecef;
+    color: #6c757d;
+    border-right: 1px solid #dcdfe4;
+    flex-shrink: 0;
+    margin-right: -1px;
+}
+
+.input-container #clear-button:hover {
+    background-color: #dcdfe4;
+}
+
+/* --- CAMBIO PARA MÁS SEPARACIÓN DE LA LISTA DE SOCIOS --- */
+/* Aumentamos el margen superior al título h2 para empujar la sección más abajo */
+#h2ActivityMembers {
+    margin-top: 40px;
+    /* Mantenemos este margen para más separación */
     text-align: center;
-
+    color: #212529;
+    font-size: 2em;
+    margin-bottom: 20px;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 10px;
 }
 
-.img-fluid {
-
-    max-width: 100%;
-    width: 100%;
-    height: auto;
+/* Mantenemos el margen de la lista de socios para asegurar el espacio */
+#ul-members-activity {
+    /* Usamos el ID para ser súper específico */
+    margin-top: 15px;
+    /* Mantenemos este margen para el espacio entre el h2 y la lista */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 15px;
+    border: 1px solid #eef2f5;
+    border-radius: 6px;
+    background-color: #fdfdfd;
+    list-style: none;
+    padding-left: 0;
 }
 
-.sticky-footer {
+/* FIN CAMBIO DE SEPARACIÓN */
+
+.list-horizontal li {
+    background-color: #eaf6ff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    white-space: nowrap;
+    font-size: 1.1em;
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: auto;
+}
+
+/* Tamaño de los iconos en las listas de actividades */
+.list-horizontal li i {
+    font-size: 1.2em;
+    width: 24px;
+    text-align: center;
     flex-shrink: 0;
 }
 
-.input-container {
+/* Color para los iconos de borrar en las listas */
+.delete-button {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9em;
+    color: #dc3545;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-button:hover {
+    color: #c82333;
+    background-color: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Sección de Búsqueda Superior */
+.navbar-search {
+    min-height: 56px;
     position: relative;
-    display: inline-block;
-}
-
-.input-find {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    border: 1px solid #ccc;
-    max-height: 1200px;
-}
-
-.input-activity {
-    font-size: 20px;
-    width: 415px;
-    color: blue;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    padding: 10px;
-    background-color: #f0f0f0;
-}
-
-.suggestions-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    border: 1px solid #ccc;
-    max-height: 200px;
-    overflow-y: auto;
-    position: absolute;
-    background-color: white;
-    width: 100%;
     z-index: 1000;
-    top: 100%;
-    left: 0;
 }
 
+.navbar-search .input-group {
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    height: 100%;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.input-container {
+    max-width: 100% !important;
+    flex-grow: 5 !important;
+    min-width: 400px !important;
+    display: flex;
+    align-items: center;
+    position: relative;
+    order: 1;
+    padding: 0;
+}
+
+/* Campo de búsqueda */
+.input-find {
+    padding-left: 12px;
+    padding-right: 12px;
+    font-size: 0.95em;
+    width: 100% !important;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    min-height: 38px;
+    border-left: none;
+}
+
+/* Fondo blanco para las sugerencias de búsqueda */
+.suggestions-list {
+    max-height: 200px;
+    width: 100%;
+    left: 0;
+    top: calc(100% + 5px);
+    position: absolute;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    overflow-y: auto;
+}
+
+.suggestions-list li {
+    padding: 10px 12px;
+    font-size: 0.9em;
+    color: #343a40;
+    cursor: pointer;
+}
 
 .suggestions-list li:hover {
     background-color: #f0f0f0;
 }
 
-
-
-/* Para pantallas pequeñas */
-
-
-@media (max-width: 768px) {
-    .container {
-        width: 100%;
-        padding: 5px;
-
-    }
+/* Agrupación de botones de acción en la cabecera */
+.action-buttons {
+    gap: 8px;
+    margin-left: 15px;
+    order: 0;
+    flex-shrink: 0;
 }
 
+.action-buttons button i {
+    margin-right: 4px;
+}
+
+.action-buttons button {
+    padding: 8px 16px;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+
+/* --- ESTILO PARA LA FECHA DEL MENÚ (#fecha) --- */
+#fecha {
+    /* Usamos el ID exacto para la fecha */
+    color: #ffffff !important;
+    /* Texto blanco */
+    background-color: #004085 !important;
+    /* Un azul aún más oscuro para el fondo */
+    padding: 8px 15px !important;
+    /* Ajusta el padding según necesites */
+    border-radius: 5px !important;
+    /* Ligeramente redondeado */
+    font-size: 0.9em !important;
+    /* Ajusta el tamaño de fuente */
+    display: inline-block !important;
+    /* Para que el padding y el fondo funcionen correctamente */
+    margin: 5px !important;
+    /* Un pequeño margen si está dentro de un contenedor flexible */
+}
+
+
+/* -- Media Queries para Responsividad -- */
+
+/* Pantallas pequeñas (móviles) */
 @media (max-width: 768px) {
+
+    .container.main-content,
+    .container.container-activity {
+        padding: 15px 10px;
+        margin: 10px auto;
+    }
+
+    h2 {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+    }
+
+    .form-section h3 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+
     .input-group {
-        flex-direction: column;
-        align-items: stretch;
+        gap: 15px 8px;
+        /* Interlineado reducido para móviles */
+        margin-bottom: 10px;
     }
 
     .input-group label {
-        text-align: left;
-        margin-bottom: 5px;
+        font-size: 0.85em;
     }
-
-    .input-group input {
-        width: 100%;
-        text-align: left;
-    }
-}
-
-@media (max-width: 768px) {
 
     input[type="text"],
     input[type="number"],
     input[type="email"],
+    input[type="tel"],
+    input[type="search"],
+    input[type="textPeque"],
     input[type="address"],
-    input[type="phone"],
-    input[type="notes"] {
-        font-size: 16px;
-        width: 100%;
+    input[type="notes"],
+    #activity-select,
+    /* También para móviles */
+    .input-activity {
+        padding: 8px 10px;
+        font-size: 0.9em;
+        min-height: 35px;
+    }
+
+    input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Botones de la Topbar */
+    .navbar-search {
+        min-height: auto;
+        padding-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .navbar-search .input-group {
+        flex-direction: column;
+        gap: 8px;
         height: auto;
-    }
-
-    h2 {
-        font-size: 1.5em;
-    }
-
-    .text-activity {
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 768px) {
-    .list-horizontal {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-
-    button,
-    .buttonFee,
-    .buttonActivity,
-    .button-add-member {
         width: 100%;
+        justify-content: center;
+    }
+
+    .input-container {
+        max-width: unset !important;
+        width: 100%;
+        order: 1;
+        padding: 0;
+        margin-top: 5px;
+        flex-grow: 1 !important;
+        min-width: unset !important;
+    }
+
+    .input-find {
+        width: 100% !important;
+        padding-left: 12px;
+        border-radius: 6px !important;
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-left: none !important;
+    }
+
+    .input-container #clear-button {
+        position: relative;
+        left: 0;
+        top: auto;
+        transform: none;
+        height: 35px;
+        padding: 5px 8px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 6px;
+        border-bottom-left-radius: 6px;
+        margin-right: -1px;
+    }
+
+    .action-buttons {
+        gap: 8px;
         margin-left: 0;
-        margin-top: 10px;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        order: 0;
+        margin-bottom: 15px;
+    }
+
+    .action-buttons button {
+        width: 48%;
+        padding: 8px 10px;
+        font-size: 0.85em;
+    }
+
+    /* Botones inferiores de la ficha */
+    .action-buttons-bottom {
+        gap: 8px;
+        margin-top: 15px;
+        padding-top: 10px;
+        flex-direction: column;
+    }
+
+    .buttonFee,
+    .buttonCard {
+        width: 100%;
+        padding: 8px 15px;
+        font-size: 0.85em;
+    }
+
+    #h2ActivityMembers {
+        margin-top: 30px;
+        /* Ajuste para móviles */
+    }
+
+    #ul-members-activity {
+        /* Aseguramos la separación también en móviles */
+        margin-top: 15px;
+        gap: 8px;
+        padding: 10px;
+        max-height: 180px;
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .list-horizontal li {
+        font-size: 0.9em;
+        padding: 6px 10px;
+        width: auto;
+    }
+
+    /* Reducir tamaño de icono en móvil */
+    .list-horizontal li i {
+        font-size: 0.75em;
+        width: 18px;
+    }
+
+    .delete-button {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8em;
+    }
+
+    .suggestions-list {
+        top: calc(100% + 5px);
+        width: calc(100% - 20px);
+        left: 10px;
+    }
+
+    .background-image {
+        opacity: 0.01;
     }
 }
 
-@media (max-width: 768px) {
-    .background-image {
-        opacity: 0.05;
+/* Pantallas medianas (tabletas) */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    .container.main-content,
+    .container.container-activity {
+        width: 92%;
+        padding: 25px;
     }
+
+    .input-group label {
+        flex-basis: 90px;
+    }
+
+    .input-group.full-width-input label {
+        flex-basis: 70px;
+    }
+
+    .list-horizontal {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        grid-template-columns: none;
+    }
+
+    .list-horizontal li {
+        width: auto;
+    }
+
+    .input-container {
+        max-width: 100% !important;
+        flex-grow: 4 !important;
+        min-width: 350px !important;
+    }
+
+    .action-buttons button {
+        padding: 9px 16px;
+        font-size: 0.9em;
+    }
+
+
 }

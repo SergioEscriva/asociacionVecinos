@@ -1,3 +1,4 @@
+**[28 junio 2025]**: NUEVO: Diseño global más limpio.
 **[26 junio 2025]**: NUEVO: Añadido en las listas clickar para abrir la ficha del socio seleccionado.
 **[25 junio 2025]**: Ahora no se puede añadir pagos hasta tener guardada la ficha del socio.
 **[23 junio 2025]**: Actualizado método de backup con DropBox después de los cambios de DropBox con los Token.
