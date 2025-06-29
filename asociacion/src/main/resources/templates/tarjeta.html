@@ -1,93 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html
-    PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN" "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
-<!--This file was converted to xhtml by LibreOffice - see https://cgit.freedesktop.org/libreoffice/core/tree/filter/source/xslt for the code.-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 
-<head profile="http://dublincore.org/documents/dcmi-terms/">
-    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+<head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+    <style type="text/css">
+        body {
+            position: relative;
+            width: 21cm;
+            height: 29.7cm;
+            margin: 0;
+            font-family: sans-serif;
+            font-size: 12pt;
+        }
 
-    <meta name="DCTERMS.title" content="                              6140" xml:lang="en-US" />
+        /* Parte superior */
+        .top-numeroSocio {
+            position: absolute;
+            top: 1cm;
+            left: 5.5cm;
+        }
 
-    <meta name="DCTERMS.language" content="en-US" scheme="DCTERMS.RFC4646" />
-    <meta name="DCTERMS.source" content="http://xml.openoffice.org/odf2xhtml" />
-    <meta name="DCTERMS.creator" content="AVM" />
-    <meta name="DCTERMS.issued" content="2010-10-09T23:53:00" scheme="DCTERMS.W3CDTF" />
-    <meta name="DCTERMS.contributor" content="usuario" />
-    <meta name="DCTERMS.modified" content="2025-03-20T19:49:00" scheme="DCTERMS.W3CDTF" />
+        .top-nombre {
+            position: absolute;
+            top: 4.2cm;
+            /* 8cm - 1.1cm */
+            left: 3cm;
+        }
 
+        .top-direccion {
+            position: absolute;
+            top: 4.8cm;
+            /* 8cm - 2.1cm */
+            left: 3cm;
+        }
 
-    <meta name="xsl:vendor" content="libxslt" />
-    <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" hreflang="en" />
-    <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" hreflang="en" />
-    <link rel="schema.DCTYPE" href="http://purl.org/dc/dcmitype/" hreflang="en" />
-    <link rel="schema.DCAM" href="http://purl.org/dc/dcam/" hreflang="en" />
+        .top-dni {
+            position: absolute;
+            top: 5.7cm;
+            /* 8cm - 2cm */
+            left: 2.5cm;
+        }
 
+        /* Parte inferior */
+        .bottom-numeroSocio {
+            position: absolute;
+            top: 22.2cm;
+            /* 29.7 - 6.4 */
+            left: 5.5cm;
+        }
 
+        .bottom-nombre {
+            position: absolute;
+            top: 19.5cm;
+            left: 3cm;
+        }
+
+        .bottom-direccion {
+            position: absolute;
+            top: 20.3cm;
+            /* 29.7 - 6.1 */
+            left: 3cm;
+        }
+
+        .bottom-dni {
+            position: absolute;
+            top: 21.1cm;
+            /* 29.7 - 4.6 */
+            left: 2.5cm;
+        }
+
+        .bottom-phone {
+            position: absolute;
+            top: 22cm;
+            /* 29.7 - 5.4 */
+            left: 3cm;
+        }
+    </style>
 </head>
 
-<body dir="ltr"
-    style="max-width:21.001cm;margin-top:0.501cm; margin-bottom:0cm; margin-left:0.519cm; margin-right:0.519cm; ">
+<body>
 
+    <!-- Parte superior -->
+    <div class="top-numeroSocio">${numeroSocio}</div>
+    <div class="top-nombre">${apellidos}, ${nombre}</div>
+    <div class="top-direccion">${address} ${address_number}, ${address_door} ${location}</div>
+    <div class="top-dni">${dni}</div>
 
-    <table border="0" cellspacing="0" cellpadding="0" class="table-Tabla1">
-        <colgroup>
-            <col width="872" />
-        </colgroup>
-        <tr class="row-Tabla1_1">
-            <td style="text-align:left;width:19.962cm; " class="cell-Tabla1_A1">
-                <p class="paragraph-P1"> <span class="text-T1" /></p>
-                <p class="paragraph-P2"> </p>
-                <p class="paragraph-P3"> </p>
-                <p class="paragraph-P4"><span class="text-T1">                              </span><span
-                        class="text-T2">${numeroSocio}</span></p>
-                <p class="paragraph-P5"> </p>
-                <p class="paragraph-P4"><span class="text-T3">              </span><span class="text-T3">${apellidos},
-                        ${nombre}</span></p>
-
-                <p class="paragraph-P4"><span class="text-T4">                    </span><span
-                        class="text-T4">${address}</span><span class="text-T4"> </span><span
-                        class="text-T4">${address_number}</span><span class="text-T4">, </span><span
-                        class="text-T4">${address_door}</span></p>
-
-                <p class="paragraph-P4"><span class="text-T4">                              </span><span
-                        class="text-T5">${location}</span></p>
-                <p class="paragraph-P6"> </p>
-                <p class="paragraph-P4">                    ${dni}    </p>
-
-                <p class="paragraph-P7">    </p>
-                <p class="paragraph-P8"> </p>
-                <p class="paragraph-P9"> </p>
-                <p class="paragraph-P8"> </p>
-                <p class="paragraph-P8"> </p>
-                <p class="paragraph-P8"> </p>
-                <p class="paragraph-P4"><span class="text-T1">                                  </span><span
-                        class="text-T2">${numeroSocio}</span></p>
-                <p class="paragraph-P5"> </p>
-                <p class="paragraph-P4"><span class="text-T3">            </span><span class="text-T3">${apellidos},
-                        ${nombre}</span></p>
-
-                <p class="paragraph-P4">               </p>
-
-                <p class="paragraph-P4"><span class="text-T4">                   </span><span
-                        class="text-T4">${address}</span><span class="text-T4">  </span><span
-                        class="text-T4">${address_number}</span><span class="text-T4">,</span><span
-                        class="text-T4">${address_door}</span><span class="text-T4">  </span><span
-                        class="text-T4">${location}</span></p>
-                <p class="paragraph-P3"> </p>
-                <p class="paragraph-P4"><span class="text-T6">                </span>${dni}                     </p>
-
-                <p class="paragraph-P3"> </p>
-
-                <p class="paragraph-P4">                     1${phone}                                                 
-                                 </p>
-
-                <p class="paragraph-P4"> </p>
-
-                <p class="paragraph-P4">                     </p>
-            </td>
-        </tr>
-    </table>
+    <!-- Parte inferior -->
+    <div class="bottom-numeroSocio">${numeroSocio}</div>
+    <div class="bottom-nombre">${apellidos}, ${nombre}</div>
+    <div class="bottom-direccion">${address} ${address_number}, ${address_door} ${location}</div>
+    <div class="bottom-dni">${dni}</div>
+    <div class="bottom-phone">${phone}</div>
 
 </body>
 
