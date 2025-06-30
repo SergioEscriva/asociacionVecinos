@@ -495,13 +495,15 @@ button:disabled {
     padding-bottom: 10px;
 }
 
-/* Mantenemos el margen de la lista de socios para asegurar el espacio */
-#ul-members-activity {
+/* CAMBIO PARA MÁS SEPARACIÓN DE LA LISTA DE SOCIOS (aquí ya aplica) */
+#ul-activity-member {
     /* Usamos el ID para ser súper específico */
     margin-top: 15px;
     /* Mantenemos este margen para el espacio entre el h2 y la lista */
     display: flex;
+    /* <-- Importante: Asegura que los elementos hijos se dispongan en fila */
     flex-wrap: wrap;
+    /* <-- Importante: Permite que los elementos salten de línea si no caben */
     gap: 12px;
     max-height: 250px;
     overflow-y: auto;
@@ -513,21 +515,24 @@ button:disabled {
     padding-left: 0;
 }
 
-/* FIN CAMBIO DE SEPARACIÓN */
-
+/* Estilos para cada elemento de la lista (los iconos de actividad) */
 .list-horizontal li {
     background-color: #eaf6ff;
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     display: flex;
+    /* <-- Asegura que el contenido interno de cada li también se alinee */
     align-items: center;
     gap: 10px;
     padding: 10px 15px;
     white-space: nowrap;
     font-size: 1.1em;
     flex-shrink: 0;
+    /* <-- Evita que los elementos se contraigan */
     flex-grow: 0;
+    /* <-- Evita que los elementos se expandan */
     width: auto;
+    /* <-- Permite que el ancho sea el necesario por el contenido */
 }
 
 /* Tamaño de los iconos en las listas de actividades */
@@ -801,7 +806,7 @@ button:disabled {
         /* Ajuste para móviles */
     }
 
-    #ul-members-activity {
+    #ul-activity-member {
         /* Aseguramos la separación también en móviles */
         margin-top: 15px;
         gap: 8px;
