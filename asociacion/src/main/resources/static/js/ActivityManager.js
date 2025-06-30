@@ -56,7 +56,7 @@ export class ActivityManager {
     document.getElementById('activityName').value = "";
     document.getElementById('managerName').value = "";
     document.getElementById('notes').value = "";
-    const ulMembersActivity = document.getElementById("ul-members-activity");
+    const ulMembersActivity = document.getElementById("ul-activity-member");
     const oldListener = ulMembersActivity.onclick;
     ulMembersActivity.removeEventListener('click', oldListener);
     ulMembersActivity.innerHTML = "";
@@ -78,7 +78,7 @@ export class ActivityManager {
   }
 
   static async getMembersActivityId(activityId) {
-    const activitySel = document.getElementById("ul-members-activity");
+    const activitySel = document.getElementById("ul-activity-member");
     activitySel.innerHTML = "";
 
     try {

@@ -61,7 +61,7 @@ export class Listeners {
     }
 
     static setupActivityListeners() {
-        const activitySel = document.getElementById("ul-members-activity");
+        const activitySel = document.getElementById("ul-activity-member");
 
         activitySel.addEventListener('click', async (event) => {
             const target = event.target;
