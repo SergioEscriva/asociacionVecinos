@@ -157,7 +157,7 @@ export class ListsManager {
         break;
 
       case 'button5':
-        titleElement.textContent = 'Listado de Pagos';
+        titleElement.textContent = 'Listado Años Pagados';
         document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
         document.getElementById('year').textContent = 'AÑO PAGADO';
         const allMembersPay = await RequestGet.getAllMembers();
@@ -175,7 +175,7 @@ export class ListsManager {
         this.setExportData(
           paidMembersData,
           ["Nombre", "Apellidos", "Nº Socio", "Años Pagados"],
-          `Listado de Pagos de ${memberAttribute.attribute}s.xlsx`
+          `Listado de Años Pagos de ${memberAttribute.attribute}s.xlsx`
         );
         genericExportButton.style.display = 'block';
         break;
@@ -401,7 +401,7 @@ export class ListsManager {
       lineNumber++
     }
 
-    document.getElementById('txtTitleList').textContent = "Lista de Pagos - Total " + (lineNumber - 1);
+    document.getElementById('txtTitleList').textContent = "Lista de Años Pagados - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
     this.addRowClickListeners(); //
   }
@@ -534,14 +534,12 @@ export class ListsManager {
           botonImprimirElement.onclick = null;
         }
         miembrosDetalleElement.style.display = "block";
-        // Volver a aplicar los listeners a las filas de miembros de la actividad
         this.addRowClickListeners();
       });
       actividadesListaElement.appendChild(listItem);
     });
   }
 
-  // Este método no parece usarse en el código original, lo mantengo por si acaso.
   getHtmlRowActivityWithMembers(activity) {
     return `<tr>
                 <td>${activity.nombre}</td>
