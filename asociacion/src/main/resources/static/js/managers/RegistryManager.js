@@ -1,6 +1,6 @@
-import { RequestPut } from './RequestPut.js';
-import { RequestPost } from './RequestPost.js';
-import { RequestGet } from './RequestGet.js';
+import { RequestPut } from '../api/RequestPut.js';
+import { RequestPost } from '../api/RequestPost.js';
+import { RequestGet } from '../api/RequestGet.js';
 
 export class RegistryManager {
     static async checkActivityTrue(memberId) {

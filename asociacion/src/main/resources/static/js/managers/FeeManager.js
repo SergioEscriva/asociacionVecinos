@@ -1,9 +1,6 @@
-import { RequestPost } from './RequestPost.js';
-import { RequestPut } from './RequestPut.js';
-import { RequestDel } from './RequestDel.js';
-import { RequestGet } from './RequestGet.js';
-import { MembersManager } from './MembersManager.js';
-
+import { RequestPost } from '../api/RequestPost.js';
+import { RequestDel } from '../api/RequestDel.js';
+import { RequestGet } from '../api/RequestGet.js';
 
 export class FeeManager {
     constructor() {

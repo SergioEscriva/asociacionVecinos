@@ -1,7 +1,7 @@
-import { RequestPost } from './RequestPost.js';
-import { RequestPut } from './RequestPut.js';
-import { RequestDel } from './RequestDel.js';
-import { RequestGet } from './RequestGet.js';
+import { RequestPost } from '../api/RequestPost.js';
+import { RequestPut } from '../api/RequestPut.js';
+import { RequestDel } from '../api/RequestDel.js';
+import { RequestGet } from '../api/RequestGet.js';
 
 
 export class ActivityMemberManager {

@@ -1,5 +1,5 @@
-import { RequestGet } from './RequestGet.js';
-import { RequestPut } from './RequestPut.js';
+import { RequestGet } from '../api/RequestGet.js';
+import { RequestPut } from '../api/RequestPut.js';
 import { BackupRecoveryManager } from './BackupRecoveryManager.js';
 
 export class ConfigManager {

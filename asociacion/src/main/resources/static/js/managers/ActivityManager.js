@@ -1,8 +1,8 @@
-import { RequestGet } from "./RequestGet.js";
-import { RequestPut } from "./RequestPut.js";
-import { RequestPost } from "./RequestPost.js";
+import { RequestGet } from "../api/RequestGet.js";
+import { RequestPut } from "../api/RequestPut.js";
+import { RequestPost } from "../api/RequestPost.js";
 import { ActivityMemberManager } from "./ActivityMemberManager.js";
-import { Listeners } from "./Listeners.js";
+import { Listeners } from "../utils/Listeners.js";
 
 export class ActivityManager {
 

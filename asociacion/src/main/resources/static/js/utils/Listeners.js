@@ -1,7 +1,7 @@
-import { ActivityMemberManager } from "./ActivityMemberManager.js";
-import { MembersManager } from "./MembersManager.js";
-import { RegistryManager } from "./RegistryManager.js";
-import { RequestGet } from "./RequestGet.js";
+import { ActivityMemberManager } from "../managers/ActivityMemberManager.js";
+import { MembersManager } from "../managers/MembersManager.js";
+import { RegistryManager } from "../managers/RegistryManager.js";
+import { RequestGet } from "../api/RequestGet.js";
 import { Utility } from "./Utility.js";
 
 export class Listeners {

@@ -1,4 +1,4 @@
-import { RequestGet } from './RequestGet.js';
+import { RequestGet } from '../api/RequestGet.js';
 import * as XLSX from 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm';
 
 

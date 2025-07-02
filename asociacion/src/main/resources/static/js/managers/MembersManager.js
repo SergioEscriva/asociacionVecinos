@@ -1,11 +1,11 @@
 import { ActivityMemberManager } from './ActivityMemberManager.js';
 import { FamilyManager } from './FamilyManager.js';
 import { FeeManager } from './FeeManager.js';
-import { RequestGet } from './RequestGet.js';
-import { RequestPost } from './RequestPost.js';
-import { RequestPut } from './RequestPut.js';
-import { Utility } from './Utility.js';
-import { RequestFile } from './RequestFile.js';
+import { RequestGet } from '../api/RequestGet.js';
+import { RequestPost } from '../api/RequestPost.js';
+import { RequestPut } from '../api/RequestPut.js';
+import { Utility } from '../utils/Utility.js';
+import { RequestFile } from '../api/RequestFile.js';
 
 export class MembersManager {
   constructor() {

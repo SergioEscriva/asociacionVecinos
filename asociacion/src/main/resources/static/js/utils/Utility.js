@@ -1,5 +1,5 @@
-import { RequestGet } from "./RequestGet.js";
-import { RequestDel } from "./RequestDel.js";
+import { RequestGet } from "../api/RequestGet.js";
+import { RequestDel } from "../api/RequestDel.js";
 
 export class Utility {
 

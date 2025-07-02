@@ -1,10 +1,10 @@
-import { ActivityManager } from './ActivityManager.js';
-import { ConfigManager } from './ConfigManager.js';
-import { Listeners } from './Listeners.js';
-import { MembersManager } from './MembersManager.js';
-import { ListsManager } from './listsManager.js';
-import { RequestGet } from './RequestGet.js';
-import { FeesByDate } from './FeesByDate.js';
+import { ActivityManager } from './managers/ActivityManager.js';
+import { ConfigManager } from './managers/ConfigManager.js';
+import { Listeners } from './utils/Listeners.js';
+import { MembersManager } from './managers/MembersManager.js';
+import { ListsManager } from './managers/ListsManager.js';
+import { RequestGet } from './api/RequestGet.js';
+import { FeesByDate } from './managers/FeesByDateManager.js';
 
 
 
