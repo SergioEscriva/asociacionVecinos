@@ -91,8 +91,19 @@ export class MembersManager {
       inputFind.value = ''; // Borra el texto del input
       inputFind.focus(); // Devuelve el foco al input (opcional)
     });
-
+    
     const postalInput = document.getElementById('postal');
+    const locationInput = document.getElementById('location');
+    locationInput.addEventListener('change', async function () {
+        const location = locationInput.value.trim();
+        if (location.length > 0) {
+            await MembersManager.buscarCodigoPostal(location);
+        } else {
+            postalInput.value = ""; // Limpia el campo postal si la localidad está vacía
+        }
+    });
+
+
     postalInput.addEventListener('change', async function () {
         const postalCode = postalInput.value.trim();
         if (postalCode.length > 0) {
@@ -159,8 +170,8 @@ export class MembersManager {
       document.getElementById('addressNumber').value = member.addressNumber;
       document.getElementById('addressDoor').value = member.addressDoor;
       document.getElementById('addressStaircase').value = member.addressStaircase;
-      document.getElementById('location').value = member.location;
-      document.getElementById('postal').value = member.postal;
+      let location = document.getElementById('location').value = member.location;
+      let postal = document.getElementById('postal').value = member.postal;
       document.getElementById('phone').value = member.phone;
       document.getElementById('email').value = member.email;
       document.getElementById('dni').value = member.dni;
@@ -182,6 +193,13 @@ export class MembersManager {
       await ActivityMemberManager.inyectOption()
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
       sessionStorage.setItem('selectedMemberId', '0');
+
+      if (location && location.trim() !== "") {
+        await MembersManager.buscarCodigoPostal(location);
+      }
+      if (postal && postal.trim() !== "") {
+        await MembersManager.buscarPoblacionPorCodigoPostal(postal);
+      } 
 
 
     }
@@ -449,6 +467,26 @@ static async buscarPoblacionPorCodigoPostal(postalCode) {
     } catch (error) {
         document.getElementById('location').value = "";
         console.error("Error buscando población por código postal:", error);
+    }
+}
+
+
+static async buscarCodigoPostal(location) {
+    if (!location) {
+        document.getElementById('postal').value = "";
+        return;
+    }
+    try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(location)}&country=España&format=json&addressdetails=1`);
+        const data = await response.json();
+        if (data.length > 0 && data[0].address && data[0].address.postcode) {
+            document.getElementById('postal').value = data[0].address.postcode;
+        } else {
+            document.getElementById('postal').value = "";
+        }
+    } catch (error) {
+        document.getElementById('postal').value = "";
+        console.error("Error buscando código postal:", error);
     }
 }
 
