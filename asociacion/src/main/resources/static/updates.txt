@@ -1,3 +1,4 @@
+**[26 julio 2025]**: NUEVO: Ahora se puede introducir el código postal y se rellena la población.
 **[28 junio 2025]**: NUEVO: Diseño global más limpio.
 **[26 junio 2025]**: NUEVO: Añadido en las listas clickar para abrir la ficha del socio seleccionado.
 **[25 junio 2025]**: Ahora no se puede añadir pagos hasta tener guardada la ficha del socio.

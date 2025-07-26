@@ -124,6 +124,8 @@ input[type="email"],
 input[type="tel"],
 input[type="search"],
 input[type="textPeque"],
+input[type="textMedio"]
+input[type="phone"]
 input[type="address"],
 input[type="notes"],
 .input-activity {
@@ -146,10 +148,12 @@ input[type="email"]:focus,
 input[type="tel"]:focus,
 input[type="search"]:focus,
 input[type="textPeque"]:focus,
+input[type="textMedio"]:focus,
+input[type="phone"]:focus,
 input[type="address"]:focus,
 input[type="notes"]:focus,
 #activity-select:focus,
-/* Apuntamos con el ID para ser más específico */
+
 .input-activity:focus {
     border-color: #007bff;
     box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.2);
@@ -162,6 +166,12 @@ input[type="textPeque"] {
     width: 50px;
     min-width: 50px;
     max-width: 70px;
+}
+
+input[type="textMedio"] {
+    width: 75px;
+    min-width: 75px;
+    max-width: 75px;
 }
 
 input[type="number"] {
@@ -706,6 +716,8 @@ button:disabled {
     input[type="tel"],
     input[type="search"],
     input[type="textPeque"],
+    input[type="textMedio"],
+    input[type="phone"],
     input[type="address"],
     input[type="notes"],
     #activity-select,

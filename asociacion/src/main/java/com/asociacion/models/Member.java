@@ -28,6 +28,7 @@ public class Member {
     private String addressDoor;
     private String addressStaircase;
     private String location;
+    private Integer postal;
     private Long phone;
     private String email;
 

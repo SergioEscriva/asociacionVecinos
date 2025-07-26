@@ -91,6 +91,14 @@ export class MembersManager {
       inputFind.value = ''; // Borra el texto del input
       inputFind.focus(); // Devuelve el foco al input (opcional)
     });
+
+    const postalInput = document.getElementById('postal');
+    postalInput.addEventListener('change', async function () {
+        const postalCode = postalInput.value.trim();
+        if (postalCode.length > 0) {
+            await MembersManager.buscarPoblacionPorCodigoPostal(postalCode);
+        }
+    });
   }
 
   static async limpiaCampos() {
@@ -106,6 +114,7 @@ export class MembersManager {
     document.getElementById('addressDoor').value = "";
     document.getElementById('addressStaircase').value = "";
     document.getElementById('location').value = "";
+    document.getElementById('postal').value = "";
     document.getElementById('phone').value = "";
     document.getElementById('email').value = "";
     document.getElementById('dni').value = "";
@@ -151,14 +160,13 @@ export class MembersManager {
       document.getElementById('addressDoor').value = member.addressDoor;
       document.getElementById('addressStaircase').value = member.addressStaircase;
       document.getElementById('location').value = member.location;
+      document.getElementById('postal').value = member.postal;
       document.getElementById('phone').value = member.phone;
       document.getElementById('email').value = member.email;
       document.getElementById('dni').value = member.dni;
       document.getElementById('gender').value = member.gender;
       const activeCheckbox = document.getElementById('active')
       this.checkActive(activeCheckbox, member)
-
-
 
       const buttonCard = document.getElementById("updateCard")
       buttonCard.title = await MembersManager.updateCard(member.cardPrint);
@@ -248,6 +256,7 @@ export class MembersManager {
       const addressDoor = document.getElementById('addressDoor').value
       const addressStaircase = document.getElementById('addressStaircase').value
       const location = document.getElementById('location').value
+      const postal = document.getElementById('postal').value
       const phone = document.getElementById('phone').value
       const email = document.getElementById('email').value
       const dni = document.getElementById('dni').value
@@ -285,6 +294,7 @@ export class MembersManager {
         addressDoor: await Utility.capitalizarString(addressDoor),
         addressStaircase: addressStaircase,
         location: await Utility.capitalizarString(location),
+        postal: postal,
         phone: phone,
         email: email,
         dni: dniUp,
@@ -413,7 +423,34 @@ export class MembersManager {
 
   }
 
+static async buscarPoblacionPorCodigoPostal(postalCode) {
+    try {
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?postalcode=${encodeURIComponent(postalCode)}&country=España&format=json&addressdetails=1`
+        );
+        const data = await response.json();
 
+        // Orden de preferencia de campos menos poblados a más poblados
+        const campos = ['village', 'town', 'hamlet', 'municipality', 'city', 'county'];
+        let poblacion = "";
+        for (const campo of campos) {
+            for (const item of data) {
+                if (item.address && item.address[campo]) {
+                    poblacion = item.address[campo];
+                    break;
+                }
+            }
+            if (poblacion) break;
+        }
+
+        document.getElementById('location').value = poblacion || "";
+        console.log("Población encontrada:", poblacion);
+
+    } catch (error) {
+        document.getElementById('location').value = "";
+        console.error("Error buscando población por código postal:", error);
+    }
 }
 
 
+}

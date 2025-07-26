@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.asociacion.models.Activity;
 import com.asociacion.models.ActivityMember;
 import com.asociacion.repositories.ActivityMemberRepository;
 
