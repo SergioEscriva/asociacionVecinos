@@ -94,20 +94,20 @@ export class MembersManager {
     
     const postalInput = document.getElementById('postal');
     const locationInput = document.getElementById('location');
-    locationInput.addEventListener('change', async function () {
-        const location = locationInput.value.trim();
-        if (location.length > 0) {
-            await MembersManager.buscarCodigoPostal(location);
-        } else {
-            postalInput.value = ""; // Limpia el campo postal si la localidad está vacía
-        }
-    });
 
-
+    // Cuando el usuario cambia el código postal, busca la población
     postalInput.addEventListener('change', async function () {
         const postalCode = postalInput.value.trim();
         if (postalCode.length > 0) {
             await MembersManager.buscarPoblacionPorCodigoPostal(postalCode);
+        }
+    });
+
+    // Cuando el usuario cambia la localidad, busca el código postal
+    locationInput.addEventListener('change', async function () {
+        const location = locationInput.value.trim();
+        if (location.length > 0) {
+            await MembersManager.buscarCodigoPostal(location);
         }
     });
   }
@@ -170,8 +170,19 @@ export class MembersManager {
       document.getElementById('addressNumber').value = member.addressNumber;
       document.getElementById('addressDoor').value = member.addressDoor;
       document.getElementById('addressStaircase').value = member.addressStaircase;
-      let location = document.getElementById('location').value = member.location;
-      let postal = document.getElementById('postal').value = member.postal;
+      document.getElementById('location').value = member.location;
+      document.getElementById('postal').value = member.postal;
+
+      
+      const location = member.location ? String(member.location).trim() : "";
+      const postal = member.postal ? String(member.postal).trim() : "";
+
+      if (location && !postal) {
+          await MembersManager.buscarCodigoPostal(location);
+      } else if (!location && postal) {
+          await MembersManager.buscarPoblacionPorCodigoPostal(postal);
+      }
+
       document.getElementById('phone').value = member.phone;
       document.getElementById('email').value = member.email;
       document.getElementById('dni').value = member.dni;
@@ -193,15 +204,7 @@ export class MembersManager {
       await ActivityMemberManager.inyectOption()
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
       sessionStorage.setItem('selectedMemberId', '0');
-
-      if (location && location.trim() !== "") {
-        await MembersManager.buscarCodigoPostal(location);
-      }
-      if (postal && postal.trim() !== "") {
-        await MembersManager.buscarPoblacionPorCodigoPostal(postal);
-      } 
-
-
+      //MembersManager.codigoPostalLocalidad();
     }
   }
 
@@ -462,7 +465,6 @@ static async buscarPoblacionPorCodigoPostal(postalCode) {
         }
 
         document.getElementById('location').value = poblacion || "";
-        console.log("Población encontrada:", poblacion);
 
     } catch (error) {
         document.getElementById('location').value = "";
@@ -472,23 +474,34 @@ static async buscarPoblacionPorCodigoPostal(postalCode) {
 
 
 static async buscarCodigoPostal(location) {
-    if (!location) {
-        document.getElementById('postal').value = "";
-        return;
-    }
+
     try {
         const response = await fetch(`https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(location)}&country=España&format=json&addressdetails=1`);
         const data = await response.json();
         if (data.length > 0 && data[0].address && data[0].address.postcode) {
             document.getElementById('postal').value = data[0].address.postcode;
-        } else {
-            document.getElementById('postal').value = "";
-        }
+        } 
     } catch (error) {
         document.getElementById('postal').value = "";
         console.error("Error buscando código postal:", error);
     }
 }
 
+static async codigoPostalLocalidad() {
+    let locationInput = document.getElementById('location');
+    let postalInput = document.getElementById('postal');
+    const postalCode = postalInput.value.trim();
+    const location = locationInput.value.trim();
+
+    // Solo busca población si el usuario cambia el código postal manualmente
+    if (postalInput && postalCode.length > 0) {
+        await MembersManager.buscarPoblacionPorCodigoPostal(postalCode);
+    }
+
+    // Solo busca código postal si el usuario cambia la localidad manualmente
+    if (locationInput && location.length > 0) {
+        await MembersManager.buscarCodigoPostal(location);
+    }
+}
 
 }
