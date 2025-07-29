@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.asociacion.models.Member;
+
 import com.asociacion.models.Registry;
-import com.asociacion.services.MemberService;
+
 import com.asociacion.services.RegistryServiceImp;
 
 @RestController
@@ -26,8 +26,7 @@ public class RegistryController {
     @Autowired
     private RegistryServiceImp registryService;
     
-        @Autowired
-    private MemberService memberService;
+
 
     //@GetMapping()
     //public List<Registry> getRegistries(){

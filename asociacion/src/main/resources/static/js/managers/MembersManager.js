@@ -131,6 +131,7 @@ export class MembersManager {
     document.getElementById('dni').value = "";
     document.getElementById('gender').value = "";
     document.getElementById('active').checked = false;
+    document.getElementById('activeDate').value = "";
     document.getElementById('notes').value = "";
     document.getElementById("memberNumber").value = "";
     this.updateCard(1);
@@ -187,8 +188,12 @@ export class MembersManager {
       document.getElementById('email').value = member.email;
       document.getElementById('dni').value = member.dni;
       document.getElementById('gender').value = member.gender;
+
       const activeCheckbox = document.getElementById('active')
       this.checkActive(activeCheckbox, member)
+
+      const activeDate = document.getElementById('activeDate');
+      this.getFirstActiveDate(member.id)
 
       const buttonCard = document.getElementById("updateCard")
       buttonCard.title = await MembersManager.updateCard(member.cardPrint);
@@ -504,4 +509,18 @@ static async codigoPostalLocalidad() {
     }
 }
 
+static async getFirstActiveDate(memberId) {
+    try {
+      const registrys = await RequestGet.getRegistryByMemberId(memberId);
+      if (registrys.length > 0) {
+        const firstActive = registrys[0].startData;
+        const activeDateInput = document.getElementById('activeDate');
+        activeDateInput.value = firstActive ? new Date(firstActive).toLocaleDateString() : "";
+      } else {
+        document.getElementById('activeDate').value = "";
+      }
+    } catch (error) {
+      console.error("Error al obtener la primera fecha activa:", error);
+    }           
+} 
 }

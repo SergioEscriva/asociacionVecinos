@@ -1,4 +1,6 @@
-**[26 julio 2025]**: NUEVO: Ahora se puede introducir el código postal y se rellena la población.
+**[29 julio 2025]**: NUEVO: Añadida fecha primera alta en el listado de todos y activos.
+**[28 julio 2025]**: NUEVO: Se muestra la fecha de la primera alta.
+**[26 julio 2025]**: NUEVO: Ahora al introducir el código postal o la población se autorellena el otro.
 **[28 junio 2025]**: NUEVO: Diseño global más limpio.
 **[26 junio 2025]**: NUEVO: Añadido en las listas clickar para abrir la ficha del socio seleccionado.
 **[25 junio 2025]**: Ahora no se puede añadir pagos hasta tener guardada la ficha del socio.

@@ -187,7 +187,8 @@ input[type="checkbox"] {
     height: 18px;
     min-width: 18px;
     min-height: 18px;
-    margin-right: 6px;
+    margin-right: 2px;
+    margin-left: 2px;
     accent-color: #007bff;
     cursor: pointer;
 }
@@ -731,6 +732,7 @@ button:disabled {
     input[type="checkbox"] {
         width: 16px;
         height: 16px;
+        
     }
 
     /* Botones de la Topbar */

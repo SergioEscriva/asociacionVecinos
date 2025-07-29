@@ -95,11 +95,12 @@ export class ListsManager {
         this.setupMemberSorting(activeMembers);
         const activeMembersExportData = await Promise.all(activeMembers.map(async m => {
           const year = await this.getLastPaidYear(m.id);
-          return [m.name, m.lastName1, m.lastName2, m.memberNumber, m.active ? '✓' : 'X', year];
+          const firstActiveDate = await this.getFirstActiveDate(m.id);
+          return [m.name, m.lastName1, m.lastName2, m.memberNumber, m.active ? '✓' : 'X', firstActiveDate, year];
         }));
         this.setExportData(
           activeMembersExportData,
-          ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo", "Último Año Pagado"],
+          ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo","Fecha Alta", "Último Año Pagado"],
           `Listado de ${memberAttribute.attribute}s Activos.xlsx`
         );
         genericExportButton.style.display = 'block';
@@ -295,7 +296,7 @@ export class ListsManager {
     switch (pageSelection) {
       case 'button1':
       case 'button2':
-        updatedData = await Promise.all(sortedMembers.map(async m => [m.name, m.lastName1, m.lastName2, m.memberNumber, m.active ? '✓' : 'X', await this.getLastPaidYear(m.id)]));
+        updatedData = await Promise.all(sortedMembers.map(async m => [m.name, m.lastName1, m.lastName2, m.memberNumber, m.active ? '✓' : 'X', await this.getFirstActiveDate(m.id), await this.getLastPaidYear(m.id)]));
         break;
       case 'button5':
         updatedData = await Promise.all(sortedMembers.map(async (member) => {
@@ -349,12 +350,15 @@ export class ListsManager {
   async getHtmlRowMembers(member, lineNumber) {
     const activeStatus = member.active ? '✓' : 'X';
     const lastPaidYear = await this.getLastPaidYear(member.id);
+    const firstActiveDate = await this.getFirstActiveDate(member.id);
     return `<tr class="clickable-row" data-member-number="${member.memberNumber}">
                 <td>${lineNumber}</td>
                 <td>${member.name}</td>
                 <td>${member.lastName1} ${member.lastName2}</td>
                 <td>${member.memberNumber}</td>
                 <td>${activeStatus}</td>
+                <td>${firstActiveDate}</td>
+                <td></td>
                 <td>${lastPaidYear}</td>
             </tr>`;
   }
@@ -611,6 +615,21 @@ export class ListsManager {
       });
     });
   }
+
+
+  async getFirstActiveDate(memberId) {
+      try {
+        const registrys = await RequestGet.getRegistryByMemberId(memberId);
+        if (registrys.length > 0) {
+          const firstActive = registrys[0].startData;
+          return firstActive ? new Date(firstActive).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : null;
+        } else {
+          return null; // No hay registros para este miembro
+        }
+      } catch (error) {
+        console.error("Error al obtener la primera fecha activa:", error);
+      }           
+  } 
 }
 
 class ExcelUtils {
