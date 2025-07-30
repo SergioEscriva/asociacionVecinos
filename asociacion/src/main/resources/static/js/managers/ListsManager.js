@@ -77,14 +77,16 @@ export class ListsManager {
         this.setupMemberSorting(allMembers);
         const allMembersExportData = await Promise.all(allMembers.map(async m => {
           const year = await this.getLastPaidYear(m.id);
-          return [m.name, m.lastName1, m.lastName2, m.memberNumber, m.active ? '✓' : 'X', year];
+          const firstActiveDate = await this.getFirstActiveDate(m.id);
+          return [m.name, m.lastName1, m.lastName2, m.memberNumber, m.active ? '✓' : 'X', firstActiveDate, year];
         }));
         this.setExportData(
           allMembersExportData,
-          ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo", "Último Año Pagado"],
+          ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo","Fecha Alta","Último Año Pagado"],
           `Listado Completo de ${memberAttribute.attribute}s.xlsx`
         );
         genericExportButton.style.display = 'block';
+        this.setListTitles('completo');
         break;
 
       case 'button2':
@@ -100,10 +102,11 @@ export class ListsManager {
         }));
         this.setExportData(
           activeMembersExportData,
-          ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo","Fecha Alta", "Último Año Pagado"],
+          ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo","Fecha Alta","Último Año Pagado"],
           `Listado de ${memberAttribute.attribute}s Activos.xlsx`
         );
         genericExportButton.style.display = 'block';
+        this.setListTitles('activo');
         break;
 
       case 'button3':
@@ -140,6 +143,7 @@ export class ListsManager {
           `Histórico de ${memberAttribute.attribute}s Inactivos.xlsx`
         );
         genericExportButton.style.display = 'block';
+        this.setListTitles('inactivo');
         break;
 
       case 'button4':
@@ -209,6 +213,92 @@ export class ListsManager {
         );
         genericExportButton.style.display = 'block';
         break;
+
+      case 'button7':
+        titleElement.textContent = `Antigüedad de los/as ${memberAttribute.attribute}(s) activos/as`;
+        document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+        const antiguedadKey = 0;
+        const activeMembersGrouped = {};
+
+        // Cargamos los miembros activos
+        const activeMembersAntiguedad = await RequestGet.getListMembersActives();
+
+        for (const member of activeMembersAntiguedad) {
+          const firstActiveDate = await this.getFirstActiveDate(member.id);
+          if (!firstActiveDate || firstActiveDate === "-") continue;
+
+          //const [day, month, year] = firstActiveDate.split('/'); //Cuenta los días, meses y años
+          const [ , , year ] = firstActiveDate.split('/'); // Solo necesitamos el año para calcular la antigüedad
+          const antiguedad = this.currentYear - parseInt(year);
+          const key = `${antiguedad} año${antiguedad === 1 ? '' : 's'}`;
+
+          if (!activeMembersGrouped[key]) {
+            activeMembersGrouped[key] = [];
+          }
+
+          activeMembersGrouped[key].push({
+            ...member,
+            antiguedad,
+            firstActiveDate
+          });
+        }
+
+        const tbody = document.getElementById('tbody-member');
+        tbody.innerHTML = '';
+
+        let totalSocios = 0;
+
+        for (const antiguedadKey of Object.keys(activeMembersGrouped).sort((a, b) => {
+          const aNum = parseInt(a);
+          const bNum = parseInt(b);
+          return bNum - aNum;
+        })) {
+          const grupo = activeMembersGrouped[antiguedadKey].sort((a, b) =>
+            a.memberNumber.localeCompare(b.memberNumber)
+          );
+
+          const groupRow = document.createElement('tr');
+          groupRow.innerHTML = `<td colspan="8" style="font-weight:bold; font-size:1.2rem; background:#f0f0f0; cursor:pointer">${antiguedadKey}</td>`;
+          groupRow.addEventListener('click', async () => {
+            const exportData = await Promise.all(grupo.map(async m => [
+              m.name,
+              `${m.lastName1} ${m.lastName2}`,
+              m.memberNumber,
+              m.firstActiveDate
+            ]));
+            ExcelUtils.exportToExcel(
+              exportData,
+              ["Nombre", "Apellidos", "Nº Socio", "Primera Alta"],
+              `Antiguedad_${antiguedadKey}.xlsx`
+            );
+          });
+          tbody.appendChild(groupRow);
+
+          for (let i = 0; i < grupo.length; i++) {
+            const member = grupo[i];
+            const row = document.createElement('tr');
+            row.classList.add('clickable-row');
+            row.setAttribute('data-member-number', member.memberNumber);
+
+            row.innerHTML = `
+              <td>${++totalSocios}</td>
+              <td>${member.name}</td>
+              <td>${member.lastName1} ${member.lastName2}</td>
+              <td>${member.memberNumber}</td>
+              <td>${member.firstActiveDate}</td>
+            `;
+            tbody.appendChild(row);
+          }
+        }
+        
+        document.getElementById('txtTitleList').textContent = `Antigüedad de Activos/as - Total ${totalSocios}`;
+        this.addRowClickListeners();
+
+        genericExportButton.style.display = 'block';
+        this.setListTitles('antiguedad');
+        genericExportButton.style.display = 'none';
+        break;
+
     }
     // Añadir listeners de fila solo una vez después de que todo el contenido se haya renderizado
     if (!this.rowClickListenersAdded) {
@@ -624,12 +714,57 @@ export class ListsManager {
           const firstActive = registrys[0].startData;
           return firstActive ? new Date(firstActive).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : null;
         } else {
-          return null; // No hay registros para este miembro
+          return "-"; // No hay registros para este miembro
         }
       } catch (error) {
         console.error("Error al obtener la primera fecha activa:", error);
       }           
   } 
+
+  setListTitles(tipo) {
+    const titulos = {
+        completo: {
+            apellidos: "APELLIDOS",
+            activo: "ACTIVO",
+            fechaAlta: "FECHA DE ALTA",
+            ultimoPago: "ÚLTIMO AÑO PAGADO"
+        },
+        activo: {
+            apellidos: "APELLIDOS",
+            activo: "ACTIVO",
+            fechaAlta: "FECHA DE ALTA",
+            ultimoPago: "ÚLTIMO AÑO PAGADO"
+        },
+        inactivo: {
+            apellidos: "APELLIDOS",
+            activo: "INACTIVO",
+            fechaAlta: "FECHA DE BAJA",
+            motivo: "MOTIVO BAJA",
+            ultimoPago: "ÚLTIMO AÑO PAGADO"
+        },
+        antiguedad: {
+            apellidos: "APELLIDOS",
+            fechaAlta: "ANTIGÜEDAD"            
+        }
+    };
+    const t = titulos[tipo] || titulos.completo;
+    document.getElementById("sortByName").textContent = t.apellidos;
+    document.getElementById("titleAct").textContent = t.activo;
+    document.getElementById("firstActiveDate").textContent = t.fechaAlta;
+    document.getElementById("reason").textContent = t.motivo;
+    document.getElementById("date").textContent = t.ultimoPago;
+
+    if (tipo === "antiguedad") {
+        document.getElementById("titleAct").style.display = "none";
+        document.getElementById("reason").style.display = "none";
+        document.getElementById("date").style.display = "none";
+    }
+    else {
+        document.getElementById("titleAct").style.display = "";
+        document.getElementById("reason").style.display = "";
+        document.getElementById("date").style.display = "";
+    }
+}
 }
 
 class ExcelUtils {
