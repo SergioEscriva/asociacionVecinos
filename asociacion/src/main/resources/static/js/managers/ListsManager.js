@@ -255,7 +255,7 @@ export class ListsManager {
           return bNum - aNum;
         })) {
           const grupo = activeMembersGrouped[antiguedadKey].sort((a, b) =>
-            a.memberNumber.localeCompare(b.memberNumber)
+            String(a.memberNumber).localeCompare(String(b.memberNumber))
           );
 
           const groupRow = document.createElement('tr');
