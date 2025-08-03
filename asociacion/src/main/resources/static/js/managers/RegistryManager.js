@@ -3,78 +3,81 @@ import { RequestPost } from '../api/RequestPost.js';
 import { RequestGet } from '../api/RequestGet.js';
 
 export class RegistryManager {
-    static async checkActivityTrue(memberId) {
-        const buttonFee = document.getElementById("updateFee")
-        const activeCheckbox = document.getElementById('active')
-        const titleButton = buttonFee.className
 
-        if (titleButton.includes("buttonFee button-green")) {
-            if (confirm("¿Estás seguro de actualizar el estado a ACTIVO?")) {
-                this.activeMemberStart(memberId)
-            }
-            else {
-                activeCheckbox.checked = false
-            }
+    static getInput(id) {
+        return document.getElementById(id);
+    }
+
+    static async checkActivityTrue(memberId) {
+        const buttonFee = this.getInput("updateFee");
+        const activeCheckbox = this.getInput('active');
+        const isFeeOk = buttonFee.className.includes("buttonFee button-green");
+
+        if (!isFeeOk) {
+            alert("No se puede activar con deudas");
+            activeCheckbox.checked = false;
+            return;
+        }
+
+        if (confirm("¿Estás seguro de actualizar el estado a ACTIVO?")) {
+            await this.activeMemberStart(memberId);
         } else {
-            alert("No se puede activar con deudas")
-            activeCheckbox.checked = false
+            activeCheckbox.checked = false;
         }
     }
 
     static async checkActivityFalse(memberId) {
-        const activeCheckbox = document.getElementById('active')
-        let reason = "Personal"
-        if (confirm("¿Estás seguro de actualizar el estado a INACTIVO?")) {
-            let newReason = reason
-            const changeReason = confirm("¿Deseas mantener el motivo (" + reason + ")?\nPresiona 'Aceptar' para mantener, o 'Cancelar' para cambiar.");
+        const activeCheckbox = this.getInput('active');
+        let reason = "Personal";
 
-            if (!changeReason) {
-                newReason = prompt("Introduce el motivo de la baja:", reason);
-            }
-            this.activeMemberEnd(memberId, newReason)
+        if (!confirm("¿Estás seguro de actualizar el estado a INACTIVO?")) {
+            activeCheckbox.checked = true;
+            return;
         }
-        else {
-            activeCheckbox.checked = true
+
+        const keepReason = confirm(`¿Deseas mantener el motivo (${reason})?\nPresiona 'Aceptar' para mantener, o 'Cancelar' para cambiar.`);
+        if (!keepReason) {
+            const newReason = prompt("Introduce el motivo de la baja:", reason);
+            reason = newReason || reason;
         }
+
+        await this.activeMemberEnd(memberId, reason);
     }
 
     static async activeMemberStart(memberId) {
         const currentDate = new Date();
-        const registryExist = await this.activeMemberRegistry(memberId)
+        const registryExist = await this.activeMemberRegistry(memberId);
+
         if (!registryExist) {
             const registry = {
-                memberId: memberId,
+                memberId,
                 startData: currentDate,
                 endData: null,
                 reasonEnd: null
-            }
-            RequestPost.newRegistry(registry)
+            };
+            await RequestPost.newRegistry(registry);
         }
     }
 
     static async activeMemberEnd(memberId, reason) {
-        const registryExist = await this.activeMemberRegistry(memberId)
+        const registryExist = await this.activeMemberRegistry(memberId);
+        if (!registryExist) return;
+
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().slice(0, -5) + "+00:00";
 
-        if (registryExist) {
-            const registry = {
-                memberId: memberId,
-                startData: registryExist.startData,
-                endData: formattedDate,
-                reasonEnd: reason
-            }
+        const registry = {
+            memberId,
+            startData: registryExist.startData,
+            endData: formattedDate,
+            reasonEnd: reason
+        };
 
-            RequestPut.editRegistry(registryExist.id, registry)
-        }
+        await RequestPut.editRegistry(registryExist.id, registry);
     }
 
     static async activeMemberRegistry(memberId) {
-        const registrys = await RequestGet.getRegistryByMemberId(memberId)
-        const exist = registrys.find(item => item.endData === null);
-
-        if (exist) {
-            return exist
-        }
+        const registrys = await RequestGet.getRegistryByMemberId(memberId);
+        return registrys.find(item => item.endData === null) || null;
     }
 }
