@@ -7,51 +7,56 @@ export class FeesByDate {
 
     }
 
+    static getInput(id) {
+        return document.getElementById(id);
+    }
+
+    static setInputValue(id, value) {
+        const el = this.getInput(id);
+        if (el) el.value = value;
+    }
 
     async init() {
 
 
         const fechaActual = new Date();
 
-        const año = fechaActual.getFullYear();
-        const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
-        const dia = String(fechaActual.getDate()).padStart(2, '0');
-        const fechaFormateada = `${año}-${mes}-${dia}`;
+        const fechaFormateada = fechaActual.toISOString().split('T')[0];
 
-        document.getElementById('startDate').value = fechaFormateada;
-        document.getElementById('endDate').value = fechaFormateada;
+        FeesByDate.setInputValue('startDate', fechaFormateada);
+        FeesByDate.setInputValue('endDate', fechaFormateada);
 
         const backImage = await RequestGet.getConfigById(9);
-        document.getElementById('backImage').src = backImage.attribute;
+        FeesByDate.getInput('backImage').src = backImage.attribute;
 
-        const sendDateBtn = document.getElementById("sendDateBtn")
+        const sendDateBtn = FeesByDate.getInput("sendDateBtn")
         if (sendDateBtn) {
             sendDateBtn.addEventListener("click", (event) => {
                 event.preventDefault();
-                const startDate = document.getElementById("startDate").value;
-                const endDate = document.getElementById("endDate").value;
+                const startDate = FeesByDate.getInput("startDate").value;
+                const endDate = FeesByDate.getInput("endDate").value;
 
                 FeesByDate.findByDate(startDate, endDate);
             });
 
         }
 
-
-        document.getElementById('printExcell').addEventListener('click', function () {
-            let table = document.getElementById('tbody-fee-date').parentNode;
-            let workbook = XLSX.utils.table_to_book(table, { sheet: "Pagos" });
-            XLSX.writeFile(workbook, 'pagos del ' + startDate.value + ' al ' + endDate.value + '.xlsx');
-        });
-
-
-
+        const printBtn = FeesByDate.getInput('printExcell');
+        if (printBtn) {
+            printBtn.addEventListener('click', function () {
+                const table = FeesByDate.getInput('tbody-fee-date').parentNode;
+                const startDate = FeesByDate.getInput('startDate').value;
+                const endDate = FeesByDate.getInput('endDate').value;
+                const workbook = XLSX.utils.table_to_book(table, { sheet: "Pagos" });
+                XLSX.writeFile(workbook, `pagos del ${startDate} al ${endDate}.xlsx`);
+            });
+        }
 
 
     }
 
     static async findByDate(startDate, endDate) {
         const memberAttribute = await RequestGet.getConfigById(3);
-        const id = document.body.getAttribute("data-page-selection");
         const listFeeDate = await RequestGet.getFeeByDate(startDate, endDate);
 
         let html = "";
@@ -67,7 +72,7 @@ export class FeesByDate {
             html += `<tr class="clickable-row" data-member-number="${member.memberNumber}">
                         <td>${position}</td>
                         <td>${member.name}</td>
-                        <td>${member.lastName1.replace(/null/gi, '').trim()} ${member.lastName2 || ''}</td>
+                        <td>${member.lastName1?.replace(/null/gi, '').trim()} ${member.lastName2 || ''}</td>
                         <td>${member.memberNumber}</td>
                         <td>${feesDate.year}</td>
                         <td>${cost}</td>
@@ -75,10 +80,9 @@ export class FeesByDate {
             position += 1
         }
 
-        document.getElementById("totalsPay").textContent = ("Total Recaudado, en " + (position - 1) + " pagos: " + costeTotal + "€");
-        let tbody = document.getElementById("tbody-fee-date");
-        tbody.innerHTML = html;
-        this.addRowClickListeners();
+        FeesByDate.setInputValue("totalsPay", `Total Recaudado, en ${position - 1} pagos: ${costeTotal}€`);
+        FeesByDate.getInput("tbody-fee-date").innerHTML = html;
+        FeesByDate.addRowClickListeners();
 
     }
 
