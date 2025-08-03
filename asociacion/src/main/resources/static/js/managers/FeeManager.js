@@ -1,39 +1,33 @@
 import { RequestPost } from '../api/RequestPost.js';
 import { RequestDel } from '../api/RequestDel.js';
 import { RequestGet } from '../api/RequestGet.js';
+import { RegistryManager } from './RegistryManager.js';
 
 export class FeeManager {
-    constructor() {
 
+    static getInput(id) {
+        return document.getElementById(id);
     }
 
+    static setInputValue(id, value) {
+        const el = this.getInput(id);
+        if (el) el.value = value;
+    }
 
     static async checkFee() {
-
-        const button = document.getElementById('updateFee')
+        const button = this.getInput('updateFee');
         const currentYear = new Date().getFullYear();
-        const memberId = document.getElementById('memberId').value
-        const feesMember = await RequestGet.getFeeByMemberId(memberId)
+        const memberId = this.getInput('memberId').value;
+        const feesMember = await RequestGet.getFeeByMemberId(memberId);
 
-        const member = await RequestGet.getMemberById(memberId);
-        //const checkFee = document.getElementById('active'); // quitamos que sea activo o no de forma automática por tener pagado.
+        const exist = Array.isArray(feesMember) && feesMember.some(item => item.year === currentYear);
 
-
-        const exist = feesMember.some(item => item.year === currentYear); // || item.date.startsWith('2023'));
-
-        if (exist) {
-            button.classList = 'buttonFee button-green'
-            button.textContent = "Sin Deudas"
-            //checkFee.checked = member.active === true; 
-
-        } else {
-            button.classList = 'buttonFee button-red'
-            button.textContent = "Con Deudas"
-            //checkFee.checked = member.active === false; 
-        }
+        button.className = exist ? 'buttonFee button-green' : 'buttonFee button-red';
+        button.textContent = exist ? "Sin Deudas" : "Con Deudas";
     }
+
     static async paidFee() {
-        const memberId = document.getElementById('memberId').value;
+        const memberId = this.getInput('memberId').value;
         const feesMember = await RequestGet.getFeeByMemberId(memberId);
 
         const choice = prompt(
@@ -50,67 +44,57 @@ export class FeeManager {
 
         switch (choice.trim()) {
             case "1":
-                this.updatePaidFee(memberId, feesMember);
+                await this.updatePaidFee(memberId, feesMember);
                 break;
             case "2":
-                this.delPaidFee(feesMember);
+                await this.delPaidFee(feesMember);
                 break;
             default:
                 alert("Opción no válida.");
         }
     }
 
-
     static async updatePaidFee(memberId, feesMember) {
-
         const currentYear = new Date().getFullYear();
-        const dateInput = document.createElement('input');
-        dateInput.type = 'date';
-        dateInput.valueAsDate = new Date();
-
-
-        const result = prompt("Selecciona la fecha del pago:", dateInput.valueAsDate.toISOString().split('T')[0]);
+        const defaultDate = new Date().toISOString().split('T')[0];
+        const result = prompt("Selecciona la fecha del pago:", defaultDate);
 
         if (result !== null) {
             const selectedDate = new Date(result);
+            const selectedYear = selectedDate.getFullYear();
 
             if (isNaN(selectedDate)) {
                 alert("Fecha no válida. Se utilizará la fecha actual.");
                 selectedDate.setDate(new Date().getDate());
             }
 
-            const selectedYear = selectedDate.getFullYear();
+            if (Array.isArray(feesMember) && feesMember.some(item => item.year === selectedYear)) {
+                alert(`Ya existe un pago para el año ${selectedYear}`);
+                return;
+            }
+
+            const feeUpdate = {
+                memberId,
+                date: selectedDate,
+                year: selectedYear
+            };
 
             try {
-                const exist = feesMember.some(item => item.year === selectedYear);
-                if (exist) {
-                    alert(`Ya existe un pago para el año ${selectedYear}`);
-                    return;
-                } else {
-                    const feeUpdate = {
-                        memberId: memberId,
-                        date: selectedDate,
-                        year: selectedYear
-                    };
-
-                    await RequestPost.newFee(feeUpdate);
-                    if (selectedYear == currentYear) {
-                        document.getElementById('active').checked = true;
-                    }
-                    FeeManager.checkFee();
+                await RequestPost.newFee(feeUpdate);
+                if (selectedYear === currentYear) {
+                    this.getInput('active').checked = true;
+                    await RegistryManager.activeMemberStart(memberId);
                 }
+                await this.checkFee();
             } catch (error) {
                 console.error("Error al actualizar el pago:", error);
                 alert("Error al actualizar el pago. Por favor, intente de nuevo.");
             }
-
         }
     }
 
     static async delPaidFee(feesMember) {
         const currentYear = new Date().getFullYear();
-
-        // Solicita el año al usuario, con el año actual como valor predeterminado
         const inputYear = prompt("¿Qué año deseas borrar?", currentYear);
 
         if (inputYear === null) {
@@ -125,7 +109,7 @@ export class FeeManager {
             return;
         }
 
-        const matchingItem = feesMember.find(item => item.year === yearToDelete);
+        const matchingItem = Array.isArray(feesMember) ? feesMember.find(item => item.year === yearToDelete) : null;
 
         if (!matchingItem) {
             alert(`No se encontró un pago para el año ${yearToDelete}.`);
@@ -135,7 +119,7 @@ export class FeeManager {
         if (confirm(`¿Estás seguro de BORRAR el pago para el año ${yearToDelete}?`)) {
             try {
                 await RequestDel.delFee(matchingItem.id);
-                this.checkFee();
+                await this.checkFee();
             } catch (error) {
                 console.error("Error al borrar el pago:", error);
                 alert("Error al borrar el pago. Por favor, intente de nuevo.");
@@ -143,9 +127,7 @@ export class FeeManager {
         }
     }
 
-
     static async paidFeeList(memberId) {
-        return await RequestGet.getFeeByMemberId(memberId)
+        return await RequestGet.getFeeByMemberId(memberId);
     }
-
 }
