@@ -81,7 +81,7 @@ export class FeeManager {
 
             try {
                 await RequestPost.newFee(feeUpdate);
-                if (selectedYear === currentYear) {
+                if (selectedYear === currentYear && memberId) {
                     this.getInput('active').checked = true;
                     await RegistryManager.activeMemberStart(memberId);
                 }
@@ -129,5 +129,18 @@ export class FeeManager {
 
     static async paidFeeList(memberId) {
         return await RequestGet.getFeeByMemberId(memberId);
+    }
+
+    static async registerNewMemberAndFee(datosSocio) {
+        // 1. Crear socio y esperar el id
+        const nuevoSocio = await RequestPost.newMember(datosSocio);
+        const memberId = nuevoSocio.id;
+        console.log(memberId, nuevoSocio);
+
+        // 2. Registrar pago
+        await this.updatePaidFee(memberId, []);
+
+        // 3. Activar registro
+        await RegistryManager.activeMemberStart(memberId);
     }
 }
