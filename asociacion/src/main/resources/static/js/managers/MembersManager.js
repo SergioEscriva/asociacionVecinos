@@ -114,29 +114,14 @@ export class MembersManager {
 
   static async limpiaCampos() {
     await this.limpiaCamposActividad();
-    document.getElementById('memberId').value = "";
-    document.getElementById('memberNumber').value = "";
-    document.getElementById("familyMasterNumber").value = "0";
-    document.getElementById('name').value = "";
-    document.getElementById('lastName1').value = "";
-    document.getElementById('lastName2').value = "";
-    document.getElementById('address').value = "";
-    document.getElementById('addressNumber').value = "";
-    document.getElementById('addressDoor').value = "";
-    document.getElementById('addressStaircase').value = "";
-    document.getElementById('location').value = "";
-    document.getElementById('postal').value = "";
-    document.getElementById('phone').value = "";
-    document.getElementById('email').value = "";
-    document.getElementById('dni').value = "";
-    document.getElementById('gender').value = "";
+    const campos = [
+        'memberId', 'memberNumber', 'familyMasterNumber', 'name', 'lastName1', 'lastName2',
+        'address', 'addressNumber', 'addressDoor', 'addressStaircase', 'location', 'postal',
+        'phone', 'email', 'dni', 'gender', 'activeDate', 'notes'
+    ];
+    campos.forEach(id => this.setInputValue(id, ""));
     document.getElementById('active').checked = false;
-    document.getElementById('activeDate').value = "";
-    document.getElementById('notes').value = "";
-    document.getElementById("memberNumber").value = "";
     this.updateCard(1);
-
-
   }
 
   static async newMember() {
@@ -523,4 +508,43 @@ static async getFirstActiveDate(memberId) {
       console.error("Error al obtener la primera fecha activa:", error);
     }           
 } 
+static getInputValue(id) {
+    const el = document.getElementById(id);
+    return el ? el.value : "";
+}
+
+static setInputValue(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+}
+
+static validarCamposObligatorios(campos) {
+    for (const campo of campos) {
+        if (!this.getInputValue(campo)) {
+            alert(`Obligatorio rellenar el campo: ${campo}`);
+            return false;
+        }
+    }
+    return true;
+}
+
+static addListeners() {
+    document.getElementById("findMemberXS").addEventListener("click", () => this.findMember("xs"));
+    document.getElementById("updateMember").addEventListener("click", () => this.updateMember());
+    document.getElementById("newMember").addEventListener("click", () => this.newMember());
+    document.getElementById("updateFee").addEventListener("click", () => this.updateFee());
+    document.getElementById("updateCard").addEventListener("click", () => this.updateCardClick());
+    document.getElementById('clear-button').addEventListener('click', () => {
+        this.setInputValue('input-find', '');
+        document.getElementById('input-find').focus();
+    });
+    document.getElementById('postal').addEventListener('change', async () => {
+        const postalCode = this.getInputValue('postal').trim();
+        if (postalCode.length > 0) await this.buscarPoblacionPorCodigoPostal(postalCode);
+    });
+    document.getElementById('location').addEventListener('change', async () => {
+        const location = this.getInputValue('location').trim();
+        if (location.length > 0) await this.buscarCodigoPostal(location);
+    });
+}
 }
