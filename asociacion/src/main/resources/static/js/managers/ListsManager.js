@@ -1,8 +1,16 @@
 import { RequestGet } from '../api/RequestGet.js';
 import * as XLSX from 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm';
 
-export class ListsManager {
+class ExcelUtils {
+  static exportToExcel(data, headers, filename = '') {
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, filename);
+  }
+}
 
+export class ListsManager {
   constructor() {
     this.actividadesConMiembros = [];
     this.currentYear = new Date().getFullYear();
@@ -13,23 +21,31 @@ export class ListsManager {
     this.rowClickListenersAdded = false;
   }
 
+  static getInput(id) {
+    return document.getElementById(id);
+  }
+
+  static setInputValue(id, value) {
+    const el = this.getInput(id);
+    if (el) el.value = value;
+  }
+
   async init() {
     const memberAttribute = await RequestGet.getConfigById(3);
     const pageSelection = document.body.getAttribute('data-page-selection');
-    const titleElement = document.getElementById('txtTitleList');
+    const titleElement = ListsManager.getInput('txtTitleList');
     const backImage = await RequestGet.getConfigById(9);
 
-    let mainListContainer = document.getElementById('list-container');
+    let mainListContainer = ListsManager.getInput('list-container');
     if (!mainListContainer) {
-      console.error("Error: El elemento con ID 'list-container' no fue encontrado en el DOM. Creando dinámicamente...");
       mainListContainer = document.createElement('div');
       mainListContainer.id = 'list-container';
       document.body.appendChild(mainListContainer);
     }
 
-    document.getElementById('backImage').src = backImage.attribute;
+    ListsManager.getInput('backImage').src = backImage.attribute;
 
-    let exportButtonContainer = document.getElementById('export-button-container');
+    let exportButtonContainer = ListsManager.getInput('export-button-container');
     if (!exportButtonContainer) {
       exportButtonContainer = document.createElement('div');
       exportButtonContainer.id = 'export-button-container';
@@ -37,7 +53,7 @@ export class ListsManager {
     }
 
     // Asegurarse de que el botón de exportar se cree una sola vez
-    let genericExportButton = document.getElementById('generic-export-button');
+    let genericExportButton = ListsManager.getInput('generic-export-button');
     if (!genericExportButton) {
       genericExportButton = document.createElement('button');
       genericExportButton.id = 'generic-export-button';
@@ -56,73 +72,57 @@ export class ListsManager {
     genericExportButton.style.display = 'none';
 
     // Limpiar el contenido previo del cuerpo de la tabla para evitar duplicados
-    const tbodyMember = document.getElementById('tbody-member');
-    if (tbodyMember) {
-      tbodyMember.innerHTML = '';
-    }
-
-    // Limpiar el contenedor de actividades antes de renderizar nuevas
-    const activitiesListContainer = document.getElementById('activities-list-container');
-    if (activitiesListContainer) {
-      activitiesListContainer.innerHTML = '';
-    }
+    ListsManager.getInput('tbody-member').innerHTML = '';
+    const activitiesListContainer = ListsManager.getInput('activities-list-container');
+    if (activitiesListContainer) activitiesListContainer.innerHTML = '';
 
 
     switch (pageSelection) {
       case 'button1':
-        titleElement.textContent = `Listado de ${memberAttribute.attribute}(s) Completo`;
-        document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
-        const allMembers = await RequestGet.getAllMembers();
-        this.renderList(allMembers, true);
-        this.setupMemberSorting(allMembers);
-        const allMembersExportData = await Promise.all(allMembers.map(async m => {
-          const year = await this.getLastPaidYear(m.id);
-          const firstActiveDate = await this.getFirstActiveDate(m.id);
-          return [m.name, m.lastName1, m.lastName2, m.memberNumber, m.active ? '✓' : 'X', firstActiveDate, year];
-        }));
+      case 'button2': {
+        const isAll = pageSelection === 'button1';
+        titleElement.textContent = isAll
+          ? `Listado de ${memberAttribute.attribute}(s) Completo`
+          : `Listado de ${memberAttribute.attribute}(s) Activos/as`;
+        ListsManager.getInput('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+        const members = isAll
+          ? await RequestGet.getAllMembers()
+          : await RequestGet.getListMembersActives();
+        this.renderList(members, isAll);
+        this.setupMemberSorting(members);
+        const exportData = await Promise.all(members.map(async m => [
+          m.name,
+          m.lastName1,
+          m.lastName2,
+          m.memberNumber,
+          m.active ? '✓' : 'X',
+          await this.getFirstActiveDate(m.id),
+          await this.getLastPaidYear(m.id)
+        ]));
         this.setExportData(
-          allMembersExportData,
-          ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo","Fecha Alta","Último Año Pagado"],
-          `Listado Completo de ${memberAttribute.attribute}s.xlsx`
+          exportData,
+          ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo", "Fecha Alta", "Último Año Pagado"],
+          isAll
+            ? `Listado Completo de ${memberAttribute.attribute}s.xlsx`
+            : `Listado de ${memberAttribute.attribute}s Activos.xlsx`
         );
         genericExportButton.style.display = 'block';
-        this.setListTitles('completo');
+        this.setListTitles(isAll ? 'completo' : 'activo');
         break;
-
-      case 'button2':
-        titleElement.textContent = `Listado de ${memberAttribute.attribute}(s) Activos/as`;
-        document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
-        const activeMembers = await RequestGet.getListMembersActives();
-        this.renderList(activeMembers, false);
-        this.setupMemberSorting(activeMembers);
-        const activeMembersExportData = await Promise.all(activeMembers.map(async m => {
-          const year = await this.getLastPaidYear(m.id);
-          const firstActiveDate = await this.getFirstActiveDate(m.id);
-          return [m.name, m.lastName1, m.lastName2, m.memberNumber, m.active ? '✓' : 'X', firstActiveDate, year];
-        }));
-        this.setExportData(
-          activeMembersExportData,
-          ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo","Fecha Alta","Último Año Pagado"],
-          `Listado de ${memberAttribute.attribute}s Activos.xlsx`
-        );
-        genericExportButton.style.display = 'block';
-        this.setListTitles('activo');
-        break;
-
-      case 'button3':
+      }
+      case 'button3': {
         titleElement.textContent = `Histórico de ${memberAttribute.attribute}(s) Inactivos/as`;
-        document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
-        document.getElementById('reason').textContent = 'MOTIVO INACTIVIDAD';
-        document.getElementById('date').textContent = 'FECHA BAJA';
+        ListsManager.getInput('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+        ListsManager.getInput('reason').textContent = 'MOTIVO INACTIVIDAD';
+        ListsManager.getInput('date').textContent = 'FECHA BAJA';
 
         const allInactiveRegistries = await RequestGet.getResgistries();
-        const filteredInactiveRegistries = allInactiveRegistries.filter(registry => {
-          return registry.reasonEnd && registry.reasonEnd.trim() !== '';
-        });
-
+        const filteredInactiveRegistries = allInactiveRegistries.filter(registry =>
+          registry.reasonEnd && registry.reasonEnd.trim() !== ''
+        );
         this.renderInactivesList(filteredInactiveRegistries);
 
-        const inactiveMembersData = await Promise.all(filteredInactiveRegistries.map(async (registry) => {
+        const inactiveMembersData = await Promise.all(filteredInactiveRegistries.map(async registry => {
           const member = await RequestGet.getMemberById(registry.memberId);
           if (!member) return null;
           const lastPaidYear = await this.getLastPaidYear(member.id);
@@ -145,6 +145,7 @@ export class ListsManager {
         genericExportButton.style.display = 'block';
         this.setListTitles('inactivo');
         break;
+      }
 
       case 'button4':
         // Asegúrate de que el contenedor de lista de actividades esté visible y el de la tabla principal oculto
@@ -748,30 +749,21 @@ export class ListsManager {
         }
     };
     const t = titulos[tipo] || titulos.completo;
-    document.getElementById("sortByName").textContent = t.apellidos;
-    document.getElementById("titleAct").textContent = t.activo;
-    document.getElementById("firstActiveDate").textContent = t.fechaAlta;
-    document.getElementById("reason").textContent = t.motivo;
-    document.getElementById("date").textContent = t.ultimoPago;
+    ListsManager.getInput("sortByName").textContent = t.apellidos;
+    ListsManager.getInput("titleAct").textContent = t.activo;
+    ListsManager.getInput("firstActiveDate").textContent = t.fechaAlta;
+    ListsManager.getInput("reason").textContent = t.motivo;
+    ListsManager.getInput("date").textContent = t.ultimoPago;
 
     if (tipo === "antiguedad") {
-        document.getElementById("titleAct").style.display = "none";
-        document.getElementById("reason").style.display = "none";
-        document.getElementById("date").style.display = "none";
+        ListsManager.getInput("titleAct").style.display = "none";
+        ListsManager.getInput("reason").style.display = "none";
+        ListsManager.getInput("date").style.display = "none";
     }
     else {
-        document.getElementById("titleAct").style.display = "";
-        document.getElementById("reason").style.display = "";
-        document.getElementById("date").style.display = "";
+        ListsManager.getInput("titleAct").style.display = "";
+        ListsManager.getInput("reason").style.display = "";
+        ListsManager.getInput("date").style.display = "";
     }
 }
-}
-
-class ExcelUtils {
-  static exportToExcel(data, headers, filename = '') {
-    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    XLSX.writeFile(workbook, filename);
-  }
 }
