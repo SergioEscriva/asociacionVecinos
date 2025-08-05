@@ -69,6 +69,8 @@ export class MembersManager {
     }
 
 
+
+
     document.getElementById("findMemberXS").addEventListener("click", function () { MembersManager.findMember("xs"); });
     document.getElementById("updateMember").addEventListener("click", function () { MembersManager.updateMember(); });
     document.getElementById("newMember").addEventListener("click", function () { MembersManager.newMember(); });
@@ -110,6 +112,8 @@ export class MembersManager {
             await MembersManager.buscarCodigoPostal(location);
         }
     });
+
+    
   }
 
   static async limpiaCampos() {
@@ -172,7 +176,10 @@ export class MembersManager {
       document.getElementById('phone').value = member.phone;
       document.getElementById('email').value = member.email;
       document.getElementById('dni').value = member.dni;
+      MembersManager.setupDniListener();
       document.getElementById('gender').value = member.gender;
+
+      MembersManager.setupDniListener();
 
       const activeCheckbox = document.getElementById('active')
       this.checkActive(activeCheckbox, member)
@@ -243,15 +250,11 @@ export class MembersManager {
     }
 
     if (!dni) {
-      alert("Obligatorio un dni válido")
+      alert("Obligatorio un dni")
     } else {
-      const resultado = MembersManager.validarDNI(dni);
-      if (!resultado) {
-        const letra = MembersManager.letraDNI(dni);
-        alert("Error, DNI no válido, se espera la letra: " + letra);
-      } else {
+      
         MembersManager.updateMemberNameDniOk()
-      }
+      
     }
   }
 
@@ -270,7 +273,8 @@ export class MembersManager {
       const postal = document.getElementById('postal').value
       const phone = document.getElementById('phone').value
       const email = document.getElementById('email').value
-      const dni = document.getElementById('dni').value
+      const dniCompleto = document.getElementById('dni').value;
+      const dniNumeros = dniCompleto.substring(0, 8);
       const gender = document.getElementById('gender').value
       const checkbox = document.getElementById('active')
       const isActive = checkbox.checked
@@ -290,9 +294,6 @@ export class MembersManager {
         printed = 0
       }
 
-      const numeroDni = dni.substring(0, 8);
-      const letraEnMayuscula = dni.charAt(8).toUpperCase();
-      const dniUp = numeroDni + letraEnMayuscula;
 
       const memberUpdate = {
 
@@ -308,7 +309,7 @@ export class MembersManager {
         postal: postal,
         phone: phone,
         email: email,
-        dni: dniUp,
+        dni: dniNumeros,
         gender: await Utility.capitalizarString(gender),
         active: activate,
         cardPrint: printed,
@@ -388,51 +389,30 @@ export class MembersManager {
 
   static async validarDNIYBaseDeDatos(dni) {
 
-    if (!MembersManager.validarDNI(dni)) {
-      const letra = MembersManager.letraDNI(dni)
-      return { valido: false, mensaje: "DNI no válido" };
-    }
-
-    try {
-
-      const dniExiste = await RequestGet.getMemberByDni(dni)
-
-      if (dniExiste) {
-        return { valido: false, mensaje: "El DNI ya existe en la base de datos" };
-      }
-
-      return { valido: true, mensaje: "DNI válido" };
-    } catch (error) {
-      console.error("Error al validar DNI:", error);
-      return { valido: false, mensaje: "Error al validar DNI" };
-    }
+    if (!dniNumeros || dniNumeros.length !== 8 || isNaN(dniNumeros)) {
+    return { valido: false, mensaje: "DNI no válido. Introduce 8 números." };
   }
 
-  static validarDNI(dni) {
-
-    if (!dni || dni.length !== 9) {
-      return false;
+  try {
+    const dniExiste = await RequestGet.getMemberByDni(dniNumeros); // Se busca por los números
+    if (dniExiste) {
+      return { valido: false, mensaje: "El DNI ya existe en la base de datos" };
     }
-
-    const numero = parseInt(dni.substring(0, 8));
-    const letra = dni.charAt(8).toUpperCase();
-    const letraValida = MembersManager.letraDNI(dni)
-
-    if (isNaN(numero) || letraValida !== letra) {
-      return false;
-    }
-
-    return true;
+    return { valido: true, mensaje: "DNI válido" };
+  } catch (error) {
+    console.error("Error al validar DNI:", error);
+    return { valido: false, mensaje: "Error al validar DNI" };
   }
+}
 
-  static letraDNI(dni) {
-    const numero = parseInt(dni.substring(0, 8));
-    const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
-    const letraValida = letras.charAt(numero % 23);
+static letraDNI(dni) {
+  const numero = parseInt(dni.substring(0, 8));
+  const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+  const letraValida = letras.charAt(numero % 23);
 
-    return letraValida;
+  return letraValida;
 
-  }
+}
 
 static async buscarPoblacionPorCodigoPostal(postalCode) {
     try {
@@ -546,5 +526,29 @@ static addListeners() {
         const location = this.getInputValue('location').trim();
         if (location.length > 0) await this.buscarCodigoPostal(location);
     });
+}
+
+
+static setupDniListener() {
+    const dniInput = document.getElementById("dni");
+    const letraDniLabel = document.getElementById("letraDni");
+    if (!dniInput || !letraDniLabel) return;
+
+    // Elimina listeners previos si existen
+    dniInput.removeEventListener('input', MembersManager.dniInputHandler);
+
+    MembersManager.dniInputHandler = () => {
+        const dniValue = dniInput.value.trim();
+        const dniNumbers = dniValue.substring(0, 8);
+        if (dniNumbers.length === 8 && !isNaN(dniNumbers)) {
+            const letra = MembersManager.letraDNI(dniNumbers);
+            letraDniLabel.value = letra;
+        } else {
+            letraDniLabel.value = '';
+        }
+    };
+
+    dniInput.addEventListener('input', MembersManager.dniInputHandler);
+    MembersManager.dniInputHandler();
 }
 }
