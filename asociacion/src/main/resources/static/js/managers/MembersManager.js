@@ -112,6 +112,7 @@ export class MembersManager {
             await MembersManager.buscarCodigoPostal(location);
         }
     });
+    MembersManager.setupDniListener();
 
     
   }
@@ -178,9 +179,7 @@ export class MembersManager {
       document.getElementById('dni').value = member.dni;
       MembersManager.setupDniListener();
       document.getElementById('gender').value = member.gender;
-
-      MembersManager.setupDniListener();
-
+      
       const activeCheckbox = document.getElementById('active')
       this.checkActive(activeCheckbox, member)
 
@@ -252,9 +251,7 @@ export class MembersManager {
     if (!dni) {
       alert("Obligatorio un dni")
     } else {
-      
         MembersManager.updateMemberNameDniOk()
-      
     }
   }
 
@@ -318,9 +315,9 @@ export class MembersManager {
 
       let request;
       if (!memberId) {
-        const resultado = await MembersManager.validarDNIYBaseDeDatos(dni);
+        const resultado = await MembersManager.validarDNIYBaseDeDatos(dniNumeros);
         if (!resultado.valido) {
-          alert("Error 285, " + resultado.mensaje)
+          alert("Error con el Dni " + dni.value + ": " + resultado.mensaje)
           return
         } else {
           request = await RequestPost.newMember(memberUpdate);
@@ -387,7 +384,7 @@ export class MembersManager {
 
 
 
-  static async validarDNIYBaseDeDatos(dni) {
+  static async validarDNIYBaseDeDatos(dniNumeros) {
 
     if (!dniNumeros || dniNumeros.length !== 8 || isNaN(dniNumeros)) {
     return { valido: false, mensaje: "DNI no válido. Introduce 8 números." };
@@ -396,7 +393,7 @@ export class MembersManager {
   try {
     const dniExiste = await RequestGet.getMemberByDni(dniNumeros); // Se busca por los números
     if (dniExiste) {
-      return { valido: false, mensaje: "El DNI ya existe en la base de datos" };
+      return { valido: false, mensaje: " DNI ya existe en la base de datos" };
     }
     return { valido: true, mensaje: "DNI válido" };
   } catch (error) {
