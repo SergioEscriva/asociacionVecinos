@@ -20,7 +20,7 @@ export class FamilyManager {
             inputElement.value = family.familyMasterNumber
         }
     }
-
+ 
 
     static async updateFamily(memberNumber) {
 

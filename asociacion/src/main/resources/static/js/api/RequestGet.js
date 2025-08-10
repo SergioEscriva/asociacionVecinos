@@ -207,4 +207,9 @@ export class RequestGet {
         return await RequestBase._getRequest(url)
     }
 
+    static async fetchDocumentsByMemberNumber(memberNumber) {
+        const url = `/api/documentos/member-number/${memberNumber}`;
+        return await RequestBase._getRequest(url);
+}
+
 }

@@ -3,13 +3,15 @@ package com.asociacion.services;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.asociacion.models.Member;
 import com.asociacion.repositories.MemberRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class MemberServiceImp implements MemberService {

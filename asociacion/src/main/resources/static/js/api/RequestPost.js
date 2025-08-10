@@ -111,6 +111,39 @@ export class RequestPost {
     }
   }
 
+static async signDocument(memberNumber, plantillaFile, firmaBase64) {
+    try {
+        const formData = new FormData();
+        formData.append("memberNumber", memberNumber);
+        formData.append("plantilla", plantillaFile); // archivo
+        formData.append("firmaBase64", firmaBase64);
+
+        const response = await fetch(`/api/documentos/firmar`, {
+            method: 'POST',
+            headers: {
+                'Authorization': sessionStorage.token
+                // ❌ No ponemos Content-Type, fetch lo añade automáticamente para FormData
+            },
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error al firmar el documento:', error);
+        throw error;
+    }
+}
+
+
+
+
+
+
+
   static async _postRequest(url, data) {
     try {
       let config = {

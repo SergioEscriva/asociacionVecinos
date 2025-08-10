@@ -353,6 +353,181 @@ width: 110px;
     
 }
 
+
+/* sign-estilos.css */
+
+.sign-body {
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.sign-container {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 768px;
+}
+
+.sign-title {
+    font-size: 1.875rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #1f2937;
+}
+
+.sign-input-group {
+    margin-bottom: 1.5rem;
+}
+
+.sign-label {
+    display: block;
+    color: #374151;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.sign-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.sign-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+}
+
+.sign-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.sign-button-search {
+    background-color: #2563eb;
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.sign-button-search:hover {
+    background-color: #1d4ed8;
+}
+
+.sign-documents-container {
+    margin-bottom: 1.5rem;
+}
+
+.sign-subtitle {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #1f2937;
+}
+
+.sign-document-list {
+    background-color: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    height: 12rem;
+    overflow-y: auto;
+}
+
+.sign-signature-section {
+    margin-top: 2rem;
+}
+
+.sign-canvas-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.sign-canvas {
+    border: 2px dashed #d1d5db;
+    width: 100%;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.sign-button-group {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.sign-button-clear {
+    background-color: #ef4444;
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.sign-button-clear:hover {
+    background-color: #dc2626;
+}
+
+.sign-button-save {
+    background-color: #16a34a;
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.sign-button-save:hover {
+    background-color: #15803d;
+}
+
+.sign-message-box {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sign-loading-spinner {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sign-spinner {
+    animation: spin 1s linear infinite;
+    border-radius: 9999px;
+    height: 2rem;
+    width: 2rem;
+    border: 4px solid #3b82f6;
+    border-top-color: transparent;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
 /* --- SOLUCIÓN AFINADA PARA EL ICONO DESPLEGABLE EN activity-select --- */
 #activity-select {
     /* Usamos el ID para máxima especificidad */

@@ -18,7 +18,6 @@ export class ConfigManager {
 
   }
 
-
   static async handleBackupRecovery() {
     const backupFileInput = document.getElementById("backupFileInput");
     if (backupFileInput.files.length > 0) {

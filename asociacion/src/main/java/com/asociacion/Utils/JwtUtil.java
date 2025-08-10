@@ -7,8 +7,14 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import org.docx4j.XmlUtils;
+import org.docx4j.wml.Text;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+
 
 public class JwtUtil {
 

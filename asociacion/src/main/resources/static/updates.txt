@@ -1,3 +1,5 @@
+**[05 agosto 2025]**: PETICIÓN: Campo DNI acepta sólo números y la letra se muestra de forma automática.
+**[30 julio 2025]**: NUEVO: Añadido el Listado de Antigüedad, al pulsar en los años de antigüedad se imprimen.
 **[29 julio 2025]**: NUEVO: Añadida fecha primera alta en el listado de todos y activos.
 **[28 julio 2025]**: NUEVO: Se muestra la fecha de la primera alta.
 **[26 julio 2025]**: NUEVO: Ahora al introducir el código postal o la población se autorellena el otro.

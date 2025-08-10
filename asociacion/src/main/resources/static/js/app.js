@@ -6,70 +6,71 @@ document.addEventListener('DOMContentLoaded', () => {
     const pageInitializers = {
         memberIndex: async (memberId = null) => {
             const { initMemberIndex } = await import('/js/main.js');
-            initMemberIndex(memberId);
+            await initMemberIndex(memberId);
             document.body.removeAttribute('data-member-id');
         },
         activityIndex: async () => {
             const { initActivityIndex } = await import('/js/main.js');
-            initActivityIndex();
+            await initActivityIndex();
         },
         memberList: async () => {
             const { initListsIndex } = await import('/js/main.js');
-            initListsIndex();
+            await initListsIndex();
         },
         payList: async () => {
             const { initListsIndex } = await import('/js/main.js');
-            initListsIndex();
+            await initListsIndex();
         },
         activitiesList: async () => {
             const { initListsIndex } = await import('/js/main.js');
-            initListsIndex();
+            await initListsIndex();
         },
         FeesByDate: async () => {
             const { initFeesByDateIndex } = await import('/js/main.js');
-            initFeesByDateIndex();
+            await initFeesByDateIndex();
         },
         configIndex: async () => {
             const { initConfigIndex } = await import('/js/main.js');
-            initConfigIndex();
+            await initConfigIndex();
+        },
+        signIndex: async () => {
+            const { initSignIndex } = await import('/js/main.js');
+            await initSignIndex();
         }
     };
 
-    function internalLoadContent(section, idList, memberId = null) {
-        fetch(`${section}.html`)
-            .then(response => response.text())
-            .then(html => {
-                content.innerHTML = html;
-                document.body.setAttribute('data-page', section);
-                document.body.setAttribute('data-page-selection', idList);
+    async function internalLoadContent(section, idList, memberId = null) {
+        try {
+            const response = await fetch(`${section}.html`);
+            const html = await response.text();
 
-                if (memberId !== null) {
-                    document.body.setAttribute('data-member-number', memberId);
+            content.innerHTML = html;
+            document.body.setAttribute('data-page', section);
+            document.body.setAttribute('data-page-selection', idList);
+
+            if (memberId !== null) {
+                document.body.setAttribute('data-member-number', memberId);
+            } else {
+                document.body.removeAttribute('data-member-number');
+            }
+
+            updateActiveMenuIcons(section);
+
+            if (pageInitializers[section]) {
+                if (section === 'memberIndex') {
+                    await pageInitializers[section](memberId);
                 } else {
-                    document.body.removeAttribute('data-member-number');
+                    await pageInitializers[section]();
                 }
-
-                updateActiveMenuIcons(section);
-
-                if (pageInitializers[section]) {
-
-                    if (section === 'memberIndex') {
-
-                        pageInitializers[section](memberId);
-                    } else {
-                        pageInitializers[section]();
-                    }
-                }
-            })
-            .catch(error => {
-                content.innerHTML = `<p>Error al cargar el contenido: ${section}.html no encontrado.</p>`;
-                console.error('Error al cargar el contenido:', error);
-            });
+            }
+        } catch (error) {
+            content.innerHTML = `<p>Error al cargar el contenido: ${section}.html no encontrado.</p>`;
+            console.error('Error al cargar el contenido:', error);
+        }
     }
 
     window.App = window.App || {};
     window.App.loadContent = internalLoadContent;
-
 
     links.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -85,13 +86,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const buttonList = linkElement.getAttribute('id')
 
             if (section) {
-
                 window.App.loadContent(section, buttonList);
             } else {
                 console.error("Error: 'data-section' no está definido en el enlace.");
             }
         });
     });
+
     function updateActiveMenuIcons(activeSection) {
         const menuItems = document.querySelectorAll('#sidebar .nav-item');
         menuItems.forEach(item => {

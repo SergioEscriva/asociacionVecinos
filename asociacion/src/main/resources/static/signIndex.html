@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firma de Documentos de Socio</title>
+    <link rel="stylesheet" href="css/styles.css">
+    
+</head>
+<body class="sign-body">
+
+    <div class="sign-container">
+        <h1 class="sign-title">Firma de Documentos de Socio</h1>
+
+        <div class="sign-input-group">
+            <label for="socio-id" class="sign-label">ID del Socio</label>
+            <div class="sign-input-wrapper">
+                <input type="number" id="socio-id" placeholder="Introduce el ID del socio" class="sign-input">
+                <button id="search-btn" class="sign-button-search">Buscar Documentos</button>
+            </div>
+    </div>
+
+    <div class="sign-input-group">
+        <label for="word-file-input" class="sign-label">Seleccionar Plantilla Word</label>
+        <input type="file" id="word-file-input" accept="application/word" class="sign-input-file">
+    </div>
+
+        <div id="document-list-container" class="sign-documents-container hidden">
+            <h2 class="sign-subtitle">Documentos Firmados</h2>
+            <div id="document-list" class="sign-document-list"></div>
+            <div id="message-box" class="sign-message-box hidden"></div>
+            <div id="loading-spinner" class="sign-loading-spinner hidden">
+            <div class="sign-spinner"></div>
+        </div>
+
+        <div id="signature-section" class="sign-signature-section">
+            <h2 class="sign-subtitle">Firmar Nuevo Documento</h2>
+            <div class="sign-canvas-wrapper">
+                <canvas id="signature-pad" class="sign-canvas" width="600" height="200"></canvas>
+            </div>
+            <div class="sign-button-group">
+                <button id="clear-btn" class="sign-button-clear">Borrar</button>
+                <button id="save-btn" class="sign-button-save">Firmar y Guardar</button>
+            </div>
+        </div>
+
+
+        </div>
+    </div>
+
+</body>
+</html>
