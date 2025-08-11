@@ -16,6 +16,7 @@ export class SignedManager {
         this.messageBox = null;
         this.loadingSpinner = null;
         this.pdfFileInput = null;
+        
     }
 
     showMessage(text, type) {
@@ -49,7 +50,7 @@ async renderDocumentList(documents) {
         return;
     }
 
-    let memberAttribute = await RequestGet.getConfigById(3);
+    
 
     documents.forEach(doc => {
         const documentItem = document.createElement('div');
@@ -67,7 +68,7 @@ async renderDocumentList(documents) {
 
         documentItem.innerHTML = `
             <div class="flex-1">
-                <p class="font-semibold text-gray-700">Documento de ${memberAttribute.attribute} #${doc.memberNumber}</p>
+                <p class="font-semibold text-gray-700">Documento ${this.memberAttribute.attribute} #${doc.memberNumber}</p>
                 <p class="text-sm text-gray-500">Firmado el: ${new Date(doc.signedDate).toLocaleString()}</p>
             </div>
             <div class="ml-4">
@@ -82,6 +83,8 @@ async renderDocumentList(documents) {
 }
 
     async init() {
+        this.memberAttribute = await RequestGet.getConfigById(3);
+        document.getElementById('socio-id-label').textContent = 'Número ' + this.memberAttribute.attribute;
         const signatureCanvas = document.getElementById('signature-pad');
         this.memberNumberInput = document.getElementById('socio-id');
         this.searchButton = document.getElementById('search-btn');
@@ -123,9 +126,9 @@ async renderDocumentList(documents) {
         this.loadingSpinner.classList.add('hidden');
 
         if (foundDocuments.length > 0) {
-            this.showMessage(`Se encontraron ${foundDocuments.length} documentos para el socio ${memberNumber}.`, 'success');
+            this.showMessage(`Se encontraron ${foundDocuments.length} documentos para ${this.memberAttribute.attribute} ${memberNumber}.`, 'success');
         } else {
-            this.showMessage(`No se encontraron documentos para el socio ${memberNumber}.`, 'info');
+            this.showMessage(`No se encontraron documentos para ${this.memberAttribute.attribute} ${memberNumber}.`, 'info');
         }
     } catch (error) {
         console.error(error);

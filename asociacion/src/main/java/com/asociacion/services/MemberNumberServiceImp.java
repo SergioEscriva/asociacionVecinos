@@ -33,7 +33,7 @@ public class MemberNumberServiceImp implements MemberNumberService {
         if (optionalConfig.isPresent()) {
             try {
                 numberStart = Long.parseLong(optionalConfig.get().getAttribute());
-                System.out.println("EEEEEEEEEEl NNNNNNumero " + numberStart);
+       
             } catch (NumberFormatException e) {
                 throw new IllegalStateException("El atributo de configuración no es un número válido.", e);
             }

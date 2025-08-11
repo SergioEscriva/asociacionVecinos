@@ -1,5 +1,3 @@
-// Archivo: src/main/java/com/asociacion/models/SignedDocument.java
-
 package com.asociacion.models;
 
 import jakarta.persistence.Column;
@@ -12,10 +10,6 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import java.util.Date;
 
-/**
- * Entidad que representa un documento firmado en la base de datos.
- * El contenido del PDF se almacena como un BLOB.
- */
 @Data
 @Entity
 @Table(name = "signed_documents")

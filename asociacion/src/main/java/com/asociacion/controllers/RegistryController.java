@@ -26,13 +26,6 @@ public class RegistryController {
     @Autowired
     private RegistryServiceImp registryService;
     
-
-
-    //@GetMapping()
-    //public List<Registry> getRegistries(){
-    //    return registryService.getRegistriesOrderByMemberId();
-    //}
-
     @GetMapping()
     public List<Registry> getAllRegistries(){
         return registryService.getRegistriesOrderByMemberId();

@@ -1,6 +1,7 @@
 package com.asociacion.services;
 
 
+import com.asociacion.models.Config;
 import com.asociacion.models.Member;
 import com.asociacion.models.SignedDocument;
 import com.asociacion.repositories.SignedDocumentRepository;
@@ -16,10 +17,14 @@ import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -48,6 +53,9 @@ public class DocumentServiceImp implements DocumentService {
     @Autowired
     private SignedDocumentRepository signedDocumentRepository;
 
+    @Autowired
+    private ConfigServiceImp configServiceImp;
+
     public SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64) throws Exception {
     byte[] pdfBytes = generarPdfDesdePlantilla(member, plantillaDocxStream);
     byte[] pdfFirmado = agregarFirmaAPdf(member, firmaBase64, Base64.getEncoder().encodeToString(pdfBytes));
@@ -58,20 +66,27 @@ public class DocumentServiceImp implements DocumentService {
     // Método para generar un PDF desde una plantilla DOCX
     @Override
     public byte[] generarPdfDesdePlantilla(Member member, InputStream plantillaDocxStream) throws Exception {
+        Optional<Config> attributoVecinal =  configServiceImp.findById(1L);
+        Optional<Config> attributoSocio = configServiceImp.findById(3L);
+        String fechaActual = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es", "ES")).format(new Date());
+
+        
         // 1. Cargar la plantilla DOCX
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(plantillaDocxStream);
 
         // 2. Definir los placeholders a reemplazar con datos del miembro
         Map<String, String> placeholders = new HashMap<>();
-        placeholders.put("${name}", member.getName());
-        placeholders.put("${lastName1}", member.getLastName1());
-        placeholders.put("${lastName2}", member.getLastName2());
+        placeholders.put("${nombre}", member.getName());
+        placeholders.put("${apellido1}", member.getLastName1());
+        placeholders.put("${apellido2}", member.getLastName2());
         placeholders.put("${dni}", member.getDni());
-        placeholders.put("${address}", member.getAddress());
-        placeholders.put("${addressNumber}", member.getAddressNumber());
-        placeholders.put("${memberNumber}", member.getMemberNumber().toString());
+        placeholders.put("${numeroSocio}", member.getMemberNumber().toString());
+        placeholders.put("${direccion}", member.getAddress() + ", " + member.getAddressNumber() + ", " + member.getAddressDoor());
+        placeholders.put("${asociacion}", attributoVecinal.get().getAttribute());
+        placeholders.put("${atributoSocio}", attributoSocio.get().getAttribute());
+        placeholders.put("${fecha}", fechaActual);
 
-        // 3. Reemplazar el texto en el documento
+        // 3. Reemplazar el texto en el documento   
         this.reemplazarTexto(wordMLPackage, placeholders);
 
         // 4. Guardar el documento modificado en un flujo de bytes
@@ -79,22 +94,18 @@ public class DocumentServiceImp implements DocumentService {
         wordMLPackage.save(docxOut);
 
         // 5. Convertir el DOCX a PDF usando la librería iText
-        // Nota: El método 'convertirDocxApdf' no está en el código proporcionado
-        // por el usuario, se asume que existe en la clase.
         byte[] pdfBytes = convertirDocxApdf(docxOut.toByteArray());
 
         return pdfBytes;
     }
 
-    // Método principal para reemplazar texto en un WordprocessingMLPackage
+    // Método principal para reemplazar texto 
     public void reemplazarTexto(WordprocessingMLPackage wordMLPackage, Map<String, String> replacements) {
         // Obtiene el contenido principal del documento
         List<Object> content = wordMLPackage.getMainDocumentPart().getContent();
-        // Inicia el proceso de reemplazo de forma recursiva
         reemplazarTextoRecursivo(content, replacements);
     }
 
-    // Método auxiliar recursivo para procesar el contenido de forma profunda
     private void reemplazarTextoRecursivo(List<Object> content, Map<String, String> replacements) {
         if (content == null) {
             return;
@@ -147,13 +158,11 @@ public class DocumentServiceImp implements DocumentService {
                             }
                         }
                         
-                        fullText = newFullText; // Preparamos la cadena para el siguiente reemplazo
+                        fullText = newFullText; 
                         replaced = true;
                     }
                 }
                 
-                // Si no se reemplazó nada, el párrafo se mantiene intacto.
-                // Si se reemplazó, la lógica de arriba ya lo manejó.
 
             } else if (resolvedObject instanceof Tbl) {
                 // Si es una tabla, procesa su contenido de forma recursiva
@@ -205,7 +214,7 @@ public class DocumentServiceImp implements DocumentService {
 
         }
     }
-    // Guardar el PDF en base de datos.
+    
     public SignedDocument guardarDocumentoFirmado(Long memberNumber, byte[] contenidoPdf) {
         SignedDocument documento = new SignedDocument();
         String originalFileName = "Documento_Firmado_Socio";
@@ -252,6 +261,7 @@ public class DocumentServiceImp implements DocumentService {
         String[] partes = pdfBase64.split(",");
         String pdfData;
 
+
         if (partes.length > 1) {
             pdfData = partes[1];
         } else {
@@ -264,14 +274,10 @@ public class DocumentServiceImp implements DocumentService {
             PDDocument document = PDDocument.load(templateInputStream)) {
 
             PDAcroForm acroForm = document.getDocumentCatalog().getAcroForm();
-            if (acroForm != null) {
-                acroForm.getField("name").setValue(member.getName());
-                acroForm.getField("lastName1").setValue(member.getLastName1());
-                acroForm.getField("lastName2").setValue(member.getLastName2());
-                acroForm.getField("dni").setValue(member.getDni());
-                acroForm.getField("address").setValue(member.getAddress());
-                acroForm.getField("addressNumber").setValue(member.getAddressNumber());
 
+            if (acroForm != null) {
+
+                
                 acroForm.flatten(); 
             }
 
@@ -282,7 +288,7 @@ public class DocumentServiceImp implements DocumentService {
 
             PDPage page = document.getPage(0);
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true)) {
-                contentStream.drawImage(pdImage, 50, 100, 150, 75); // Posición de la firma
+                contentStream.drawImage(pdImage, 100, 75, 250, 175); // Posición de la firma
             }
 
             // Añadir hash de integridad

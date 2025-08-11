@@ -20,13 +20,10 @@ import com.asociacion.services.ActivityService;
 @RequestMapping("/api/activity")
 public class ActivityController {
 
-    private final ActivityService activityService;
 
     @Autowired
-    public ActivityController(ActivityService activityService) {
-        this.activityService = activityService;
-    }
-
+    private ActivityService activityService;
+    
     @GetMapping
     public List<Activity> getAllActivities() {
         return activityService.getActivities();

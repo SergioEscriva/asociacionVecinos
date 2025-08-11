@@ -1,5 +1,3 @@
-// Archivo: src/main/java/com/asociacion/services/DocumentService.java
-
 package com.asociacion.services;
 
 import com.asociacion.models.Member;
@@ -24,8 +22,6 @@ public interface DocumentService {
     SignedDocument buscarDocumentoPorId(Long id);
 
     public byte[] generarPdfDesdePlantilla(Member member, InputStream plantillaDocxStream) throws Exception;
-
-    //void reemplazarTexto(WordprocessingMLPackage wordMLPackage, Map<String, String> replacements);
 
     String generarHash(byte[] input) throws IOException;
 

@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.asociacion.models.ActivityMember;
 import com.asociacion.services.ActivityMemberProjection;
-import com.asociacion.services.ActivityMemberServiceImp;
+import com.asociacion.services.ActivityMemberService;
 
 @RestController
 @RequestMapping("/api/activitymember")
 public class ActivityMemberController {
 
     @Autowired
-    private ActivityMemberServiceImp activityMemberService;
+    private ActivityMemberService activityMemberService;
 
     @GetMapping("/activityId/{id}")
     public List<ActivityMemberProjection> getActivityIdMembers(@PathVariable Long id) {
