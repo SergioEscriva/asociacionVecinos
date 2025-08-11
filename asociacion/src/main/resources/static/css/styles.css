@@ -442,8 +442,8 @@ width: 110px;
     padding: 1rem;
     border-radius: 0.5rem;
     border: 1px solid #e5e7eb;
-    height: 20rem;
-    overflow-y: auto;
+    /*height: 20rem;*/
+    /*overflow-y: auto;*/
 }
 
 .sign-documents-container {
@@ -543,6 +543,12 @@ width: 110px;
         transform: rotate(360deg);
     }
 }
+
+svg {
+    width: 32px !important;
+    height: 32px !important;
+}
+
 
 
 /* --- SOLUCIÓN AFINADA PARA EL ICONO DESPLEGABLE EN activity-select --- */

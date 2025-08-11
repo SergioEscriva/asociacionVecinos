@@ -68,11 +68,10 @@ async renderDocumentList(documents) {
 
         documentItem.innerHTML = `
             <div class="flex-1">
-                <p class="font-semibold text-gray-700">Documento ${this.memberAttribute.attribute} #${doc.memberNumber}</p>
-                <p class="text-sm text-gray-500">Firmado el: ${new Date(doc.signedDate).toLocaleString()}</p>
+                <i class="fas fa-file-pdf" aria-hidden="true"> ${doc.nombreArchivo}</i>
             </div>
-            <div class="ml-4">
-                <a href="${url}" target="_blank" class="text-blue-500 hover:underline">Ver PDF</a>
+            <div class="flex-1">
+                <p class="text-sm text-gray-500">Firmado el: ${new Date(doc.signedDate).toLocaleString()} - <a href="${url}" target="_blank" class="text-blue-500 hover:underline">Ver PDF</a></p>
             </div>
         `;
 
