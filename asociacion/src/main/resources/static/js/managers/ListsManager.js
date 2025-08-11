@@ -465,7 +465,12 @@ export class ListsManager {
   async getHtmlRowMembers(member, lineNumber) {
     const activeStatus = member.active ? '✓' : 'X';
     const lastPaidYear = await this.getLastPaidYear(member.id);
-    const firstActiveDate = await this.getFirstActiveDate(member.id);
+    const firstActiveDate = '-';
+    try{
+      firstActiveDate = await this.getFirstActiveDate(member.id);
+    }catch (error) {
+      console.error("Error fetching first active date:", error);
+    }
     return `<tr class="clickable-row" data-member-number="${member.memberNumber}">
                 <td>${lineNumber}</td>
                 <td>${member.name}</td>
