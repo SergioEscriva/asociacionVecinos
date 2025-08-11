@@ -14,7 +14,6 @@ export class SignedManager {
         this.documentListContainer = null;
         this.documentListElement = null;
         this.messageBox = null;
-        this.loadingSpinner = null;
         this.pdfFileInput = null;
         
     }
@@ -92,7 +91,6 @@ export class SignedManager {
         this.documentListContainer = document.getElementById('document-list-container');
         this.documentListElement = document.getElementById('document-list');
         this.messageBox = document.getElementById('message-box');
-        this.loadingSpinner = document.getElementById('loading-spinner');
         this.pdfFileInput = document.getElementById('word-file-input');
 
         this.signaturePad = new SignaturePad(signatureCanvas, {
@@ -135,13 +133,14 @@ export class SignedManager {
         let member = await RequestGet.getMemberByMemberNumber(memberNumber);
             document.getElementById('socio-name').textContent = member.name + " " + member.lastName1 + " " + member.lastName2;
         this.renderDocumentList(foundDocuments);
-
-        if (foundDocuments.length > 0) {
-            this.showMessage(`Se encontraron ${foundDocuments.length} documentos para ${this.memberAttribute.attribute} ${memberNumber}.`, 'success');
-            const columnasDiv = document.getElementsByClassName('sign-columns');
+                    const columnasDiv = document.getElementsByClassName('sign-columns');
             for (let i = 0; i < columnasDiv.length; i++) {
                 columnasDiv[i].classList.remove('deshabilitado');
             }
+
+        if (foundDocuments.length > 0) {
+            this.showMessage(`Se encontraron ${foundDocuments.length} documentos para ${this.memberAttribute.attribute} ${memberNumber}.`, 'success');
+
         } else {
             this.showMessage(`No se encontraron documentos para ${this.memberAttribute.attribute} ${memberNumber}.`, 'info');
         }
@@ -176,8 +175,6 @@ export class SignedManager {
     }
 
     const signatureData = this.signaturePad.toDataURL('image/png');
-    this.loadingSpinner.classList.remove('hidden');
-
 
     let response;
     try {
@@ -192,18 +189,24 @@ export class SignedManager {
         
         
         const result = await RequestPost.signDocument(memberNumber, wordFile, signatureData);
+        this.saveButton.disabled = true;
+
         if (result.error) {
             throw new Error(result.errorMessage || "Error al guardar documento");
+            
         }
            
         this.signaturePad.clear();
         this.showMessage('¡Documento firmado y guardado con éxito!', 'success');
+        this.handleSearch();
+        this.saveButton.disabled = false;
 
     } catch (error) {
         console.error("Error al guardar el documento: ", error);
         this.showMessage('Error al guardar la firma: ' + error.message, 'error');
+        this.saveButton.disabled = false;
     } finally {
-        this.loadingSpinner.classList.add('hidden');
+
     }
     }
 
