@@ -424,6 +424,10 @@ width: 110px;
     border-radius: 0.5rem;
     transition: background-color 0.3s;
     width: 175px;
+    height: 50px;
+    flex-shrink: 0;
+    align-self: flex-start; 
+
 }
 
 .sign-button-search:hover {
@@ -534,6 +538,57 @@ svg {
   /* Opcional: para dar un feedback visual de que está inactivo */
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.sign-horizontal-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+
+.sign-input-with-label {
+    display: flex;
+    flex-direction: column;
+}
+
+.sign-input-button-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px; /* espacio entre input+botón y el label de abajo */
+}
+
+.sign-input-button-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.sign-input-container {
+    display: flex;
+    flex-direction: column;
+    width: 315px;
+    position: relative;
+}
+
+
+.sign-below-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.sign-input-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.sign-input-column {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0; /* evita que el input se reduzca si el contenedor se achica */
 }
 
 
