@@ -6,16 +6,13 @@ import java.io.InputStream;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 public interface DocumentService {
 
 
     byte[] agregarFirmaAPdf(Member member, String pdfBase64, String firmaBase64) throws IOException;
 
-    SignedDocument guardarDocumentoFirmado(Long memberNumber, byte[] contenidoPdf);
+    public SignedDocument guardarDocumentoFirmado(Long memberNumber, byte[] contenidoPdf, String originalFileName);
 
     List<SignedDocument> buscarDocumentosPorMemberNumber(Long memberNumber);
 
@@ -29,5 +26,5 @@ public interface DocumentService {
 
     byte[] convertirDocxApdf(byte[] docxBytes) throws IOException;
 
-    SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64) throws Exception;
+    SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64, String originalFileName) throws Exception;
 }

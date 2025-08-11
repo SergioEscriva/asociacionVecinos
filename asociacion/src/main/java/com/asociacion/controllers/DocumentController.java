@@ -48,7 +48,8 @@ public class DocumentController {
                 .orElseThrow(() -> new RuntimeException("Miembro no encontrado con número: " + memberNumber));
 
         try (InputStream plantillaStream = plantilla.getInputStream()) {
-            return documentService.crearYGuardarDocumentoFirmado(member, plantillaStream, firmaBase64);
+            return documentService.crearYGuardarDocumentoFirmado(member, plantillaStream, firmaBase64, plantilla.getOriginalFilename());
+
         } catch (Exception e) {
             throw new RuntimeException("Error al crear y guardar documento firmado", e);
         }

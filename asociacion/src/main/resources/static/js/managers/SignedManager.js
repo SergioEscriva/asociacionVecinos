@@ -110,7 +110,7 @@ async renderDocumentList(documents) {
     async handleSearch() {
     const memberNumber = this.memberNumberInput.value.trim();
     if (!memberNumber) {
-        this.showMessage('Por favor, introduce un ID de socio válido.', 'error');
+        this.showMessage('Por favor, introduce un número válido.', 'error');
         this.documentListContainer.classList.add('hidden');
         return;
     }
@@ -183,8 +183,6 @@ async renderDocumentList(documents) {
            
         this.signaturePad.clear();
         this.showMessage('¡Documento firmado y guardado con éxito!', 'success');
-        // Opcional: actualizar lista documentos
-        // this.handleSearch();
 
     } catch (error) {
         console.error("Error al guardar el documento: ", error);

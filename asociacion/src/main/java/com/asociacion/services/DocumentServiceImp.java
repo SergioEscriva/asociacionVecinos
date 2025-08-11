@@ -56,11 +56,13 @@ public class DocumentServiceImp implements DocumentService {
     @Autowired
     private ConfigServiceImp configServiceImp;
 
-    public SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64) throws Exception {
-    byte[] pdfBytes = generarPdfDesdePlantilla(member, plantillaDocxStream);
-    byte[] pdfFirmado = agregarFirmaAPdf(member, firmaBase64, Base64.getEncoder().encodeToString(pdfBytes));
-    return guardarDocumentoFirmado(member.getMemberNumber(), pdfFirmado);
-}
+    public SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64, String originalFileName) throws Exception {
+        byte[] pdfBytes = generarPdfDesdePlantilla(member, plantillaDocxStream);
+        byte[] pdfFirmado = agregarFirmaAPdf(member, firmaBase64, Base64.getEncoder().encodeToString(pdfBytes));
+        return guardarDocumentoFirmado(member.getMemberNumber(), pdfFirmado, originalFileName);
+    }
+
+
 
 
     // Método para generar un PDF desde una plantilla DOCX
@@ -215,11 +217,12 @@ public class DocumentServiceImp implements DocumentService {
         }
     }
     
-    public SignedDocument guardarDocumentoFirmado(Long memberNumber, byte[] contenidoPdf) {
+    public SignedDocument guardarDocumentoFirmado(Long memberNumber, byte[] contenidoPdf, String originalFileName)
+ {
         SignedDocument documento = new SignedDocument();
-        String originalFileName = "Documento_Firmado_Socio";
+        //String originalFileName = "Documento_Firmado_Socio";
         documento.setMemberNumber(memberNumber);
-        String nombreArchivoFirmado = obtenerNombreBase(originalFileName) + "_" + memberNumber + ".pdf";
+        String nombreArchivoFirmado = memberNumber + "_" + obtenerNombreBase(originalFileName) + ".pdf";
         documento.setNombreArchivo(nombreArchivoFirmado);
         documento.setSignedDate(new Date());
         documento.setContenidoPdf(contenidoPdf);
