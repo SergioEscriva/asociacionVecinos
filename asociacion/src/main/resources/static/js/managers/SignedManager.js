@@ -155,7 +155,13 @@ export class SignedManager {
         this.showMessage('Firma borrada. Puedes volver a intentarlo.', 'info');
     }
 
+    
+
     async handleSave() {
+        
+    this.saveButton = document.getElementById('save-btn');
+    this.saveButton.disabled = true;
+
     const memberNumber = this.memberNumberInput.value.trim();
     const wordFile = this.pdfFileInput.files[0];  // Es Word, no PDF
 
@@ -166,11 +172,13 @@ export class SignedManager {
 
     if (this.signaturePad.isEmpty()) {
         this.showMessage('Por favor, primero firma en el recuadro.', 'error');
+        this.saveButton.disabled = false;
         return;
     }
 
     if (!wordFile) {
         this.showMessage('Por favor, selecciona un archivo Word.', 'error');
+        this.saveButton.disabled = false;
         return;
     }
 
@@ -189,7 +197,6 @@ export class SignedManager {
         
         
         const result = await RequestPost.signDocument(memberNumber, wordFile, signatureData);
-        this.saveButton.disabled = true;
 
         if (result.error) {
             throw new Error(result.errorMessage || "Error al guardar documento");

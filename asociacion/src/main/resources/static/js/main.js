@@ -7,37 +7,72 @@ import { SignedManager } from './managers/SignedManager.js';
 import { RequestGet } from './api/RequestGet.js';
 import { FeesByDate } from './managers/FeesByDateManager.js';
 
-// Función genérica para inicializar cualquier manager
-async function initializeManager(ManagerClass, ...args) {
-    const manager = new ManagerClass();
-    await manager.init(...args);
-    return manager;
+function initMemberIndex() {
+    const membersManager = new MembersManager();
+
+    membersManager.init()
+        .then(() => {
+            Listeners.init();
+        })
+        .catch(error => {
+            console.error('Error initializing MembersManager:', error);
+        });
 }
 
-// Funciones de inicialización que usan la función genérica
-async function initMemberIndex(memberId = null) {
-    const membersManager = await initializeManager(MembersManager, memberId);
-    Listeners.init();
+function initActivityIndex() {
+    //const activityManager = new ActivityManager();
+    ActivityManager.init()
+        .then(() => {
+
+        })
+        .catch(error => {
+            console.error('Error initializing MembersManager:', error);
+        });
 }
 
-async function initActivityIndex() {
-    await initializeManager(ActivityManager);
+
+function initListsIndex() {
+    const listsManager = new ListsManager();
+    listsManager.init()
+        .then(() => {
+
+        })
+        .catch(error => {
+            console.error('Error initializing:', error);
+        });
 }
 
-async function initListsIndex() {
-    await initializeManager(ListsManager);
+function initFeesByDateIndex() {
+    const feesByDate = new FeesByDate();
+    feesByDate.init()
+        .then(() => {
+
+        })
+        .catch(error => {
+            console.error('Error initializing FeesByDate', error);
+        });
 }
 
-async function initFeesByDateIndex() {
-    await initializeManager(FeesByDate);
+function initConfigIndex() {
+    const configManager = new ConfigManager();
+    configManager.init()
+        .then(() => {
+
+        })
+        .catch(error => {
+            console.error('Error initializing:', error);
+        });
 }
 
-async function initConfigIndex() {
-    await initializeManager(ConfigManager);
-}
+function initSignIndex() {
+    const signedManager = new SignedManager();
+    signedManager.init()
+        .then(() => {
 
-async function initSignIndex() {
-    await initializeManager(SignedManager);
+        })
+        .catch(error => {
+            console.error('Error initializing:', error);
+        });
 }
 
 function mostrarFecha() {
@@ -65,7 +100,7 @@ function mostrarFecha() {
         document.getElementById('button1').textContent = "Listado de " + memberAttribute.attribute + "(s)";
         document.getElementById('button2').textContent = "Listado de activo/a(s)";
         document.getElementById('button3').textContent = "Histórico de Inactividad";
-        document.getElementById('button7').textContent = "Firma Documentos";
+        
     } catch (error) {
         console.error('Error en la configuración inicial del módulo:', error);
     }

@@ -71,46 +71,47 @@ export class ListsManager {
     // Ocultar el botón por defecto, se mostrará según el caso
     genericExportButton.style.display = 'none';
 
-    // Limpiar el contenido previo del cuerpo de la tabla para evitar duplicados
-    ListsManager.getInput('tbody-member').innerHTML = '';
-    const activitiesListContainer = ListsManager.getInput('activities-list-container');
-    if (activitiesListContainer) activitiesListContainer.innerHTML = '';
-
-
     switch (pageSelection) {
       case 'button1':
       case 'button2': {
-        const isAll = pageSelection === 'button1';
-        titleElement.textContent = isAll
-          ? `Listado de ${memberAttribute.attribute}(s) Completo`
-          : `Listado de ${memberAttribute.attribute}(s) Activos/as`;
-        ListsManager.getInput('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
-        const members = isAll
-          ? await RequestGet.getAllMembers()
-          : await RequestGet.getListMembersActives();
-        this.renderList(members, isAll);
-        this.setupMemberSorting(members);
-        const exportData = await Promise.all(members.map(async m => [
-          m.name,
-          m.lastName1,
-          m.lastName2,
-          m.memberNumber,
-          m.active ? '✓' : 'X',
-          await this.getFirstActiveDate(m.id),
-          await this.getLastPaidYear(m.id)
-        ]));
-        this.setExportData(
-          exportData,
-          ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo", "Fecha Alta", "Último Año Pagado"],
-          isAll
-            ? `Listado Completo de ${memberAttribute.attribute}s.xlsx`
-            : `Listado de ${memberAttribute.attribute}s Activos.xlsx`
-        );
-        genericExportButton.style.display = 'block';
-        this.setListTitles(isAll ? 'completo' : 'activo');
+         ListsManager.showLoading();
+        try {
+          const isAll = pageSelection === 'button1';
+          titleElement.textContent = isAll
+            ? `Listado de ${memberAttribute.attribute}(s) Completo`
+            : `Listado de ${memberAttribute.attribute}(s) Activos/as`;
+          ListsManager.getInput('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+          const members = isAll
+            ? await RequestGet.getAllMembers()
+            : await RequestGet.getListMembersActives();
+          this.renderList(members, isAll);
+          this.setupMemberSorting(members);
+          const exportData = await Promise.all(members.map(async m => [
+            m.name,
+            m.lastName1,
+            m.lastName2,
+            m.memberNumber,
+            m.active ? '✓' : 'X',
+            await this.getFirstActiveDate(m.id),
+            await this.getLastPaidYear(m.id)
+          ]));
+          this.setExportData(
+            exportData,
+            ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo", "Fecha Alta", "Último Año Pagado"],
+            isAll
+              ? `Listado Completo de ${memberAttribute.attribute}s.xlsx`
+              : `Listado de ${memberAttribute.attribute}s Activos.xlsx`
+          );
+          genericExportButton.style.display = 'block';
+          this.setListTitles(isAll ? 'completo' : 'activo');
+        } finally {
+          ListsManager.hideLoading();
+        }
         break;
       }
       case 'button3': {
+        ListsManager.showLoading();
+        try {
         titleElement.textContent = `Histórico de ${memberAttribute.attribute}(s) Inactivos/as`;
         ListsManager.getInput('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
         ListsManager.getInput('reason').textContent = 'MOTIVO INACTIVIDAD';
@@ -144,10 +145,15 @@ export class ListsManager {
         );
         genericExportButton.style.display = 'block';
         this.setListTitles('inactivo');
+        } finally {
+          ListsManager.hideLoading();
+        }
         break;
       }
 
       case 'button4':
+        ListsManager.showLoading();
+        try {
         // Asegúrate de que el contenedor de lista de actividades esté visible y el de la tabla principal oculto
         const mainTableContainer = document.getElementById('main-table-container'); // Asumo que tienes un contenedor para la tabla principal
         if (mainTableContainer) mainTableContainer.style.display = 'none';
@@ -160,9 +166,14 @@ export class ListsManager {
         this.renderActivityListWithMembers(this.actividadesConMiembros);
         // Ocultar el botón de exportar genérico para esta vista
         genericExportButton.style.display = 'none';
+        } finally {
+          ListsManager.hideLoading();
+        }
         break;
 
       case 'button5':
+        ListsManager.showLoading();
+        try {
         titleElement.textContent = 'Listado Años Pagados';
         document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
         document.getElementById('year').textContent = 'AÑO PAGADO';
@@ -184,9 +195,14 @@ export class ListsManager {
           `Listado de Años Pagos de ${memberAttribute.attribute}s.xlsx`
         );
         genericExportButton.style.display = 'block';
+                } finally {
+          ListsManager.hideLoading();
+        }
         break;
 
       case 'button6':
+        ListsManager.showLoading();
+        try {
         titleElement.textContent = 'Listado de Impagos';
         document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
         document.getElementById('year').textContent = 'ÚLTIMO AÑO PAGADO';
@@ -213,9 +229,14 @@ export class ListsManager {
           `Listado de Impagos de ${memberAttribute.attribute}s.xlsx`
         );
         genericExportButton.style.display = 'block';
+        } finally {
+          ListsManager.hideLoading();
+        }
         break;
 
       case 'button7':
+        ListsManager.showLoading();
+        try {
         titleElement.textContent = `Antigüedad de los/as ${memberAttribute.attribute}(s) activos/as`;
         document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
         const antiguedadKey = 0;
@@ -298,6 +319,9 @@ export class ListsManager {
         genericExportButton.style.display = 'block';
         this.setListTitles('antiguedad');
         genericExportButton.style.display = 'none';
+        } finally {
+          ListsManager.hideLoading();
+        }
         break;
 
     }
@@ -721,6 +745,16 @@ export class ListsManager {
         console.error("Error al obtener la primera fecha activa:", error);
       }           
   } 
+
+  static showLoading() {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) overlay.style.display = 'flex';
+}
+
+static hideLoading() {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) overlay.style.display = 'none';
+}
 
   setListTitles(tipo) {
     const titulos = {
