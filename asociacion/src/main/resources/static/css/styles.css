@@ -395,6 +395,7 @@ width: 110px;
     color: #374151;
     font-weight: 600;
     margin-bottom: 0.5rem;
+    
 }
 
 .sign-input-wrapper {
@@ -404,7 +405,6 @@ width: 110px;
 }
 
 .sign-input {
-    flex: 1;
     padding: 0.75rem;
     border: 1px solid #d1d5db;
     border-radius: 0.5rem;
@@ -423,6 +423,7 @@ width: 110px;
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
     transition: background-color 0.3s;
+    width: 175px;
 }
 
 .sign-button-search:hover {
@@ -522,31 +523,17 @@ width: 110px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.sign-loading-spinner {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.sign-spinner {
-    animation: spin 1s linear infinite;
-    border-radius: 9999px;
-    height: 2rem;
-    width: 2rem;
-    border: 4px solid #3b82f6;
-    border-top-color: transparent;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
 
 svg {
     width: 32px !important;
     height: 32px !important;
+}
+
+.deshabilitado {
+  pointer-events: none;
+  /* Opcional: para dar un feedback visual de que está inactivo */
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 

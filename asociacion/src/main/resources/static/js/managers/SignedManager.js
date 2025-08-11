@@ -40,15 +40,15 @@ export class SignedManager {
         }, 5000);
     }
 
-async renderDocumentList(documents) {
-    if (!this.documentListElement || !this.documentListContainer) return;
+    async renderDocumentList(documents) {
+        if (!this.documentListElement || !this.documentListContainer) return;
 
-    this.documentListElement.innerHTML = '';
-    if (documents.length === 0) {
-        this.documentListElement.innerHTML = '<p class="text-gray-500 italic">No se encontraron documentos firmados.</p>';
-        this.documentListContainer.classList.remove('hidden');
-        return;
-    }
+        this.documentListElement.innerHTML = '';
+        if (documents.length === 0) {
+            this.documentListElement.innerHTML = '<p class="text-gray-500 italic">No se encontraron documentos firmados.</p>';
+            this.documentListContainer.classList.remove('hidden');
+            return;
+        }
 
     
 
@@ -79,7 +79,7 @@ async renderDocumentList(documents) {
     });
 
     this.documentListContainer.classList.remove('hidden');
-}
+    }
 
     async init() {
         this.memberAttribute = await RequestGet.getConfigById(3);
@@ -105,36 +105,51 @@ async renderDocumentList(documents) {
         
         this.resizeCanvas();
         window.addEventListener('resize', () => this.resizeCanvas());
+
+
+        const memberNumber = document.body.getAttribute("data-member-number");
+        if (memberNumber) {
+            this.memberNumberInput = document.getElementById("socio-id");
+            this.memberNumberInput.value = memberNumber;
+            await this.handleSearch();
+        }
+
     }
 
     async handleSearch() {
+    
     const memberNumber = this.memberNumberInput.value.trim();
+    
+    
     if (!memberNumber) {
         this.showMessage('Por favor, introduce un número válido.', 'error');
         this.documentListContainer.classList.add('hidden');
         return;
     }
 
-    this.loadingSpinner.classList.remove('hidden');
     this.documentListElement.innerHTML = '';
     this.documentListContainer.classList.add('hidden');
 
     try {
         const foundDocuments = await RequestGet.fetchDocumentsByMemberNumber(memberNumber);
+        let member = await RequestGet.getMemberByMemberNumber(memberNumber);
+            document.getElementById('socio-name').textContent = member.name + " " + member.lastName1 + " " + member.lastName2;
         this.renderDocumentList(foundDocuments);
-        this.loadingSpinner.classList.add('hidden');
 
         if (foundDocuments.length > 0) {
             this.showMessage(`Se encontraron ${foundDocuments.length} documentos para ${this.memberAttribute.attribute} ${memberNumber}.`, 'success');
+            const columnasDiv = document.getElementsByClassName('sign-columns');
+            for (let i = 0; i < columnasDiv.length; i++) {
+                columnasDiv[i].classList.remove('deshabilitado');
+            }
         } else {
             this.showMessage(`No se encontraron documentos para ${this.memberAttribute.attribute} ${memberNumber}.`, 'info');
         }
     } catch (error) {
         console.error(error);
-        this.loadingSpinner.classList.add('hidden');
         this.showMessage('Error al buscar documentos en el servidor.', 'error');
     }
-}
+    }
 
     handleClear() {
         this.signaturePad.clear();
@@ -190,7 +205,7 @@ async renderDocumentList(documents) {
     } finally {
         this.loadingSpinner.classList.add('hidden');
     }
-}
+    }
 
     
     resizeCanvas() {

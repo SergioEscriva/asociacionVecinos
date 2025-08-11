@@ -6,10 +6,12 @@ import { RequestPost } from '../api/RequestPost.js';
 import { RequestPut } from '../api/RequestPut.js';
 import { Utility } from '../utils/Utility.js';
 import { RequestFile } from '../api/RequestFile.js';
+import { SignedManager } from './SignedManager.js';
 
 export class MembersManager {
   constructor() {
     this.scheduleInactiveRedirect();
+    this.signedManager = new SignedManager();
 
   }
 
@@ -196,6 +198,19 @@ export class MembersManager {
       const buttonFee = document.getElementById("updateFee")
       buttonFee.title = await MembersManager.updateFeeTitle(member.id);
       buttonFee.disabled = false;
+
+
+      const buttonFiles = document.getElementById("buttonFiles");
+      buttonFiles.title = "Pulsa para ver documentos firmados";
+      buttonFiles.disabled = false;
+      buttonFiles.addEventListener("click", () => {
+        const memberNumber = document.getElementById("memberNumber").value;
+        const buttonId = "buttonFiles"; // o el ID que estés usando
+        window.App.loadContent("signIndex", buttonId, memberNumber);
+      });
+
+
+
 
       await ActivityMemberManager.inyectOption()
       await ActivityMemberManager.getActivitiesByMemberId(member.id)
