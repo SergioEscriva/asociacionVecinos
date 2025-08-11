@@ -358,12 +358,13 @@ width: 110px;
 
 .sign-body {
     background-color: #f3f4f6;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 1rem;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', sans-serif
+
 }
 
 .sign-container {
@@ -372,7 +373,9 @@ width: 110px;
     border-radius: 1rem;
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 768px;
+    height: 100%;
+    max-width: none;
+    box-sizing: border-box;
 }
 
 .sign-title {
@@ -426,9 +429,6 @@ width: 110px;
     background-color: #1d4ed8;
 }
 
-.sign-documents-container {
-    margin-bottom: 1.5rem;
-}
 
 .sign-subtitle {
     font-size: 1.25rem;
@@ -442,12 +442,29 @@ width: 110px;
     padding: 1rem;
     border-radius: 0.5rem;
     border: 1px solid #e5e7eb;
-    height: 12rem;
+    height: 20rem;
     overflow-y: auto;
 }
 
+.sign-documents-container {
+    flex: 1;
+    background-color: #f9fafb;
+    padding: 1rem;
+}
+
 .sign-signature-section {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 1rem;
+    border-right: 1px solid #e5e7eb;
+}
+
+.sign-columns {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
     margin-top: 2rem;
+    width: 100%;
 }
 
 .sign-canvas-wrapper {
