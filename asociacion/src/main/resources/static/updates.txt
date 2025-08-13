@@ -1,3 +1,4 @@
+**[13 agosto 2025]**: NUEVO: Añadido desplegable en búsqueda de documentos con nombres ya guardados.
 **[12 agosto 2025]**: NUEVO: Lista de Miembros con/sin un Documento concreto.
 **[11 agosto 2025]**: NUEVO: Firma de documentación.
 **[05 agosto 2025]**: PETICIÓN: Campo DNI acepta sólo números y la letra se muestra de forma automática.
