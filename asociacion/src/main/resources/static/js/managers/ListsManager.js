@@ -105,7 +105,7 @@ export class ListsManager {
           genericExportButton.style.display = 'block';
           this.setListTitles(isAll ? 'completo' : 'activo');
         } finally {
-          ListsManager.hideLoading();
+          
         }
         break;
       }
@@ -146,7 +146,6 @@ export class ListsManager {
         genericExportButton.style.display = 'block';
         this.setListTitles('inactivo');
         } finally {
-          ListsManager.hideLoading();
         }
         break;
       }
@@ -167,7 +166,6 @@ export class ListsManager {
         // Ocultar el botón de exportar genérico para esta vista
         genericExportButton.style.display = 'none';
         } finally {
-          ListsManager.hideLoading();
         }
         break;
 
@@ -196,7 +194,6 @@ export class ListsManager {
         );
         genericExportButton.style.display = 'block';
                 } finally {
-          ListsManager.hideLoading();
         }
         break;
 
@@ -230,7 +227,6 @@ export class ListsManager {
         );
         genericExportButton.style.display = 'block';
         } finally {
-          ListsManager.hideLoading();
         }
         break;
 
@@ -311,6 +307,8 @@ export class ListsManager {
             `;
             tbody.appendChild(row);
           }
+          ListsManager.hideLoading();
+          
         }
         
         document.getElementById('txtTitleList').textContent = `Antigüedad de Activos/as - Total ${totalSocios}`;
@@ -320,7 +318,7 @@ export class ListsManager {
         this.setListTitles('antiguedad');
         genericExportButton.style.display = 'none';
         } finally {
-          ListsManager.hideLoading();
+          
         }
         break;
 
@@ -459,7 +457,8 @@ export class ListsManager {
       document.getElementById('txtTitleList').textContent = "Listado de Activos/as - Total " + (lineNumber - 1);
     }
     document.getElementById('tbody-member').innerHTML = html;
-    this.addRowClickListeners(); //
+    this.addRowClickListeners();
+    ListsManager.hideLoading();
   }
 
   async getHtmlRowMembers(member, lineNumber) {
@@ -492,7 +491,8 @@ export class ListsManager {
     }
     document.getElementById('txtTitleList').textContent = "Histórico de Inactividad - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
-    this.addRowClickListeners(); //
+    this.addRowClickListeners();
+    ListsManager.hideLoading();
   }
 
   async getHtmlInactivesRowMembers(registry, lineNumber) {
@@ -527,7 +527,8 @@ export class ListsManager {
 
     document.getElementById('txtTitleList').textContent = "Lista de Años Pagados - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
-    this.addRowClickListeners(); //
+    this.addRowClickListeners();
+    ListsManager.hideLoading();
   }
 
   async getHtmlPayRowMembers(member, lineNumber) {
@@ -555,7 +556,8 @@ export class ListsManager {
     }
     document.getElementById('txtTitleList').textContent = "Lista de Impagados - Total " + (lineNumber - 1);
     document.getElementById('tbody-member').innerHTML = html;
-    this.addRowClickListeners(); //
+    this.addRowClickListeners();
+    ListsManager.hideLoading();
   }
 
   async getHtmlUnpayRowMembers(member, lineNumber) {
@@ -661,6 +663,7 @@ export class ListsManager {
         this.addRowClickListeners();
       });
       actividadesListaElement.appendChild(listItem);
+      ListsManager.hideLoading();
     });
   }
 
@@ -754,12 +757,12 @@ export class ListsManager {
   static showLoading() {
     const overlay = document.getElementById('loading-overlay');
     if (overlay) overlay.style.display = 'flex';
-}
+  }
 
-static hideLoading() {
-    const overlay = document.getElementById('loading-overlay');
-    if (overlay) overlay.style.display = 'none';
-}
+  static hideLoading() {
+      const overlay = document.getElementById('loading-overlay');
+      if (overlay) overlay.style.display = 'none';
+  }
 
   setListTitles(tipo) {
     const titulos = {
