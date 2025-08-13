@@ -1,6 +1,7 @@
 package com.asociacion.controllers;
 
 import com.asociacion.models.SignedDocument;
+import com.asociacion.dto.MemberDTO;
 import com.asociacion.models.Member;
 import com.asociacion.services.DocumentService; 
 import com.asociacion.services.MemberService;
@@ -67,4 +68,18 @@ public class DocumentController {
 
             return new ResponseEntity<>(documento.getContenidoPdf(), headers, HttpStatus.OK);
         }
-}
+
+        @GetMapping("/activos")
+        public List<MemberDTO> getActiveMembersByDocument(
+            @RequestParam String nombreArchivo,
+            @RequestParam boolean incluidos
+        ) {
+            return documentService.getFilteredMembers(nombreArchivo, incluidos);
+        }
+
+
+
+
+    }
+
+

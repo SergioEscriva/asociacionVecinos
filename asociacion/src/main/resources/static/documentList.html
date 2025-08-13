@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <title>Listado Actividades</title>
+
+</head>
+
+<body id="page-top">
+
+  <div class="document-list-page">
+    <h2>Listado de miembros por documento</h2>
+
+    <div class="filter-bar">
+      <input id="document-name-input" list="document-name-datalist" placeholder="Buscar documento...">
+      <datalist id="document-name-datalist"></datalist>
+
+
+      <label class="switch">
+        <input type="checkbox" id="toggle-included" checked>
+        <span class="slider"></span>
+      </label>
+
+      <span id="toggle-label">Incluidos</span>
+
+      <button id="search-documents-btn" class="button-excel">Buscar</button>
+      <button id="export-excel-btn" class="button-excel">Exportar a Excel</button>
+    </div>
+
+    <div id="document-list-container">
+      <table id="document-list-table"  class="table table-hover">
+        <thead>
+          <tr>
+            <th>Número</th>
+            <th>Nombre</th>
+            <th>Apellido 1</th>
+            <th>Apellido 2</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-member"></tbody>
+      </table>
+    </div>
+
+  </div>
+  
+  
+  <footer>
+      <div>
+          <div class="copyright text-center my-auto">
+              <span>Copyright &copy; SergioS 2024-2025</span>
+          </div>
+      </div>
+  </footer>
+<div id="loading-overlay" style="
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+">
+  <div style="text-align:center">
+    <div style="
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin: auto;
+    "></div>
+    <p style="margin-top: 15px; font-size: 1.2em;">Cargando lista...</p>
+  </div>
+</div>
+
+<style>
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+</body>
+
+</html>

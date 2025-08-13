@@ -1,3 +1,4 @@
+**[12 agosto 2025]**: NUEVO: Lista de Miembros con/sin un Documento concreto.
 **[11 agosto 2025]**: NUEVO: Firma de documentación.
 **[05 agosto 2025]**: PETICIÓN: Campo DNI acepta sólo números y la letra se muestra de forma automática.
 **[30 julio 2025]**: NUEVO: Añadido el Listado de Antigüedad, al pulsar en los años de antigüedad se imprimen.

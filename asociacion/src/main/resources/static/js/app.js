@@ -36,6 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
         signIndex: async () => {
             const { initSignIndex } = await import('/js/main.js');
             await initSignIndex();
+        },
+        documentList: async () => {
+            const { initDocumentList } = await import('/js/main.js');
+            await initDocumentList();
         }
     };
 

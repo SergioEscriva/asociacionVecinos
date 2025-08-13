@@ -1,9 +1,11 @@
 package com.asociacion.services;
 
 
+import com.asociacion.dto.MemberDTO;
 import com.asociacion.models.Config;
 import com.asociacion.models.Member;
 import com.asociacion.models.SignedDocument;
+import com.asociacion.repositories.MemberRepository;
 import com.asociacion.repositories.SignedDocumentRepository;
 
 import org.docx4j.XmlUtils;
@@ -55,6 +57,9 @@ public class DocumentServiceImp implements DocumentService {
 
     @Autowired
     private ConfigServiceImp configServiceImp;
+
+     @Autowired
+    private MemberRepository memberRepository;
 
     public SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64, String originalFileName) throws Exception {
         byte[] pdfBytes = generarPdfDesdePlantilla(member, plantillaDocxStream);
@@ -323,6 +328,36 @@ public class DocumentServiceImp implements DocumentService {
         public SignedDocument buscarDocumentoPorId(Long id) {
             return signedDocumentRepository.findById(id).orElse(null);
         }
+
+
+    public List<MemberDTO> getFilteredMembers(String nombreArchivo, boolean incluidos) {
+        String normalizedNombre = nombreArchivo.trim().toLowerCase();
+
+        List<Member> miembrosActivos = memberRepository.findActives();
+        List<MemberDTO> resultado = new ArrayList<>();
+
+        for (Member miembro : miembrosActivos) {
+            List<SignedDocument> documentos = signedDocumentRepository.findByMemberNumber(miembro.getMemberNumber());
+
+            boolean tieneDocumento = documentos.stream().anyMatch(doc -> {
+                String nombre = doc.getNombreArchivo();
+                // Eliminar prefijo y extensión
+                String[] partes = nombre.split("_", 2);
+                if (partes.length == 2) {
+                    String nombreLimpio = partes[1].replace(".pdf", "").toLowerCase();
+                    return nombreLimpio.equals(normalizedNombre);
+                }
+                return false;
+            });
+
+            if ((incluidos && tieneDocumento) || (!incluidos && !tieneDocumento)) {
+                resultado.add(new MemberDTO(miembro));
+            }
+        }
+
+        return resultado;
+    }
+
 
     
 }

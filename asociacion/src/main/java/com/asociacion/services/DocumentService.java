@@ -1,5 +1,6 @@
 package com.asociacion.services;
 
+import com.asociacion.dto.MemberDTO;
 import com.asociacion.models.Member;
 import com.asociacion.models.SignedDocument;
 import java.io.InputStream;
@@ -27,4 +28,6 @@ public interface DocumentService {
     byte[] convertirDocxApdf(byte[] docxBytes) throws IOException;
 
     SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64, String originalFileName) throws Exception;
+
+    List<MemberDTO> getFilteredMembers(String nombreArchivo, boolean incluidos);
 }

@@ -6,6 +6,7 @@ import { ListsManager } from './managers/ListsManager.js';
 import { SignedManager } from './managers/SignedManager.js';
 import { RequestGet } from './api/RequestGet.js';
 import { FeesByDate } from './managers/FeesByDateManager.js';
+import { DocumentListManager } from './managers/DocumentListManager.js';
 
 function initMemberIndex() {
     const membersManager = new MembersManager();
@@ -75,6 +76,17 @@ function initSignIndex() {
         });
 }
 
+function initDocumentList() {
+    const documentListManager = new DocumentListManager();
+    documentListManager.init()
+        .then(() => {
+
+        })
+        .catch(error => {
+            console.error('Error initializing:', error);
+        });
+}
+
 function mostrarFecha() {
     const fechaActual = new Date();
     const opciones = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
@@ -106,4 +118,4 @@ function mostrarFecha() {
     }
 })();
 
-export { initActivityIndex, initListsIndex, initMemberIndex, initConfigIndex, initFeesByDateIndex, initSignIndex};
+export { initActivityIndex, initListsIndex, initMemberIndex, initConfigIndex, initFeesByDateIndex, initSignIndex, initDocumentList };
