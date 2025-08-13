@@ -80,18 +80,23 @@ this.updateToggleLabel();
     }
   }
 
-  renderTable(miembros) {
+  renderTable(grupo) {
+     let totalSocios = 0;
     this.tableBody.innerHTML = '';
-    for (const miembro of miembros) {
-      const row = document.createElement('tr');
+    for (let i = 0; i < grupo.length; i++) {
+            const miembro = grupo[i];
+            const row = document.createElement('tr');
+            row.classList.add('clickable-row');
+            row.setAttribute('data-member-number', miembro.memberNumber);
+      
       row.innerHTML = `
+        <td>${++totalSocios}</td>
         <td>${miembro.memberNumber}</td>
-        <td>${miembro.name}</td>
-        <td>${miembro.lastName1}</td>
-        <td>${miembro.lastName2}</td>
+        <td>${miembro.name} ${miembro.lastName1} ${miembro.lastName2}</td>
       `;
       this.tableBody.appendChild(row);
     }
+    this.addRowClickListeners();
   }
 
   exportToExcel() {
@@ -120,4 +125,35 @@ this.updateToggleLabel();
         const overlay = document.getElementById('loading-overlay');
         if (overlay) overlay.style.display = 'none';
     }
+  addRowClickListeners() {
+    // Eliminar listeners previos para evitar duplicados si esta función se llama múltiples veces
+    const rows = document.querySelectorAll('.clickable-row');
+    rows.forEach(row => {
+      // Clona el nodo para eliminar todos los listeners existentes
+      const newRow = row.cloneNode(true);
+      row.parentNode.replaceChild(newRow, row);
+    });
+
+    // Seleccionar de nuevo todos los elementos con la clase .clickable-row (ahora sin listeners)
+    const newRows = document.querySelectorAll('.clickable-row');
+    newRows.forEach(row => {
+      row.addEventListener('click', function () {
+        const memberNumberFromRow = this.getAttribute('data-member-number');
+
+        if (memberNumberFromRow) {
+          sessionStorage.setItem('selectedMemberId', memberNumberFromRow);
+        } else {
+          sessionStorage.removeItem('selectedMemberId');
+          console.warn("ListsManager: No se encontró memberNumber en la fila, limpiando sessionStorage para 'selectedMemberId'.");
+        }
+
+        if (typeof window.App !== 'undefined' && window.App.loadContent) {
+          window.App.loadContent('memberIndex', 2, null);
+        } else {
+          console.error('ListsManager: Error: window.App.loadContent no está definido o accesible.');
+        }
+      });
+    });
+  }
+    
 }
