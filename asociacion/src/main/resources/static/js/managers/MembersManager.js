@@ -128,7 +128,7 @@ export class MembersManager {
     ];
     campos.forEach(id => this.setInputValue(id, ""));
     document.getElementById('active').checked = false;
-    this.updateCard(1);
+    this.updateCard(0);
   }
 
   static async newMember() {
@@ -155,7 +155,7 @@ export class MembersManager {
     } else {
       document.getElementById('memberId').value = member.id;
       document.getElementById('memberNumber').value = memberNumber;
-      FamilyManager.getFamilyByMemberNumber(memberNumber);
+      //FamilyManager.getFamilyByMemberNumber(memberNumber);
       document.getElementById('name').value = member.name;
       document.getElementById('lastName1').value = member.lastName1;
       document.getElementById('lastName2').value = member.lastName2;
@@ -219,28 +219,32 @@ export class MembersManager {
     }
   }
 
-  static async checkActive(element, member) {
-    const registrys = await RequestGet.getRegistryByMemberId(member.id);
-    const inActive = registrys.some(item => item.endData === null);
+static async checkActive(element, member) {
+  const registrys = await RequestGet.getRegistryByMemberId(member.id);
+  const inActive = registrys.some(item => item.endData === null);
 
-    const feesMember = await RequestGet.getFeeByMemberId(member.id);
-    const actualYear = new Date().getFullYear();
-    const configYearsForInactive = await RequestGet.getConfigById(4);
+  const feesMember = await RequestGet.getFeeByMemberId(member.id);
+  const actualYear = new Date().getFullYear();
+  const configYearsForInactive = await RequestGet.getConfigById(4);
 
-    const yearsForInactive = actualYear - configYearsForInactive.attribute;
+  const yearsForInactive = actualYear - configYearsForInactive.attribute;
 
-    const hasPaidRecently = feesMember.some(item => parseInt(item.year) >= yearsForInactive);
+  const hasPaidRecently = feesMember.some(item => parseInt(item.year) >= yearsForInactive);
+  const hasPaidCurrentYear = feesMember.some(item => parseInt(item.year) === actualYear);
 
-    const hasPaidCurrentYear = feesMember.some(item => parseInt(item.year) === actualYear);
+  element.checked = false;
 
-
-    element.checked = false;
-    if ((inActive && hasPaidRecently) || (inActive && hasPaidCurrentYear)) {
-      element.checked = true;
-    }
-
-    element.dataset.memberbyId = member.id;
+  // Si está activo en registrys y ha pagado recientemente o este año, o no tiene pagos pero estamos inicializando
+  if (
+    inActive &&
+    (hasPaidRecently || hasPaidCurrentYear || feesMember.length === 0)
+  ) {
+    element.checked = true;
   }
+
+  element.dataset.memberbyId = member.id;
+}
+
 
 
   static async findMember(screen) {
@@ -298,12 +302,11 @@ export class MembersManager {
         activate = 1
       }
 
-      /// Se cambia 0 para impreso y 1 para no impreso para poder importar base de datos de acces
-      var printed = 1
+      var printed = 0
       const buttonCard = document.getElementById('updateCard')
       const buttonContent = buttonCard.textContent
       if (buttonContent == "Impreso") {
-        printed = 0
+        printed = 1
       }
 
 
@@ -371,7 +374,7 @@ export class MembersManager {
   static async updateCard(cardPrint) {
 
     const buttonCard = document.getElementById('updateCard')
-    if (cardPrint) {
+    if (!cardPrint) {
       buttonCard.classList = 'buttonCard button-red'
       buttonCard.textContent = "No Impreso"
     } else {
