@@ -19,21 +19,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 300); // Espera 300ms después de que el usuario deje de escribir
     });
 
-    function fetchMembers(searchTerm) {
-        fetch(`/api/members/search?term=${encodeURIComponent(searchTerm)}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    updateFields(data[0]); // Actualiza con el primer resultado
+function fetchMembers(searchTerm) {
+    fetch(`/api/members/search?term=${encodeURIComponent(searchTerm)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+                const options = {
+                    keys: ['memberNumber', 'familyMasterNumber'], // campos a comparar
+                    threshold: 0.4 // ajusta la sensibilidad
+                };
+                const fuse = new Fuse(data, options);
+                const result = fuse.search(searchTerm);
+
+                if (result.length > 0) {
+                    updateFields(result[0].item); // el más parecido
                 } else {
                     clearFields();
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
+            } else {
                 clearFields();
-            });
-    }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            clearFields();
+        });
+}
+
 
     function updateFields(member) {
         memberIdField.value = member.id || '';

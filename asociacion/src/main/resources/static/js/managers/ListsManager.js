@@ -175,7 +175,7 @@ export class ListsManager {
         titleElement.textContent = 'Listado Años Pagados';
         document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
         document.getElementById('year').textContent = 'AÑO PAGADO';
-        const allMembersPay = await RequestGet.getAllMembers();
+        const allMembersPay = await RequestGet.getListMembersActives() //await RequestGet.getAllMembers();
         this.renderPayList(allMembersPay);
         this.setupPaySorting(allMembersPay);
         const paidMembersData = await Promise.all(allMembersPay.map(async (member) => {
@@ -203,7 +203,7 @@ export class ListsManager {
         titleElement.textContent = 'Listado de Impagos';
         document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
         document.getElementById('year').textContent = 'ÚLTIMO AÑO PAGADO';
-        const unpayMembers = await RequestGet.getAllMembers();
+        const unpayMembers = await RequestGet.getListMembersActives(); // await RequestGet.getAllMembers();
         this.renderUnpayList(unpayMembers);
         this.setupUnpaySorting(unpayMembers);
         const unpayMembersFiltered = [];
