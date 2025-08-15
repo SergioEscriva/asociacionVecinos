@@ -362,14 +362,21 @@ static async checkActive(element, member) {
     await FeeManager.paidFee()
   }
 
-  static async updateFeeTitle(memberId) {
-    const listFees = await FeeManager.paidFeeList(memberId)
-    let text = "Pagados años: ";
-    for (let x in listFees) {
-      text += " - " + listFees[x].year;
-    }
-    return text
+
+static async updateFeeTitle(memberId) {
+  const listFees = await FeeManager.paidFeeList(memberId);
+
+  // Ordenar los años de mayor a menor
+  listFees.sort((a, b) => b.year - a.year);
+
+  let text = "Pagados años:";
+  for (let fee of listFees) {
+    text += " - " + fee.year;
   }
+
+  return text;
+}
+
 
   static async updateCard(cardPrint) {
 

@@ -14,17 +14,30 @@ export class FeeManager {
         if (el) el.value = value;
     }
 
-    static async checkFee() {
-        const button = this.getInput('updateFee');
-        const currentYear = new Date().getFullYear();
-        const memberId = this.getInput('memberId').value;
-        const feesMember = await RequestGet.getFeeByMemberId(memberId);
+static async checkFee() {
+  const button = this.getInput('updateFee');
+  const currentYear = new Date().getFullYear();
+  const memberId = this.getInput('memberId').value;
+  const feesMember = await RequestGet.getFeeByMemberId(memberId);
 
-        const exist = Array.isArray(feesMember) && feesMember.some(item => item.year === currentYear);
+  // Extraer los años pagados y ordenarlos
+  const paidYears = feesMember.map(fee => fee.year).sort((a, b) => a - b);
 
-        button.className = exist ? 'buttonFee button-green' : 'buttonFee button-red';
-        button.textContent = exist ? "Sin Deudas" : "Con Deudas";
+  // Verificar si hay algún año faltante entre el primero pagado y el actual
+  const firstYear = paidYears[0];
+  let hasDebt = false;
+
+  for (let year = firstYear; year <= currentYear; year++) {
+    if (!paidYears.includes(year)) {
+      hasDebt = true;
+      break;
     }
+  }
+
+  button.className = hasDebt ? 'buttonFee button-red' : 'buttonFee button-green';
+  button.textContent = hasDebt ? "Con Deudas" : "Sin Deudas";
+}
+
 
     static async paidFee() {
         const memberId = this.getInput('memberId').value;
