@@ -510,6 +510,7 @@ static async getFirstActiveDate(memberId) {
       console.error("Error al obtener la primera fecha activa:", error);
     }           
 } 
+
 static getInputValue(id) {
     const el = document.getElementById(id);
     return el ? el.value : "";
