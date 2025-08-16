@@ -36,6 +36,7 @@ export class FeesByDate {
                 const startDate = FeesByDate.getInput("startDate").value;
                 const endDate = FeesByDate.getInput("endDate").value;
 
+                FeesByDate.showLoading();
                 FeesByDate.findByDate(startDate, endDate);
             });
 
@@ -83,6 +84,7 @@ export class FeesByDate {
         FeesByDate.setInputValue("totalsPay", `Total Recaudado, en ${position - 1} pagos: ${costeTotal}€`);
         FeesByDate.getInput("tbody-fee-date").innerHTML = html;
         FeesByDate.addRowClickListeners();
+        FeesByDate.hideLoading();
 
     }
 
@@ -135,6 +137,16 @@ export class FeesByDate {
             });
         });
     }
+
+      static showLoading() {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) overlay.style.display = 'flex';
+  }
+
+  static hideLoading() {
+      const overlay = document.getElementById('loading-overlay');
+      if (overlay) overlay.style.display = 'none';
+  }
 
 }
 
