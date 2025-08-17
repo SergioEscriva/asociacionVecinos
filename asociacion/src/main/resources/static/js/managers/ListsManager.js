@@ -17,7 +17,6 @@ export class ListsManager {
     this.currentListData = [];
     this.currentListHeaders = [];
     this.currentListFilename = '';
-    // Bandera para asegurar que los listeners de fila se añaden una sola vez
     this.rowClickListenersAdded = false;
   }
 
@@ -52,7 +51,6 @@ export class ListsManager {
       mainListContainer.appendChild(exportButtonContainer);
     }
 
-    // Asegurarse de que el botón de exportar se cree una sola vez
     let genericExportButton = ListsManager.getInput('generic-export-button');
     if (!genericExportButton) {
       genericExportButton = document.createElement('button');
@@ -68,33 +66,25 @@ export class ListsManager {
       });
     }
 
-    // Ocultar el botón por defecto, se mostrará según el caso
     genericExportButton.style.display = 'none';
 
     switch (pageSelection) {
       case 'button1':
       case 'button2': {
-         ListsManager.showLoading();
+        //ListsManager.showLoading();
         try {
           const isAll = pageSelection === 'button1';
           titleElement.textContent = isAll
             ? `Listado de ${memberAttribute.attribute}(s) Completo`
             : `Listado de ${memberAttribute.attribute}(s) Activos/as`;
+            this.setListTitles(isAll ? 'completo' : 'activo');
           ListsManager.getInput('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
           const members = isAll
             ? await RequestGet.getAllMembers()
             : await RequestGet.getListMembersActives();
           this.renderList(members, isAll);
           this.setupMemberSorting(members);
-          const exportData = await Promise.all(members.map(async m => [
-            m.name,
-            m.lastName1,
-            m.lastName2,
-            m.memberNumber,
-            m.active ? '✓' : 'X',
-            await this.getFirstActiveDate(m.id),
-            await this.getLastPaidYear(m.id)
-          ]));
+          const exportData = await this.processInBatches.call(this, members);
           this.setExportData(
             exportData,
             ["Nombre", "Apellido 1", "Apellido 2", "Nº Socio", "Activo", "Fecha Alta", "Último Año Pagado"],
@@ -103,237 +93,327 @@ export class ListsManager {
               : `Listado de ${memberAttribute.attribute}s Activos.xlsx`
           );
           genericExportButton.style.display = 'block';
-          this.setListTitles(isAll ? 'completo' : 'activo');
-        } finally {
           
-        }
+        } finally {}
         break;
       }
       case 'button3': {
-        ListsManager.showLoading();
+        //ListsManager.showLoading();
         try {
-        titleElement.textContent = `Histórico de ${memberAttribute.attribute}(s) Inactivos/as`;
-        ListsManager.getInput('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
-        ListsManager.getInput('reason').textContent = 'MOTIVO INACTIVIDAD';
-        ListsManager.getInput('date').textContent = 'FECHA BAJA';
+          titleElement.textContent = `Histórico de ${memberAttribute.attribute}(s) Inactivos/as`;
+          ListsManager.getInput('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+          ListsManager.getInput('reason').textContent = 'MOTIVO INACTIVIDAD';
+          ListsManager.getInput('date').textContent = 'FECHA BAJA';
+          this.setListTitles('inactivo');
+          const inactiveMembers = await RequestGet.getListMembersInactives();
+          const allRegistries = await RequestGet.getResgistries();
 
-        const allInactiveRegistries = await RequestGet.getResgistries();
-        const filteredInactiveRegistries = allInactiveRegistries.filter(registry =>
-          registry.reasonEnd && registry.reasonEnd.trim() !== ''
-        );
-        this.renderInactivesList(filteredInactiveRegistries);
-
-        const inactiveMembersData = await Promise.all(filteredInactiveRegistries.map(async registry => {
-          const member = await RequestGet.getMemberById(registry.memberId);
-          if (!member) return null;
-          const lastPaidYear = await this.getLastPaidYear(member.id);
-          const registroCompleto = await RequestGet.getRegistryById(registry.id);
-          const startDate = new Date(registroCompleto.startData).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-          return [
-            member.name,
-            `${member.lastName1} ${member.lastName2}`,
-            member.memberNumber,
-            lastPaidYear,
-            registroCompleto.reasonEnd,
-            startDate
-          ];
-        }));
-        this.setExportData(
-          inactiveMembersData.filter(data => data !== null),
-          ["Nombre", "Apellidos", "Nº Socio", "Último Año Pagado", "Motivo Inactividad", "Fecha Baja"],
-          `Histórico de ${memberAttribute.attribute}s Inactivos.xlsx`
-        );
-        genericExportButton.style.display = 'block';
-        this.setListTitles('inactivo');
-        } finally {
-        }
-        break;
-      }
-
-      case 'button4':
-        ListsManager.showLoading();
-        try {
-        // Asegúrate de que el contenedor de lista de actividades esté visible y el de la tabla principal oculto
-        const mainTableContainer = document.getElementById('main-table-container'); // Asumo que tienes un contenedor para la tabla principal
-        if (mainTableContainer) mainTableContainer.style.display = 'none';
-
-        const activitiesContainer = document.getElementById('activities-list-container');
-        if (activitiesContainer) activitiesContainer.style.display = 'block';
-
-        const allActivities = await RequestGet.getActivitys(this.currentYear);
-        this.actividadesConMiembros = await this.getActividadesConMiembros(allActivities);
-        this.renderActivityListWithMembers(this.actividadesConMiembros);
-        // Ocultar el botón de exportar genérico para esta vista
-        genericExportButton.style.display = 'none';
-        } finally {
-        }
-        break;
-
-      case 'button5':
-        ListsManager.showLoading();
-        try {
-        titleElement.textContent = 'Listado Años Pagados';
-        document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
-        document.getElementById('year').textContent = 'AÑO PAGADO';
-        const allMembersPay = await RequestGet.getListMembersActives() //await RequestGet.getAllMembers();
-        this.renderPayList(allMembersPay);
-        this.setupPaySorting(allMembersPay);
-        const paidMembersData = await Promise.all(allMembersPay.map(async (member) => {
-          const paidYears = await this.getPaidYears(member.id);
-          return [
-            member.name,
-            `${member.lastName1} ${member.lastName2}`,
-            member.memberNumber,
-            paidYears.join(', ')
-          ];
-        }));
-        this.setExportData(
-          paidMembersData,
-          ["Nombre", "Apellidos", "Nº Socio", "Años Pagados"],
-          `Listado de Años Pagos de ${memberAttribute.attribute}s.xlsx`
-        );
-        genericExportButton.style.display = 'block';
-                } finally {
-        }
-        break;
-
-      case 'button6':
-        ListsManager.showLoading();
-        try {
-        titleElement.textContent = 'Listado de Impagos';
-        document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
-        document.getElementById('year').textContent = 'ÚLTIMO AÑO PAGADO';
-        const unpayMembers = await RequestGet.getListMembersActives(); // await RequestGet.getAllMembers();
-        this.renderUnpayList(unpayMembers);
-        this.setupUnpaySorting(unpayMembers);
-        const unpayMembersFiltered = [];
-        for (const member of unpayMembers) {
-          const paidYears = await this.getPaidYears(member.id);
-          const hasPaidThisYear = paidYears.includes(this.currentYear);
-          if (!hasPaidThisYear) {
-            const lastPaidYear = await this.getLastPaidYear(member.id);
-            unpayMembersFiltered.push([
-              member.name,
-              `${member.lastName1} ${member.lastName2}`,
-              member.memberNumber,
-              lastPaidYear
-            ]);
-          }
-        }
-        this.setExportData(
-          unpayMembersFiltered,
-          ["Nombre", "Apellidos", "Nº Socio", "Último Año Pagado"],
-          `Listado de Impagos de ${memberAttribute.attribute}s.xlsx`
-        );
-        genericExportButton.style.display = 'block';
-        } finally {
-        }
-        break;
-
-      case 'button7':
-        ListsManager.showLoading();
-        try {
-        titleElement.textContent = `Antigüedad de los/as ${memberAttribute.attribute}(s) activos/as`;
-        document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
-        const antiguedadKey = 0;
-        const activeMembersGrouped = {};
-
-        // Cargamos los miembros activos
-        const activeMembersAntiguedad = await RequestGet.getListMembersActives();
-
-        for (const member of activeMembersAntiguedad) {
-          const firstActiveDate = await this.getFirstActiveDate(member.id);
-          if (!firstActiveDate || firstActiveDate === "-") continue;
-
-          //const [day, month, year] = firstActiveDate.split('/'); //Cuenta los días, meses y años
-          const [ , , year ] = firstActiveDate.split('/'); // Solo necesitamos el año para calcular la antigüedad
-          const antiguedad = this.currentYear - parseInt(year);
-          const key = `${antiguedad} año${antiguedad === 1 ? '' : 's'}`;
-
-          if (!activeMembersGrouped[key]) {
-            activeMembersGrouped[key] = [];
-          }
-
-          activeMembersGrouped[key].push({
-            ...member,
-            antiguedad,
-            firstActiveDate
+          const registryMap = new Map();
+          allRegistries.forEach(reg => {
+            if (reg.memberId) {
+              registryMap.set(reg.memberId, reg);
+            }
           });
+
+          const inactiveRegistries = inactiveMembers
+          .map(member => {
+            const registro = registryMap.get(member.id);
+              if (!registro) return null;
+              return {
+                ...member,
+                reasonEnd: registro.reasonEnd,
+                endData: registro.endData
+              };
+            })
+            .filter(item => item !== null);
+
+          this.renderInactivesList(inactiveRegistries);
+
+          const inactiveMembersData = [];
+        for (let member of inactiveMembers) {
+          const registroCompleto = registryMap.get(member.id);
+          if (!registroCompleto) continue;
+          const endDate = registroCompleto.endData
+            ? new Date(registroCompleto.endData).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
+            : '-';
+
+          inactiveMembersData.push([
+            member.name,
+            `${member.lastName1} ${member.lastName2}`,
+            member.memberNumber,
+            endDate,                     
+            registroCompleto.reasonEnd?.trim() || '-'
+          ]);
         }
 
-        const tbody = document.getElementById('tbody-member');
-        tbody.innerHTML = '';
 
-        let totalSocios = 0;
-
-        for (const antiguedadKey of Object.keys(activeMembersGrouped).sort((a, b) => {
-          const aNum = parseInt(a);
-          const bNum = parseInt(b);
-          return bNum - aNum;
-        })) {
-          const grupo = activeMembersGrouped[antiguedadKey].sort((a, b) =>
-            String(a.memberNumber).localeCompare(String(b.memberNumber))
+          this.setExportData(
+            inactiveMembersData,
+            ["Nombre", "Apellidos", "Nº Socio", "Fecha Baja", "Motivo Inactividad"],
+            `Histórico de ${memberAttribute.attribute}s Inactivos.xlsx`
           );
 
-          const groupRow = document.createElement('tr');
-          groupRow.innerHTML = `<td colspan="8" style="font-weight:bold; font-size:1.2rem; background:#f0f0f0; cursor:pointer">${antiguedadKey}</td>`;
-          groupRow.addEventListener('click', async () => {
-            const exportData = await Promise.all(grupo.map(async m => [
-              m.name,
-              `${m.lastName1} ${m.lastName2}`,
-              m.memberNumber,
-              m.firstActiveDate
-            ]));
-            ExcelUtils.exportToExcel(
-              exportData,
-              ["Nombre", "Apellidos", "Nº Socio", "Primera Alta"],
-              `Antiguedad_${antiguedadKey}.xlsx`
-            );
-          });
-          tbody.appendChild(groupRow);
-
-          for (let i = 0; i < grupo.length; i++) {
-            const member = grupo[i];
-            const row = document.createElement('tr');
-            row.classList.add('clickable-row');
-            row.setAttribute('data-member-number', member.memberNumber);
-
-            row.innerHTML = `
-              <td>${++totalSocios}</td>
-              <td>${member.name}</td>
-              <td>${member.lastName1} ${member.lastName2}</td>
-              <td>${member.memberNumber}</td>
-              <td>${member.firstActiveDate}</td>
-            `;
-            tbody.appendChild(row);
-          }
-          ListsManager.hideLoading();
+          genericExportButton.style.display = 'block';
           
-        }
-        
-        document.getElementById('txtTitleList').textContent = `Antigüedad de Activos/as - Total ${totalSocios}`;
-        this.addRowClickListeners();
-
-        genericExportButton.style.display = 'block';
-        this.setListTitles('antiguedad');
-        genericExportButton.style.display = 'none';
-        } finally {
-          
-        }
+        } finally {}
         break;
-
+      }
+      case 'button4': {
+        //ListsManager.showLoading();
+        try {
+          const mainTableContainer = document.getElementById('main-table-container');
+          if (mainTableContainer) mainTableContainer.style.display = 'none';
+          const activitiesContainer = document.getElementById('activities-list-container');
+          if (activitiesContainer) activitiesContainer.style.display = 'block';
+          const allActivities = await RequestGet.getActivitys(this.currentYear);
+          this.actividadesConMiembros = await this.getActividadesConMiembros(allActivities);
+          this.renderActivityListWithMembers(this.actividadesConMiembros);
+          genericExportButton.style.display = 'none';
+        } finally {}
+        break;
+      }
+      case 'button5': {
+        //ListsManager.showLoading();
+        try {
+          titleElement.textContent = 'Listado Años Pagados';
+          document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+          document.getElementById('year').textContent = 'AÑO PAGADO';
+          const allMembersPay = await RequestGet.getListMembersActives();
+          this.renderPayList(allMembersPay);
+          this.setupPaySorting(allMembersPay);
+          const paidMembersData = await Promise.all(allMembersPay.map(async (member) => {
+            const paidYears = await this.getPaidYears(member.id);
+            return [member.name, `${member.lastName1} ${member.lastName2}`, member.memberNumber, paidYears.join(', ')];
+          }));
+          this.setExportData(
+            paidMembersData,
+            ["Nombre", "Apellidos", "Nº Socio", "Años Pagados"],
+            `Listado de Años Pagos de ${memberAttribute.attribute}s.xlsx`
+          );
+          genericExportButton.style.display = 'block';
+        } finally {}
+        break;
+      }
+      case 'button6': {
+        //ListsManager.showLoading();
+        try {
+          titleElement.textContent = 'Listado de Impagos';
+          document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+          document.getElementById('year').textContent = 'ÚLTIMO AÑO PAGADO';
+          const unpayMembers = await RequestGet.getListMembersActives();
+          this.renderUnpayList(unpayMembers);
+          this.setupUnpaySorting(unpayMembers);
+          const unpayMembersFiltered = [];
+          for (const member of unpayMembers) {
+            const paidYears = await this.getPaidYears(member.id);
+            const hasPaidThisYear = paidYears.includes(this.currentYear);
+            if (!hasPaidThisYear) {
+              const lastPaidYear = await this.getLastPaidYear(member.id);
+              unpayMembersFiltered.push([member.name, `${member.lastName1} ${member.lastName2}`, member.memberNumber, lastPaidYear]);
+            }
+          }
+          this.setExportData(
+            unpayMembersFiltered,
+            ["Nombre", "Apellidos", "Nº Socio", "Último Año Pagado"],
+            `Listado de Impagos de ${memberAttribute.attribute}s.xlsx`
+          );
+          genericExportButton.style.display = 'block';
+        } finally {}
+        break;
+      }
+      case 'button7': {
+        //ListsManager.showLoading();
+        try {
+          titleElement.textContent = `Antigüedad de los/as ${memberAttribute.attribute}(s) activos/as`;
+          document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+          this.setListTitles('antiguedad');
+          const activeMembersAntiguedad = await RequestGet.getListMembersActives();
+          const activeMembersGrouped = {};
+          for (const member of activeMembersAntiguedad) {
+            const firstActiveDate = await this.getFirstActiveDate(member.id);
+            if (!firstActiveDate || firstActiveDate === "-") continue;
+            const [ , , year ] = firstActiveDate.split('/');
+            const antiguedad = this.currentYear - parseInt(year);
+            const key = `${antiguedad} año${antiguedad === 1 ? '' : 's'}`;
+            if (!activeMembersGrouped[key]) activeMembersGrouped[key] = [];
+            activeMembersGrouped[key].push({ ...member, antiguedad, firstActiveDate });
+          }
+          const tbody = document.getElementById('tbody-member');
+          tbody.innerHTML = '';
+          let totalSocios = 0;
+          for (const antiguedadKey of Object.keys(activeMembersGrouped).sort((a, b) => parseInt(b) - parseInt(a))) {
+            const grupo = activeMembersGrouped[antiguedadKey].sort((a, b) =>
+              String(a.memberNumber).localeCompare(String(b.memberNumber))
+            );
+            const groupRow = document.createElement('tr');
+            groupRow.innerHTML = `<td colspan="8" style="font-weight:bold; font-size:1.2rem; background:#f0f0f0; cursor:pointer">${antiguedadKey}</td>`;
+            groupRow.addEventListener('click', async () => {
+              const exportData = await Promise.all(grupo.map(async m => [
+                m.name, `${m.lastName1} ${m.lastName2}`, m.memberNumber, m.firstActiveDate
+              ]));
+              ExcelUtils.exportToExcel(exportData, ["Nombre", "Apellidos", "Nº Socio", "Primera Alta"], `Antiguedad_${antiguedadKey}.xlsx`);
+            });
+            tbody.appendChild(groupRow);
+            for (let i = 0; i < grupo.length; i++) {
+              const member = grupo[i];
+              const row = document.createElement('tr');
+              row.classList.add('clickable-row');
+              row.setAttribute('data-member-number', member.memberNumber);
+              row.innerHTML = `
+                <td>${++totalSocios}</td>
+                <td>${member.name}</td>
+                <td>${member.lastName1} ${member.lastName2}</td>
+                <td>${member.memberNumber}</td>
+                <td>${member.firstActiveDate}</td>
+              `;
+              tbody.appendChild(row);
+            }
+            ListsManager.hideLoading();
+          }
+          document.getElementById('txtTitleList').textContent = `Antigüedad de Activos/as - Total ${totalSocios}`;
+          this.addRowClickListeners();
+          genericExportButton.style.display = 'none';
+          
+        } finally {}
+        break;
+      }
     }
-    // Añadir listeners de fila solo una vez después de que todo el contenido se haya renderizado
     if (!this.rowClickListenersAdded) {
       this.addRowClickListeners();
       this.rowClickListenersAdded = true;
     }
   }
 
-  setExportData(data, headers, filename) {
-    this.currentListData = data;
-    this.currentListHeaders = headers;
-    this.currentListFilename = filename;
+  // ✅ renderizado incremental
+  async renderList(members, allMembers) {
+    const tbody = document.getElementById('tbody-member');
+    tbody.innerHTML = '';
+    let lineNumber = 1;
+    const batchSize = 50;
+    for (let i = 0; i < members.length; i += batchSize) {
+      const batch = members.slice(i, i + batchSize);
+      const rowsHtml = await Promise.all(
+        batch.map((member, idx) => this.getHtmlRowMembers(member, lineNumber + idx))
+      );
+      tbody.insertAdjacentHTML('beforeend', rowsHtml.join(''));
+      lineNumber += batch.length;
+      await new Promise(requestAnimationFrame);
+    }
+    document.getElementById('txtTitleList').textContent =
+      (allMembers ? "Listado Completo - Total " : "Listado de Activos/as - Total ") + (lineNumber - 1);
+    this.addRowClickListeners();
+    ListsManager.hideLoading();
+  }
+
+async renderInactivesList(members) {
+  const tbody = document.getElementById('tbody-member');
+  tbody.innerHTML = '';
+
+  let lineNumber = 1;
+  const batchSize = 50;
+
+  for (let i = 0; i < members.length; i += batchSize) {
+    const batch = members.slice(i, i + batchSize);
+
+    const rowsHtml = await Promise.all(
+      batch.map(async (m, idx) => {
+        const endDateStr = m.endData
+          ? new Date(m.endData).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
+          : '-';
+
+        return `
+          <tr class="clickable-row" data-member-number="${m.memberNumber}">
+            <td>${lineNumber + idx}</td>                       
+            <td>${m.name || ''}</td>                               
+            <td>${(m.lastName1 || '')} ${(m.lastName2 || '')}</td> 
+            <td>${m.memberNumber || ''}</td>                   
+            <td></td>                                            
+            <td>${endDateStr}</td>                     
+            <td>${m.reasonEnd?.trim() || '-'}</td> 
+          </tr>
+        `;
+      })
+    );
+
+    tbody.insertAdjacentHTML('beforeend', rowsHtml.join(''));
+    lineNumber += batch.length;
+    await new Promise(requestAnimationFrame);
+  }
+
+  document.getElementById('txtTitleList').textContent = "Histórico de Inactividad - Total " + (lineNumber - 1);
+  this.addRowClickListeners();
+  ListsManager.hideLoading();
+}
+
+
+async getHtmlRowMembers(member, lineNumber) {
+  const activeStatus = member.active ? '✓' : 'X';
+  let firstActiveDate = '-';
+  try {
+    firstActiveDate = (await this.getFirstActiveDate(member.id)) || '-';
+  } catch (e) {
+    console.error("Error fetching first active date:", e);
+  }
+  const lastPaidYear = await this.getLastPaidYear(member.id);
+
+  return `
+    <tr class="clickable-row" data-member-number="${member.memberNumber}">
+      <td>${lineNumber}</td>
+      <td>${member.name || ''}</td>
+      <td>${(member.lastName1 || '')} ${(member.lastName2 || '')}</td>
+      <td>${member.memberNumber || ''}</td>
+      <td>${activeStatus}</td>
+      <td>${firstActiveDate}</td>
+      <td></td>
+      <td>${lastPaidYear || '-'}</td>
+    </tr>
+  `;
+}
+
+
+
+
+  async renderPayList(members) {
+    const tbody = document.getElementById('tbody-member');
+    tbody.innerHTML = '';
+    let lineNumber = 1;
+    const batchSize = 50;
+    for (let i = 0; i < members.length; i += batchSize) {
+      const batch = members.slice(i, i + batchSize);
+      const rowsHtml = await Promise.all(
+        batch.map((member, idx) => this.getHtmlPayRowMembers(member, lineNumber + idx))
+      );
+      tbody.insertAdjacentHTML('beforeend', rowsHtml.join(''));
+      lineNumber += batch.length;
+      await new Promise(requestAnimationFrame);
+    }
+    document.getElementById('txtTitleList').textContent = "Lista de Años Pagados - Total " + (lineNumber - 1);
+    this.addRowClickListeners();
+    ListsManager.hideLoading();
+  }
+
+  async renderUnpayList(members) {
+    const tbody = document.getElementById('tbody-member');
+    tbody.innerHTML = '';
+    let lineNumber = 1;
+    const batchSize = 50;
+    for (let i = 0; i < members.length; i += batchSize) {
+      const batch = members.slice(i, i + batchSize);
+      const rowsHtml = [];
+      for (let j = 0; j < batch.length; j++) {
+        const member = batch[j];
+        const paidYears = await this.getPaidYears(member.id);
+        if (!paidYears.includes(this.currentYear)) {
+          rowsHtml.push(await this.getHtmlUnpayRowMembers(member, lineNumber));
+          lineNumber++;
+        }
+      }
+      tbody.insertAdjacentHTML('beforeend', rowsHtml.join(''));
+      await new Promise(requestAnimationFrame);
+    }
+    document.getElementById('txtTitleList').textContent = "Lista de Impagados - Total " + (lineNumber - 1);
+    this.addRowClickListeners();
+    ListsManager.hideLoading();
   }
 
   setupMemberSorting(members) {
@@ -439,125 +519,6 @@ export class ListsManager {
         break;
     }
     this.currentListData = updatedData;
-  }
-
-
-  async renderList(members, allMembers) {
-    let html = '';
-    let lineNumber = 1;
-
-    for (const member of members) {
-      html += await this.getHtmlRowMembers(member, lineNumber);
-      lineNumber++
-    }
-
-    if (allMembers) {
-      document.getElementById('txtTitleList').textContent = "Listado Completo - Total " + (lineNumber - 1);
-    } else {
-      document.getElementById('txtTitleList').textContent = "Listado de Activos/as - Total " + (lineNumber - 1);
-    }
-    document.getElementById('tbody-member').innerHTML = html;
-    this.addRowClickListeners();
-    ListsManager.hideLoading();
-  }
-
-  async getHtmlRowMembers(member, lineNumber) {
-    const activeStatus = member.active ? '✓' : 'X';
-    const lastPaidYear = await this.getLastPaidYear(member.id);
-    const firstActiveDate = '-';
-    try{
-      firstActiveDate = await this.getFirstActiveDate(member.id);
-    }catch (error) {
-      console.error("Error fetching first active date:", error);
-    }
-    return `<tr class="clickable-row" data-member-number="${member.memberNumber}">
-                <td>${lineNumber}</td>
-                <td>${member.name}</td>
-                <td>${member.lastName1} ${member.lastName2}</td>
-                <td>${member.memberNumber}</td>
-                <td>${activeStatus}</td>
-                <td>${firstActiveDate}</td>
-                <td></td>
-                <td>${lastPaidYear}</td>
-            </tr>`;
-  }
-
-  async renderInactivesList(registries) {
-    let html = '';
-    let lineNumber = 1;
-    for (const registry of registries) {
-      html += await this.getHtmlInactivesRowMembers(registry, lineNumber);
-      lineNumber++
-    }
-    document.getElementById('txtTitleList').textContent = "Histórico de Inactividad - Total " + (lineNumber - 1);
-    document.getElementById('tbody-member').innerHTML = html;
-    this.addRowClickListeners();
-    ListsManager.hideLoading();
-  }
-
-  async getHtmlInactivesRowMembers(registry, lineNumber) {
-    const member = await RequestGet.getMemberById(registry.memberId);
-    if (member === null) {
-      return ""
-    }
-    const activeStatus = member.active ? 'O' : 'X'; // Este 'O' no parece usarse en el HTML final, pero lo mantengo
-    const lastPaidYear = await this.getLastPaidYear(member.id);
-    const registro = await RequestGet.getRegistryById(registry.id);
-    const startDate = new Date(registro.startData).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    return `<tr class="clickable-row" data-member-number="${member.memberNumber}">
-                <td>${lineNumber}</td>
-                <td>${member.name}</td>
-                <td>${member.lastName1} ${member.lastName2}</td>
-                <td>${member.memberNumber}</td>
-                <td>-</td>
-                <td>${lastPaidYear}</td>
-                <td>${registro.reasonEnd}</td>
-                <td>${startDate}</td>
-            </tr>`;
-  }
-
-  async renderPayList(members) {
-    let html = '';
-    let lineNumber = 1;
-
-    for (const member of members) {
-      html += await this.getHtmlPayRowMembers(member, lineNumber);
-      lineNumber++
-    }
-
-    document.getElementById('txtTitleList').textContent = "Lista de Años Pagados - Total " + (lineNumber - 1);
-    document.getElementById('tbody-member').innerHTML = html;
-    this.addRowClickListeners();
-    ListsManager.hideLoading();
-  }
-
-  async getHtmlPayRowMembers(member, lineNumber) {
-    const paidYears = await this.getPaidYears(member.id);
-    return `<tr class="clickable-row" data-member-number="${member.memberNumber}">
-                <td>${lineNumber}</td>
-                <td>${member.name}</td>
-                <td>${member.lastName1} ${member.lastName2}</td>
-                <td>${member.memberNumber}</td>
-                <td>${paidYears.join(', ')}</td>
-            </tr>`;
-  }
-
-  async renderUnpayList(members) {
-    let html = '';
-    let lineNumber = 1;
-
-    for (const member of members) {
-      const paidYears = await this.getPaidYears(member.id);
-      const hasPaidThisYear = paidYears.includes(this.currentYear);
-      if (!hasPaidThisYear) {
-        html += await this.getHtmlUnpayRowMembers(member, lineNumber);
-        lineNumber++;
-      }
-    }
-    document.getElementById('txtTitleList').textContent = "Lista de Impagados - Total " + (lineNumber - 1);
-    document.getElementById('tbody-member').innerHTML = html;
-    this.addRowClickListeners();
-    ListsManager.hideLoading();
   }
 
   async getHtmlUnpayRowMembers(member, lineNumber) {
@@ -667,6 +628,21 @@ export class ListsManager {
     });
   }
 
+  async getHtmlPayRowMembers(member, lineNumber) {
+    const paidYears = await this.getPaidYears(member.id);
+    return `
+      <tr class="clickable-row" data-member-number="${member.memberNumber}">
+        <td>${lineNumber}</td>
+        <td>${member.name || ''}</td>
+        <td>${(member.lastName1 || '')} ${(member.lastName2 || '')}</td>
+        <td>${member.memberNumber || ''}</td>
+        <td>${Array.isArray(paidYears) ? paidYears.join(', ') : '-'}</td>
+      </tr>
+    `;
+  }
+
+
+
   getHtmlRowActivityWithMembers(activity) {
     return `<tr>
                 <td>${activity.nombre}</td>
@@ -739,20 +715,29 @@ export class ListsManager {
     });
   }
 
+async getFirstActiveDate(memberId) {
+  try {
+    const registrys = await RequestGet.getRegistryByMemberId(memberId);
+    if (Array.isArray(registrys) && registrys.length) {
+      const first = registrys.reduce((min, r) =>
+        (!min || new Date(r.startData) < new Date(min.startData)) ? r : min, null);
+      return first?.startData
+        ? new Date(first.startData).toLocaleDateString('es-ES', { day:'2-digit', month:'2-digit', year:'numeric' })
+        : "-";
+    }
+    return "-";
+  } catch (error) {
+    console.error("Error al obtener la primera fecha activa:", error);
+    return "-";
+  }
+}
 
-  async getFirstActiveDate(memberId) {
-      try {
-        const registrys = await RequestGet.getRegistryByMemberId(memberId);
-        if (registrys.length > 0) {
-          const firstActive = registrys[0].startData;
-          return firstActive ? new Date(firstActive).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : null;
-        } else {
-          return "-"; // No hay registros para este miembro
-        }
-      } catch (error) {
-        console.error("Error al obtener la primera fecha activa:", error);
-      }           
-  } 
+  
+  setExportData(data, headers, filename) {
+    this.currentListData = data;
+    this.currentListHeaders = headers;
+    this.currentListFilename = filename;
+  }
 
   static showLoading() {
     const overlay = document.getElementById('loading-overlay');
@@ -763,6 +748,25 @@ export class ListsManager {
       const overlay = document.getElementById('loading-overlay');
       if (overlay) overlay.style.display = 'none';
   }
+
+  async processInBatches(members, batchSize = 100) {
+    const results = [];
+    for (let i = 0; i < members.length; i += batchSize) {
+      const batch = members.slice(i, i + batchSize);
+      const batchResults = await Promise.all(batch.map(async m => [
+        m.name,
+        m.lastName1,
+        m.lastName2,
+        m.memberNumber,
+        m.active ? '✓' : 'X',
+        await this.getFirstActiveDate(m.id),
+        await this.getLastPaidYear(m.id)
+      ]));
+      results.push(...batchResults);
+    }
+    return results;
+  }
+
 
   setListTitles(tipo) {
     const titulos = {
@@ -780,10 +784,8 @@ export class ListsManager {
         },
         inactivo: {
             apellidos: "APELLIDOS",
-            activo: "INACTIVO",
-            fechaAlta: "FECHA DE BAJA",
             motivo: "MOTIVO BAJA",
-            ultimoPago: "ÚLTIMO AÑO PAGADO"
+            fechaAlta: "FECHA DE BAJA"
         },
         antiguedad: {
             apellidos: "APELLIDOS",
