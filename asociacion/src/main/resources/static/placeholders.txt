@@ -10,9 +10,12 @@ ${apellido2}
 ${dni}
 ${numeroSocio}
 ${direccion}
+${postal}
+${localidad}
+${telefono}
 ${asociacion} (nombre de la asociación que hay en configuración)
 ${atributoSocio} (atributo de los socios que hay en configuración)
-${fecha}" (fecha de la firma)
+${fecha} (fecha de la firma)
 
 
 Ejemplo.:

@@ -92,6 +92,9 @@ public class DocumentServiceImp implements DocumentService {
         placeholders.put("${asociacion}", attributoVecinal.get().getAttribute());
         placeholders.put("${atributoSocio}", attributoSocio.get().getAttribute());
         placeholders.put("${fecha}", fechaActual);
+        placeholders.put("${postal}", member.getPostal().toString());
+        placeholders.put("${localidad}", member.getLocation());
+        placeholders.put("${telefono}", member.getPhone().toString());
 
         // 3. Reemplazar el texto en el documento   
         this.reemplazarTexto(wordMLPackage, placeholders);

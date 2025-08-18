@@ -1,5 +1,5 @@
-**[EN PROCESO]**: Agilizar las cargas de las listas.
-
+**[18 agosto 2025]**: Eliminado número de índice en listados para no confundir con el número de socio.
+**[18 agosto 2025]**: NUEVO: Carga de listas al vuelo, no hay que esperar la carga total.
 **[16 agosto 2025]**: Actualizada Base de Datos sin deudas añadidas en Notas. 
 **[14 agosto 2025]**: AÑADIDA BASE DE DATOS FUNCIONAL REAL.
 **[13 agosto 2025]**: NUEVO: Añadido desplegable en búsqueda de documentos con nombres ya guardados.

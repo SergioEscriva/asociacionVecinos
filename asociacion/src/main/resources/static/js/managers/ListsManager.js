@@ -250,10 +250,6 @@ case 'button7': {
           const tbody = document.getElementById('tbody-member');
           tbody.innerHTML = '';
           
-          const batchSize = 50;
-          let totalSocios = 0;
-          let htmlContent = '';
-          
           const allRegistries = await RequestGet.getResgistries();
           const registryMap = new Map();
           allRegistries.forEach(reg => {
@@ -283,36 +279,50 @@ case 'button7': {
             return numB - numA;
           });
           
+          let totalSocios = 0;
+          let htmlContent = '';
+
           for (const antiguedadKey of sortedAntiguedadKeys) {
             const grupo = activeMembersGrouped[antiguedadKey].sort((a, b) => String(a.memberNumber).localeCompare(String(b.memberNumber)));
             
-            // Añadir el contador de miembros
             const count = grupo.length;
-            const groupTitle = `${count} con ${antiguedadKey.toLowerCase()}`;
-            
-            htmlContent += `<tr class="group-row" data-group-name="${antiguedadKey}">
+            const groupTitle = `${count} ${memberAttribute.attribute}/s con ${antiguedadKey.toLowerCase()} ▼`;
+            const groupId = antiguedadKey.replace(/\s/g, '-'); // Crear un ID para el grupo
+
+            // Fila del encabezado del grupo que se puede pulsar para desplegar
+            htmlContent += `<tr class="group-row toggle-group" data-target="${groupId}">
                               <td colspan="8" style="font-weight:bold; font-size:1.2rem; background:#f0f0f0; cursor:pointer">${groupTitle}</td>
                             </tr>`;
 
-            for (let i = 0; i < grupo.length; i += batchSize) {
-                const batch = grupo.slice(i, i + batchSize);
-                const batchHtml = batch.map(member => {
-                    totalSocios++;
-                    return `<tr class="clickable-row" data-member-number="${member.memberNumber}">
-                                <td>${totalSocios}</td>
+            // Filas de los miembros dentro de un div con un ID para poder mostrar/ocultar
+            htmlContent += `<tr id="${groupId}" class="group-content" style="display: none;"><td colspan="8"><table class="sub-table">`;
+            for (let i = 0; i < grupo.length; i++) {
+                const member = grupo[i];
+                totalSocios++;
+                htmlContent += `<tr class="clickable-row" data-member-number="${member.memberNumber}">
+                                <td>#</td>
                                 <td>${member.name}</td>
                                 <td>${member.lastName1} ${member.lastName2}</td>
                                 <td>${member.memberNumber}</td>
                                 <td>${member.firstActiveDate}</td>
                             </tr>`;
-                }).join('');
-                htmlContent += batchHtml;
-                await new Promise(resolve => setTimeout(resolve, 0));
             }
+            htmlContent += `</table></td></tr>`;
           }
           
           tbody.innerHTML = htmlContent;
           
+          // Añadir el listener para la funcionalidad de desplegar/plegar
+          document.querySelectorAll('.toggle-group').forEach(row => {
+              row.addEventListener('click', function() {
+                  const targetId = this.getAttribute('data-target');
+                  const contentRow = document.getElementById(targetId);
+                  if (contentRow) {
+                      contentRow.style.display = contentRow.style.display === 'none' ? '' : 'none';
+                  }
+              });
+          });
+
           this.addRowClickListeners();
           
           document.getElementById('txtTitleList').textContent = `Antigüedad de Activos/as - Total ${totalSocios}`;
@@ -359,7 +369,7 @@ async renderInactivesList(members) {
 
   for (let i = 0; i < members.length; i += batchSize) {
     const batch = members.slice(i, i + batchSize);
-
+    //<td>${lineNumber + idx}</td> //
     const rowsHtml = await Promise.all(
       batch.map(async (m, idx) => {
         const endDateStr = m.endData
@@ -368,7 +378,7 @@ async renderInactivesList(members) {
 
         return `
           <tr class="clickable-row" data-member-number="${m.memberNumber}">
-            <td>${lineNumber + idx}</td>                       
+            <td>#</td>                       
             <td>${m.name || ''}</td>                               
             <td>${(m.lastName1 || '')} ${(m.lastName2 || '')}</td> 
             <td>${m.memberNumber || ''}</td>                   
@@ -401,10 +411,10 @@ async getHtmlRowMembers(member, lineNumber) {
     console.error("Error fetching first active date:", e);
   }
   const lastPaidYear = await this.getLastPaidYear(member.id);
-
+    //<td>${lineNumber}</td>
   return `
     <tr class="clickable-row" data-member-number="${member.memberNumber}">
-      <td>${lineNumber}</td>
+      <td>#</td>
       <td>${member.name || ''}</td>
       <td>${(member.lastName1 || '')} ${(member.lastName2 || '')}</td>
       <td>${member.memberNumber || ''}</td>
@@ -571,8 +581,9 @@ async getHtmlRowMembers(member, lineNumber) {
 
   async getHtmlUnpayRowMembers(member, lineNumber) {
     const lastPaidYear = await this.getLastPaidYear(member.id);
+    //<td>${lineNumber}</td>
     return `<tr class="clickable-row" data-member-number="${member.memberNumber}">
-                <td>${lineNumber}</td>
+                <td>#</td>
                 <td>${member.name}</td>
                 <td>${member.lastName1} ${member.lastName2}</td>
                 <td>${member.memberNumber}</td>
@@ -679,9 +690,10 @@ async getHtmlRowMembers(member, lineNumber) {
 
   async getHtmlPayRowMembers(member, lineNumber) {
     const paidYears = await this.getPaidYears(member.id);
+    //<td>${lineNumber}</td>
     return `
       <tr class="clickable-row" data-member-number="${member.memberNumber}">
-        <td>${lineNumber}</td>
+        <td>#</td>
         <td>${member.name || ''}</td>
         <td>${(member.lastName1 || '')} ${(member.lastName2 || '')}</td>
         <td>${member.memberNumber || ''}</td>
