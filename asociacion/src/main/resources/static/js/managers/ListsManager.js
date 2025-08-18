@@ -29,6 +29,19 @@ export class ListsManager {
     if (el) el.value = value;
   }
 
+  static getAntiguedad(dateString) {
+    if (!dateString || dateString === '-') return 0;
+    const [day, month, year] = dateString.split('/').map(Number);
+    const firstActiveDate = new Date(year, month - 1, day);
+    const today = new Date();
+    let antiguedad = today.getFullYear() - firstActiveDate.getFullYear();
+    const m = today.getMonth() - firstActiveDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < firstActiveDate.getDate())) {
+      antiguedad--;
+    }
+    return antiguedad;
+  }
+
   async init() {
     const memberAttribute = await RequestGet.getConfigById(3);
     const pageSelection = document.body.getAttribute('data-page-selection');
@@ -224,63 +237,88 @@ export class ListsManager {
         } finally {}
         break;
       }
-      case 'button7': {
-        //ListsManager.showLoading();
+case 'button7': {
         document.getElementById('spinner').style.display = 'block';
         try {
+          const titleElement = ListsManager.getInput('txtTitleList');
+          const memberAttribute = await RequestGet.getConfigById(3);
           titleElement.textContent = `Antigüedad de los/as ${memberAttribute.attribute}(s) activos/as`;
-          document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
+          ListsManager.getInput('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
           this.setListTitles('antiguedad');
+          
           const activeMembersAntiguedad = await RequestGet.getListMembersActives();
+          const tbody = document.getElementById('tbody-member');
+          tbody.innerHTML = '';
+          
+          const batchSize = 50;
+          let totalSocios = 0;
+          let htmlContent = '';
+          
+          const allRegistries = await RequestGet.getResgistries();
+          const registryMap = new Map();
+          allRegistries.forEach(reg => {
+            if (reg.memberId) {
+              const current = registryMap.get(reg.memberId);
+              if (!current || new Date(reg.startData) < new Date(current.startData)) {
+                registryMap.set(reg.memberId, reg);
+              }
+            }
+          });
+          
           const activeMembersGrouped = {};
           for (const member of activeMembersAntiguedad) {
-            const firstActiveDate = await this.getFirstActiveDate(member.id);
-            if (!firstActiveDate || firstActiveDate === "-") continue;
-            const [ , , year ] = firstActiveDate.split('/');
-            const antiguedad = this.currentYear - parseInt(year);
-            const key = `${antiguedad} año${antiguedad === 1 ? '' : 's'}`;
+            const registry = registryMap.get(member.id);
+            const firstActiveDate = registry?.startData
+              ? new Date(registry.startData).toLocaleDateString('es-ES', { day:'2-digit', month:'2-digit', year:'numeric' })
+              : "-";
+            const antiguedad = ListsManager.getAntiguedad(firstActiveDate);
+            const key = `Antigüedad de ${antiguedad} año${antiguedad === 1 ? '' : 's'}`;
             if (!activeMembersGrouped[key]) activeMembersGrouped[key] = [];
             activeMembersGrouped[key].push({ ...member, antiguedad, firstActiveDate });
           }
-          const tbody = document.getElementById('tbody-member');
-          tbody.innerHTML = '';
-          let totalSocios = 0;
-          for (const antiguedadKey of Object.keys(activeMembersGrouped).sort((a, b) => parseInt(b) - parseInt(a))) {
-            const grupo = activeMembersGrouped[antiguedadKey].sort((a, b) =>
-              String(a.memberNumber).localeCompare(String(b.memberNumber))
-            );
-            const groupRow = document.createElement('tr');
-            groupRow.innerHTML = `<td colspan="8" style="font-weight:bold; font-size:1.2rem; background:#f0f0f0; cursor:pointer">${antiguedadKey}</td>`;
-            groupRow.addEventListener('click', async () => {
-              const exportData = await Promise.all(grupo.map(async m => [
-                m.name, `${m.lastName1} ${m.lastName2}`, m.memberNumber, m.firstActiveDate
-              ]));
-              ExcelUtils.exportToExcel(exportData, ["Nombre", "Apellidos", "Nº Socio", "Primera Alta"], `Antiguedad_${antiguedadKey}.xlsx`);
-            });
-            tbody.appendChild(groupRow);
-            for (let i = 0; i < grupo.length; i++) {
-              const member = grupo[i];
-              const row = document.createElement('tr');
-              row.classList.add('clickable-row');
-              row.setAttribute('data-member-number', member.memberNumber);
-              row.innerHTML = `
-                <td>${++totalSocios}</td>
-                <td>${member.name}</td>
-                <td>${member.lastName1} ${member.lastName2}</td>
-                <td>${member.memberNumber}</td>
-                <td>${member.firstActiveDate}</td>
-              `;
-              tbody.appendChild(row);
-            }
-            
-        ListsManager.hideLoading();
-              }
-          document.getElementById('txtTitleList').textContent = `Antigüedad de Activos/as - Total ${totalSocios}`;
-          document.getElementById('spinner').style.display = 'none';
-          this.addRowClickListeners();
-          genericExportButton.style.display = 'none';
+
+          const sortedAntiguedadKeys = Object.keys(activeMembersGrouped).sort((a, b) => {
+            const numA = parseInt(a.match(/\d+/)[0]);
+            const numB = parseInt(b.match(/\d+/)[0]);
+            return numB - numA;
+          });
           
-        } finally {}
+          for (const antiguedadKey of sortedAntiguedadKeys) {
+            const grupo = activeMembersGrouped[antiguedadKey].sort((a, b) => String(a.memberNumber).localeCompare(String(b.memberNumber)));
+            
+            // Añadir el contador de miembros
+            const count = grupo.length;
+            const groupTitle = `${count} con ${antiguedadKey.toLowerCase()}`;
+            
+            htmlContent += `<tr class="group-row" data-group-name="${antiguedadKey}">
+                              <td colspan="8" style="font-weight:bold; font-size:1.2rem; background:#f0f0f0; cursor:pointer">${groupTitle}</td>
+                            </tr>`;
+
+            for (let i = 0; i < grupo.length; i += batchSize) {
+                const batch = grupo.slice(i, i + batchSize);
+                const batchHtml = batch.map(member => {
+                    totalSocios++;
+                    return `<tr class="clickable-row" data-member-number="${member.memberNumber}">
+                                <td>${totalSocios}</td>
+                                <td>${member.name}</td>
+                                <td>${member.lastName1} ${member.lastName2}</td>
+                                <td>${member.memberNumber}</td>
+                                <td>${member.firstActiveDate}</td>
+                            </tr>`;
+                }).join('');
+                htmlContent += batchHtml;
+                await new Promise(resolve => setTimeout(resolve, 0));
+            }
+          }
+          
+          tbody.innerHTML = htmlContent;
+          
+          this.addRowClickListeners();
+          
+          document.getElementById('txtTitleList').textContent = `Antigüedad de Activos/as - Total ${totalSocios}`;
+        } finally {
+          document.getElementById('spinner').style.display = 'none';
+        }
         break;
       }
     }
