@@ -2,6 +2,7 @@
 
 import { RequestPost } from '../api/RequestPost.js';
 import { RequestGet } from '../api/RequestGet.js';
+import { RequestDel } from '../api/RequestDel.js';
 
 export class SignedManager {
 
@@ -49,35 +50,44 @@ export class SignedManager {
             return;
         }
 
-    
+        documents.forEach(doc => {
+            const documentItem = document.createElement('div');
+            documentItem.className = 'p-3 my-2 bg-white rounded-lg shadow flex items-center justify-between';
 
-    documents.forEach(doc => {
-        const documentItem = document.createElement('div');
-        documentItem.className = 'p-3 my-2 bg-white rounded-lg shadow flex items-center justify-between';
+            // Convertir base64 del PDF a Blob y crear un enlace de descarga
+            const byteCharacters = atob(doc.contenidoPdf);
+            const byteArrays = [];
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteArrays.push(byteCharacters.charCodeAt(i));
+            }
+            const byteArray = new Uint8Array(byteArrays);
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
 
-        // Convertir base64 del PDF a Blob y crear un enlace de descarga
-        const byteCharacters = atob(doc.contenidoPdf);
-        const byteArrays = [];
-        for (let i = 0; i < byteCharacters.length; i++) {
-            byteArrays.push(byteCharacters.charCodeAt(i));
-        }
-        const byteArray = new Uint8Array(byteArrays);
-        const blob = new Blob([byteArray], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
+            documentItem.innerHTML = `
+                <div class="flex-1">
+                    <i class="fas fa-file-pdf" aria-hidden="true"> ${doc.nombreArchivo}</i>
+                </div>
+                <div class="flex-1">
+                    <p class="text-sm text-gray-500">
+                        Firmado el: ${new Date(doc.signedDate).toLocaleString()} - 
+                        <a href="${url}" target="_blank" class="text-blue-500 hover:underline">Ver PDF</a> - 
+                        <a href="#" class="text-red-500 hover:underline delete-doc-btn" data-doc-id="${doc.id}">Borrar PDF</a>
+                    </p>
+                </div>
+            `;
 
-        documentItem.innerHTML = `
-            <div class="flex-1">
-                <i class="fas fa-file-pdf" aria-hidden="true"> ${doc.nombreArchivo}</i>
-            </div>
-            <div class="flex-1">
-                <p class="text-sm text-gray-500">Firmado el: ${new Date(doc.signedDate).toLocaleString()} - <a href="${url}" target="_blank" class="text-blue-500 hover:underline">Ver PDF</a></p>
-            </div>
-        `;
+            this.documentListElement.appendChild(documentItem);
 
-        this.documentListElement.appendChild(documentItem);
-    });
+            // Importante: Añadir el listener de eventos aquí, después de crear el elemento.
+            const deleteButton = documentItem.querySelector('.delete-doc-btn');
+            deleteButton.addEventListener('click', (e) => {
+                e.preventDefault(); // Evita que el enlace recargue la página
+                this.handleDeleteDocument(doc.id);
+            });
+        });
 
-    this.documentListContainer.classList.remove('hidden');
+        this.documentListContainer.classList.remove('hidden');
     }
 
     async init() {
@@ -228,4 +238,23 @@ export class SignedManager {
             this.signaturePad.fromData(this.signaturePad.toData());
         }
     }
+
+    async handleDeleteDocument(docId) {
+        const pin = prompt('Por favor, ingresa el PIN para confirmar la eliminación:');
+        
+        if (pin !== '4554') {
+            alert('PIN incorrecto. No se puede borrar el documento.');
+            return; 
+        }
+
+        try {
+            await RequestDel.delDocument(docId);
+            alert('Documento borrado exitosamente.');
+            await this.handleSearch(); // Asegúrate de tener un método para recargar la lista.
+        } catch (error) {
+            console.error('Error al borrar el documento:', error);
+            alert('Error al borrar el documento. Por favor, inténtalo de nuevo.');
+        }
+    }
+
 }

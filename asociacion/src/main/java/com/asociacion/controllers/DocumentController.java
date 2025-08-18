@@ -77,8 +77,11 @@ public class DocumentController {
             return documentService.getFilteredMembers(nombreArchivo, incluidos);
         }
 
-
-
+        @DeleteMapping("/eliminar/{id}")
+        public ResponseEntity<Void> eliminarDocumento(@PathVariable Long id) {
+            documentService.delDocumentById(id);
+            return ResponseEntity.noContent().build();
+        }
 
     }
 

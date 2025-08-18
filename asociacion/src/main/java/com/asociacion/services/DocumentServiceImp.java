@@ -95,6 +95,7 @@ public class DocumentServiceImp implements DocumentService {
         placeholders.put("${postal}", member.getPostal().toString());
         placeholders.put("${localidad}", member.getLocation());
         placeholders.put("${telefono}", member.getPhone().toString());
+        placeholders.put("${email}", member.getEmail());
 
         // 3. Reemplazar el texto en el documento   
         this.reemplazarTexto(wordMLPackage, placeholders);
@@ -359,6 +360,11 @@ public class DocumentServiceImp implements DocumentService {
         }
 
         return resultado;
+    }
+
+    @Override
+    public void delDocumentById(Long id) {
+        signedDocumentRepository.deleteById(id);
     }
 
 

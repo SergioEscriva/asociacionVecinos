@@ -30,4 +30,6 @@ public interface DocumentService {
     SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64, String originalFileName) throws Exception;
 
     List<MemberDTO> getFilteredMembers(String nombreArchivo, boolean incluidos);
+
+    void delDocumentById(Long id);
 }
