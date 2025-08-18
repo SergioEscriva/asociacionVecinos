@@ -9,6 +9,48 @@ import { RequestFile } from '../api/RequestFile.js';
 import { SignedManager } from './SignedManager.js';
 
 export class MembersManager {
+  showLoader(show) {
+    const loader = document.getElementById('loader');
+    if (loader) loader.style.display = show ? 'block' : 'none';
+  }
+
+  setupBasicListeners() {
+    document.getElementById("findMemberXS").addEventListener("click", () => MembersManager.findMember("xs"));
+    document.getElementById("updateMember").addEventListener("click", () => MembersManager.updateMember());
+    document.getElementById("newMember").addEventListener("click", () => MembersManager.newMember());
+
+    const buttonFee = document.getElementById("updateFee");
+    buttonFee.addEventListener("click", () => MembersManager.updateFee());
+    buttonFee.textContent = "Pagos";
+    buttonFee.disabled = true;
+
+    const buttonCard = document.getElementById("updateCard");
+    buttonCard.addEventListener("click", () => MembersManager.updateCardClick());
+    buttonCard.textContent = "Imprimir";
+    buttonCard.disabled = true;
+
+    const clearButton = document.getElementById('clear-button');
+    clearButton.addEventListener('click', () => {
+      const inputFind = document.getElementById('input-find');
+      inputFind.value = '';
+      inputFind.focus();
+    });
+
+    const postalInput = document.getElementById('postal');
+    postalInput.addEventListener('change', async () => {
+      const postalCode = postalInput.value.trim();
+      if (postalCode.length > 0) await MembersManager.buscarPoblacionPorCodigoPostal(postalCode);
+    });
+
+    const locationInput = document.getElementById('location');
+    locationInput.addEventListener('change', async () => {
+      const location = locationInput.value.trim();
+      if (location.length > 0) await MembersManager.buscarCodigoPostal(location);
+    });
+
+    MembersManager.setupDniListener();
+  }
+
   constructor() {
     this.scheduleInactiveRedirect();
     this.signedManager = new SignedManager();
