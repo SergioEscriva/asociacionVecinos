@@ -1,3 +1,7 @@
+**[EN PROCESO]**: Agilizar las cargas de las listas.
+
+**[16 agosto 2025]**: Actualizada Base de Datos sin deudas añadidas en Notas. 
+**[14 agosto 2025]**: AÑADIDA BASE DE DATOS FUNCIONAL REAL.
 **[13 agosto 2025]**: NUEVO: Añadido desplegable en búsqueda de documentos con nombres ya guardados.
 **[12 agosto 2025]**: NUEVO: Lista de Miembros con/sin un Documento concreto.
 **[11 agosto 2025]**: NUEVO: Firma de documentación.

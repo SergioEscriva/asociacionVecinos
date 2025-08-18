@@ -72,6 +72,8 @@ export class ListsManager {
       case 'button1':
       case 'button2': {
         //ListsManager.showLoading();
+        document.getElementById('spinner').style.display = 'block';
+        document.getElementById('spinner').style.display = 'block';
         try {
           const isAll = pageSelection === 'button1';
           titleElement.textContent = isAll
@@ -93,12 +95,12 @@ export class ListsManager {
               : `Listado de ${memberAttribute.attribute}s Activos.xlsx`
           );
           genericExportButton.style.display = 'block';
-          
         } finally {}
         break;
       }
       case 'button3': {
         //ListsManager.showLoading();
+        document.getElementById('spinner').style.display = 'block';
         try {
           titleElement.textContent = `Histórico de ${memberAttribute.attribute}(s) Inactivos/as`;
           ListsManager.getInput('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
@@ -159,7 +161,6 @@ export class ListsManager {
         break;
       }
       case 'button4': {
-        //ListsManager.showLoading();
         try {
           const mainTableContainer = document.getElementById('main-table-container');
           if (mainTableContainer) mainTableContainer.style.display = 'none';
@@ -174,6 +175,7 @@ export class ListsManager {
       }
       case 'button5': {
         //ListsManager.showLoading();
+        document.getElementById('spinner').style.display = 'block';
         try {
           titleElement.textContent = 'Listado Años Pagados';
           document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
@@ -196,6 +198,7 @@ export class ListsManager {
       }
       case 'button6': {
         //ListsManager.showLoading();
+        document.getElementById('spinner').style.display = 'block';
         try {
           titleElement.textContent = 'Listado de Impagos';
           document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
@@ -223,6 +226,7 @@ export class ListsManager {
       }
       case 'button7': {
         //ListsManager.showLoading();
+        document.getElementById('spinner').style.display = 'block';
         try {
           titleElement.textContent = `Antigüedad de los/as ${memberAttribute.attribute}(s) activos/as`;
           document.getElementById('sortByMemberNumber').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
@@ -268,9 +272,11 @@ export class ListsManager {
               `;
               tbody.appendChild(row);
             }
-            ListsManager.hideLoading();
-          }
+            
+        ListsManager.hideLoading();
+              }
           document.getElementById('txtTitleList').textContent = `Antigüedad de Activos/as - Total ${totalSocios}`;
+          document.getElementById('spinner').style.display = 'none';
           this.addRowClickListeners();
           genericExportButton.style.display = 'none';
           
@@ -301,8 +307,9 @@ export class ListsManager {
     }
     document.getElementById('txtTitleList').textContent =
       (allMembers ? "Listado Completo - Total " : "Listado de Activos/as - Total ") + (lineNumber - 1);
+    document.getElementById('spinner').style.display = 'none';
     this.addRowClickListeners();
-    ListsManager.hideLoading();
+    //ListsManager.hideLoading();
   }
 
 async renderInactivesList(members) {
@@ -341,8 +348,9 @@ async renderInactivesList(members) {
   }
 
   document.getElementById('txtTitleList').textContent = "Histórico de Inactividad - Total " + (lineNumber - 1);
+  document.getElementById('spinner').style.display = 'none';
   this.addRowClickListeners();
-  ListsManager.hideLoading();
+  //ListsManager.hideLoading();
 }
 
 
@@ -388,8 +396,9 @@ async getHtmlRowMembers(member, lineNumber) {
       await new Promise(requestAnimationFrame);
     }
     document.getElementById('txtTitleList').textContent = "Lista de Años Pagados - Total " + (lineNumber - 1);
+    document.getElementById('spinner').style.display = 'none';
     this.addRowClickListeners();
-    ListsManager.hideLoading();
+    //ListsManager.hideLoading();
   }
 
   async renderUnpayList(members) {
@@ -412,8 +421,9 @@ async getHtmlRowMembers(member, lineNumber) {
       await new Promise(requestAnimationFrame);
     }
     document.getElementById('txtTitleList').textContent = "Lista de Impagados - Total " + (lineNumber - 1);
+    document.getElementById('spinner').style.display = 'none';
     this.addRowClickListeners();
-    ListsManager.hideLoading();
+    //ListsManager.hideLoading();
   }
 
   setupMemberSorting(members) {
@@ -625,6 +635,7 @@ async getHtmlRowMembers(member, lineNumber) {
       });
       actividadesListaElement.appendChild(listItem);
       ListsManager.hideLoading();
+      document.getElementById('spinner').style.display = 'none';
     });
   }
 
