@@ -6,6 +6,7 @@ import com.asociacion.models.Member;
 import com.asociacion.services.DocumentService; 
 import com.asociacion.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 import java.io.InputStream;
 
@@ -38,18 +40,15 @@ public class DocumentController {
     public SignedDocument firmarDocumento(
             @RequestParam Long memberNumber,
             @RequestParam MultipartFile plantilla,
-            @RequestParam String firmaBase64
+            @RequestParam String firmaBase64,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date fechaAlta
             ) {
-
-        System.out.println("memberNumber: " + memberNumber);
-        System.out.println("plantilla: " + plantilla.getOriginalFilename() + " (" + plantilla.getSize() + " bytes)");
-        System.out.println("firmaBase64: " + (firmaBase64 != null ? firmaBase64.substring(0, 30) + "..." : "null"));
 
         Member member = memberService.findByMemberNumber(memberNumber)
                 .orElseThrow(() -> new RuntimeException("Miembro no encontrado con número: " + memberNumber));
 
         try (InputStream plantillaStream = plantilla.getInputStream()) {
-            return documentService.crearYGuardarDocumentoFirmado(member, plantillaStream, firmaBase64, plantilla.getOriginalFilename());
+            return documentService.crearYGuardarDocumentoFirmado(member, plantillaStream, firmaBase64, plantilla.getOriginalFilename(), fechaAlta);
 
         } catch (Exception e) {
             throw new RuntimeException("Error al crear y guardar documento firmado", e);

@@ -4,8 +4,8 @@ import com.asociacion.dto.MemberDTO;
 import com.asociacion.models.Member;
 import com.asociacion.models.SignedDocument;
 import java.io.InputStream;
-
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 public interface DocumentService {
@@ -19,7 +19,7 @@ public interface DocumentService {
 
     SignedDocument buscarDocumentoPorId(Long id);
 
-    public byte[] generarPdfDesdePlantilla(Member member, InputStream plantillaDocxStream) throws Exception;
+    public byte[] generarPdfDesdePlantilla(Member member, InputStream plantillaDocxStream, Date fechaAlta) throws Exception;
 
     String generarHash(byte[] input) throws IOException;
 
@@ -27,7 +27,7 @@ public interface DocumentService {
 
     byte[] convertirDocxApdf(byte[] docxBytes) throws IOException;
 
-    SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64, String originalFileName) throws Exception;
+    SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64, String originalFileName, Date fechaAlta) throws Exception;
 
     List<MemberDTO> getFilteredMembers(String nombreArchivo, boolean incluidos);
 

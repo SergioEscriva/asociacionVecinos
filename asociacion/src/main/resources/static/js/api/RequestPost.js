@@ -96,14 +96,6 @@ export class RequestPost {
   static async newRegistry(registryUpdate) {
 
     try {
-      /*const response = {
-        method: "POST",
-        body: JSON.stringify(registryUpdate),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };*/
-      // Devuelve la respuesta en formato JSON
       return await RequestBase._postRequest(`/api/registry`, registryUpdate);
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
@@ -111,12 +103,13 @@ export class RequestPost {
     }
   }
 
-static async signDocument(memberNumber, plantillaFile, firmaBase64) {
+static async signDocument(memberNumber, plantillaFile, firmaBase64, fechaAlta) {
     try {
         const formData = new FormData();
         formData.append("memberNumber", memberNumber);
         formData.append("plantilla", plantillaFile); // archivo
         formData.append("firmaBase64", firmaBase64);
+        formData.append("fechaAlta", fechaAlta);
 
         const response = await fetch(`/api/documentos/firmar`, {
             method: 'POST',
@@ -137,11 +130,6 @@ static async signDocument(memberNumber, plantillaFile, firmaBase64) {
         throw error;
     }
 }
-
-
-
-
-
 
 
   static async _postRequest(url, data) {

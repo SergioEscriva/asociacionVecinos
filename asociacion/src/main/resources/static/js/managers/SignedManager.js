@@ -175,6 +175,9 @@ export class SignedManager {
     const memberNumber = this.memberNumberInput.value.trim();
     const wordFile = this.pdfFileInput.files[0];  // Es Word, no PDF
 
+    const registries = await RequestGet.getRegistryByMemberId(memberNumber);
+    const fechaAlta = registries.length > 0 ? registries[0].startData : new Date();
+
     if (!memberNumber || memberNumber === '0') {
          this.showMessage('Por favor, introduce un ID de socio válido.', 'error');
          return;
@@ -204,9 +207,10 @@ export class SignedManager {
         formData.append('memberNumber', memberNumber);
         formData.append('plantilla', new Blob([wordArrayBuffer], { type: wordFile.type }), wordFile.name);
         formData.append('firmaBase64', signatureData); // Base64 PNG
+        formData.append('fechaAlta', fechaAlta);
         
         
-        const result = await RequestPost.signDocument(memberNumber, wordFile, signatureData);
+        const result = await RequestPost.signDocument(memberNumber, wordFile, signatureData, fechaAlta);
 
         if (result.error) {
             throw new Error(result.errorMessage || "Error al guardar documento");

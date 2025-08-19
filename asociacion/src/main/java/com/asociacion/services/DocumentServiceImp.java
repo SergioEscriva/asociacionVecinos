@@ -2,6 +2,7 @@ package com.asociacion.services;
 
 
 import com.asociacion.dto.MemberDTO;
+import com.asociacion.models.Registry;
 import com.asociacion.models.Config;
 import com.asociacion.models.Member;
 import com.asociacion.models.SignedDocument;
@@ -61,23 +62,23 @@ public class DocumentServiceImp implements DocumentService {
      @Autowired
     private MemberRepository memberRepository;
 
-    public SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64, String originalFileName) throws Exception {
-        byte[] pdfBytes = generarPdfDesdePlantilla(member, plantillaDocxStream);
+
+    public SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64, String originalFileName, Date fechaAlta) throws Exception {
+        byte[] pdfBytes = generarPdfDesdePlantilla(member, plantillaDocxStream, fechaAlta);
         byte[] pdfFirmado = agregarFirmaAPdf(member, firmaBase64, Base64.getEncoder().encodeToString(pdfBytes));
         return guardarDocumentoFirmado(member.getMemberNumber(), pdfFirmado, originalFileName);
     }
 
-
-
-
     // Método para generar un PDF desde una plantilla DOCX
     @Override
-    public byte[] generarPdfDesdePlantilla(Member member, InputStream plantillaDocxStream) throws Exception {
+    public byte[] generarPdfDesdePlantilla(Member member, InputStream plantillaDocxStream, Date fechaAlta) throws Exception {
         Optional<Config> attributoVecinal =  configServiceImp.findById(1L);
         Optional<Config> attributoSocio = configServiceImp.findById(3L);
         String fechaActual = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es", "ES")).format(new Date());
+        String fechaAltaString = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es", "ES")).format(fechaAlta);
+        System.out.println("fechaActual: " + fechaActual);
+        System.out.println("fechaAlta: " + fechaAltaString);
 
-        
         // 1. Cargar la plantilla DOCX
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(plantillaDocxStream);
 
@@ -96,6 +97,8 @@ public class DocumentServiceImp implements DocumentService {
         placeholders.put("${localidad}", member.getLocation());
         placeholders.put("${telefono}", member.getPhone().toString());
         placeholders.put("${email}", member.getEmail());
+        placeholders.put("${alta}", fechaAltaString);
+        System.out.println("Placeholders: " + placeholders);
 
         // 3. Reemplazar el texto en el documento   
         this.reemplazarTexto(wordMLPackage, placeholders);
@@ -110,7 +113,7 @@ public class DocumentServiceImp implements DocumentService {
         return pdfBytes;
     }
 
-    // Método principal para reemplazar texto 
+            // Método principal para reemplazar texto 
     public void reemplazarTexto(WordprocessingMLPackage wordMLPackage, Map<String, String> replacements) {
         // Obtiene el contenido principal del documento
         List<Object> content = wordMLPackage.getMainDocumentPart().getContent();
