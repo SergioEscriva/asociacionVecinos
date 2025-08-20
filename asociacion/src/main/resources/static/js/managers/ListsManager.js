@@ -198,49 +198,93 @@ export class ListsManager {
           document.getElementById('year').textContent = 'AÑO PAGADO';
           const allMembersPay = await RequestGet.getListMembersActives();
           this.renderPayList(allMembersPay);
-          this.setupPaySorting(allMembersPay);
-          const paidMembersData = await Promise.all(allMembersPay.map(async (member) => {
-            const paidYears = await this.getPaidYears(member.id);
-            return [member.name, `${member.lastName1} ${member.lastName2}`, member.memberNumber, paidYears.join(', ')];
-          }));
+          //this.setupPaySorting(allMembersPay);
+          const paidMembersData = [];
+          const chunkSize = 25; // Puedes ajustar el tamaño del lote
+
+          for (let i = 0; i < allMembersPay.length; i += chunkSize) {
+            // Se obtiene un trozo (chunk) del array de miembros activos
+            const chunk = allMembersPay.slice(i, i + chunkSize);
+
+            // Se crea un array de promesas para el lote actual
+            const promises = chunk.map(async (member) => {
+              try {
+                const paidYears = await this.getPaidYears(member.id);
+                // Se devuelve un array con los datos del miembro y sus años pagados
+                return [member.name, `${member.lastName1} ${member.lastName2}`, member.memberNumber, paidYears.join(', ')];
+              } catch (error) {
+                console.error(`Error procesando socio ${member.id}:`, error);
+                // En caso de error, se devuelve un valor por defecto
+                return [member.name, `${member.lastName1} ${member.lastName2}`, member.memberNumber, 'Error'];
+              }
+            });
+
+            // Se espera a que todas las promesas del lote terminen antes de continuar
+            const batchResults = await Promise.all(promises);
+            // Se añaden los resultados del lote al array principal
+            paidMembersData.push(...batchResults);
+          }
+          
           this.setExportData(
             paidMembersData,
             ["Nombre", "Apellidos", "Nº Socio", "Años Pagados"],
-            `Listado de Años Pagos de ${memberAttribute.attribute}s.xlsx`
+            `Listado de Socios de ${memberAttribute.attribute}s.xlsx`
           );
           genericExportButton.style.display = 'block';
+
         } finally {}
         break;
       }
-      case 'button6': {
-        //ListsManager.showLoading();
+case 'button6': {
         document.getElementById('spinner').style.display = 'block';
         try {
           titleElement.textContent = 'Listado de Impagos';
           document.getElementById('sortByMemberNumberPayList').textContent = `Nº ${memberAttribute.attribute.toUpperCase()}`;
           document.getElementById('year').textContent = 'ÚLTIMO AÑO PAGADO';
+
           const unpayMembers = await RequestGet.getListMembersActives();
           this.renderUnpayList(unpayMembers);
           this.setupUnpaySorting(unpayMembers);
+          
           const unpayMembersFiltered = [];
-          for (const member of unpayMembers) {
-            const paidYears = await this.getPaidYears(member.id);
-            const hasPaidThisYear = paidYears.includes(this.currentYear);
-            if (!hasPaidThisYear) {
-              const lastPaidYear = await this.getLastPaidYear(member.id);
-              unpayMembersFiltered.push([member.name, `${member.lastName1} ${member.lastName2}`, member.memberNumber, lastPaidYear]);
-            }
+          const chunkSize = 50; // Puedes ajustar el tamaño del lote según tus pruebas
+          
+          for (let i = 0; i < unpayMembers.length; i += chunkSize) {
+            const chunk = unpayMembers.slice(i, i + chunkSize);
+
+            const promises = chunk.map(async (member) => {
+              try {
+                const paidYears = await this.getPaidYears(member.id);
+                const hasPaidThisYear = paidYears.includes(this.currentYear);
+                
+                if (!hasPaidThisYear) {
+                  const lastPaidYear = await this.getLastPaidYear(member.id);
+                  unpayMembersFiltered.push([
+                    member.name,
+                    `${member.lastName1} ${member.lastName2}`,
+                    member.memberNumber,
+                    lastPaidYear,
+                  ]);
+                }
+              } catch (error) {
+                console.error(`Error procesando socio ${member.id}:`, error);
+              }
+            });
+            await Promise.all(promises);
           }
+          
           this.setExportData(
             unpayMembersFiltered,
             ["Nombre", "Apellidos", "Nº Socio", "Último Año Pagado"],
             `Listado de Impagos de ${memberAttribute.attribute}s.xlsx`
           );
           genericExportButton.style.display = 'block';
-        } finally {}
+
+        } finally {
+        }
         break;
       }
-case 'button7': {
+      case 'button7': {
         document.getElementById('spinner').style.display = 'block';
         try {
           const titleElement = ListsManager.getInput('txtTitleList');
@@ -675,6 +719,7 @@ async getHtmlRowMembers(member, lineNumber) {
 
   async getPaidYears(memberid) {
     const response = await RequestGet.getFeeByMemberId(memberid);
+    
     if (Array.isArray(response) && response.length > 0) {
       const memberRecords = response.filter(record => record.memberId === memberid);
       return memberRecords.map(record => record.year);
@@ -752,7 +797,7 @@ async getHtmlRowMembers(member, lineNumber) {
 
   async getHtmlPayRowMembers(member, lineNumber) {
     const paidYears = await this.getPaidYears(member.id);
-    //<td>${lineNumber}</td>
+    
     return `
       <tr class="clickable-row" data-member-number="${member.memberNumber}">
         <td>#</td>
@@ -933,6 +978,10 @@ async getFirstActiveDate(memberId) {
         ListsManager.getInput("date").style.display = "";
     }
   }
+
+  static delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 }
 
