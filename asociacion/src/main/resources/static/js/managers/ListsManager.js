@@ -33,14 +33,15 @@ export class ListsManager {
 
   static getAntiguedad(dateString) {
     if (!dateString || dateString === '-') return 0;
-    const [day, month, year] = dateString.split('/').map(Number);
-    const firstActiveDate = new Date(year, month - 1, day);
+    
+    const year = parseInt(dateString.slice(-4));
+    
     const today = new Date();
-    let antiguedad = today.getFullYear() - firstActiveDate.getFullYear();
-    const m = today.getMonth() - firstActiveDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < firstActiveDate.getDate())) {
-      antiguedad--;
-    }
+    const currentYear = today.getFullYear();
+    
+    // Calcular la antigüedad restando solo los años
+    const antiguedad = currentYear - year;
+    
     return antiguedad;
   }
 
