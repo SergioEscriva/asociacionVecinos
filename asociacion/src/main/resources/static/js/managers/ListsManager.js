@@ -327,7 +327,8 @@ case 'button7': {
           const container = document.getElementById(`export-button-container-${groupId}`);
           if (container) {
             const exportBtn = document.createElement('button');
-            exportBtn.textContent = '📤 Exportar';
+            exportBtn.className = 'button-excel-peque';
+            exportBtn.textContent = '📤';
             exportBtn.style.marginLeft = '10px';
             exportBtn.addEventListener('click', () => {
               ListsManager.exportGroupToExcel(groupId, antiguedadKey);
