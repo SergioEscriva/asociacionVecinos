@@ -10,6 +10,8 @@ class ExcelUtils {
   }
 }
 
+
+
 export class ListsManager {
   constructor() {
     this.actividadesConMiembros = [];
@@ -79,7 +81,7 @@ export class ListsManager {
       });
     }
 
-    genericExportButton.style.display = 'none';
+    //genericExportButton.style.display = 'none';
 
     switch (pageSelection) {
       case 'button1':
@@ -290,9 +292,15 @@ case 'button7': {
             const groupId = antiguedadKey.replace(/\s/g, '-'); // Crear un ID para el grupo
 
             // Fila del encabezado del grupo que se puede pulsar para desplegar
-            htmlContent += `<tr class="group-row toggle-group" data-target="${groupId}">
-                              <td colspan="8" style="font-weight:bold; font-size:1.2rem; background:#f0f0f0; cursor:pointer">${groupTitle}</td>
-                            </tr>`;
+
+
+          htmlContent += `<tr class="group-row toggle-group" data-target="${groupId}">
+            <td colspan="8" style="font-weight:bold; font-size:1.2rem; background:#f0f0f0; cursor:pointer">
+              ${groupTitle}
+              <span id="export-button-container-${groupId}" style="float:right;"></span>
+            </td>
+          </tr>`;
+
 
             // Filas de los miembros dentro de un div con un ID para poder mostrar/ocultar
             htmlContent += `<tr id="${groupId}" class="group-content" style="display: none;"><td colspan="8"><table class="sub-table">`;
@@ -311,6 +319,23 @@ case 'button7': {
           }
           
           tbody.innerHTML = htmlContent;
+
+          //Excel por grupos
+          sortedAntiguedadKeys.forEach(antiguedadKey => {
+          const groupId = antiguedadKey.replace(/\s/g, '-');
+          const container = document.getElementById(`export-button-container-${groupId}`);
+          if (container) {
+            const exportBtn = document.createElement('button');
+            exportBtn.textContent = '📤 Exportar';
+            exportBtn.style.marginLeft = '10px';
+            exportBtn.addEventListener('click', () => {
+              ListsManager.exportGroupToExcel(groupId, antiguedadKey);
+            });
+            container.appendChild(exportBtn);
+          }
+        });
+
+
           
           // Añadir el listener para la funcionalidad de desplegar/plegar
           document.querySelectorAll('.toggle-group').forEach(row => {
@@ -324,9 +349,28 @@ case 'button7': {
           });
 
           this.addRowClickListeners();
-          
+          // Excel de toooodos los años
           document.getElementById('txtTitleList').textContent = `Antigüedad de Activos/as - Total ${totalSocios}`;
+          this.currentListHeaders = ['#', 'Nombre', 'Apellidos', 'Nº Socio', 'Fecha Alta'];
+          this.currentListData = [];
+
+          sortedAntiguedadKeys.forEach(antiguedadKey => {
+            const grupo = activeMembersGrouped[antiguedadKey].sort((a, b) => String(a.memberNumber).localeCompare(String(b.memberNumber)));
+            grupo.forEach(member => {
+              this.currentListData.push([
+                '#',
+                member.name,
+                `${member.lastName1} ${member.lastName2}`,
+                member.memberNumber,
+                member.firstActiveDate
+              ]);
+            });
+          });
+
+          this.currentListFilename = 'Antigüedad_Activos.xlsx';
         } finally {
+
+
           document.getElementById('spinner').style.display = 'none';
         }
         break;
@@ -337,6 +381,22 @@ case 'button7': {
       this.rowClickListenersAdded = true;
     }
   }
+
+
+  static exportGroupToExcel(groupId, groupName) {
+    const table = document.querySelector(`#${groupId} .sub-table`);
+    if (!table) return;
+
+    const rows = Array.from(table.querySelectorAll('tr'));
+    const data = rows.map(row => {
+      return Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim());
+    });
+
+    const headers = ['#', 'Nombre', 'Apellidos', 'Nº Socio', 'Fecha Alta'];
+    ExcelUtils.exportToExcel(data, headers, `${groupName}.xlsx`);
+    }
+
+
 
   // ✅ renderizado incremental
   async renderList(members, allMembers) {
@@ -870,5 +930,13 @@ async getFirstActiveDate(memberId) {
         ListsManager.getInput("reason").style.display = "";
         ListsManager.getInput("date").style.display = "";
     }
+  }
+
 }
-}
+
+
+
+
+
+
+  
