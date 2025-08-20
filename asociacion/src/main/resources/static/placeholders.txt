@@ -16,6 +16,7 @@ ${telefono}
 ${asociacion} (nombre de la asociación que hay en configuración)
 ${atributoSocio} (atributo de los socios que hay en configuración)
 ${fecha} (fecha de la firma)
+${alta} (fecha de alta)
 
 
 Ejemplo.:
