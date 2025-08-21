@@ -101,7 +101,6 @@ export class ListsManager {
             ? await RequestGet.getAllMembers()
             : await RequestGet.getListMembersActives();
           this.renderList(members, isAll);
-          this.setupMemberSorting(members);
           const exportData = await this.processInBatches.call(this, members);
           this.setExportData(
             exportData,
@@ -198,7 +197,6 @@ export class ListsManager {
           document.getElementById('year').textContent = 'AÑO PAGADO';
           const allMembersPay = await RequestGet.getListMembersActives();
           this.renderPayList(allMembersPay);
-          //this.setupPaySorting(allMembersPay);
           const paidMembersData = [];
           const chunkSize = 25; // Puedes ajustar el tamaño del lote
 
@@ -244,7 +242,6 @@ case 'button6': {
 
           const unpayMembers = await RequestGet.getListMembersActives();
           this.renderUnpayList(unpayMembers);
-          this.setupUnpaySorting(unpayMembers);
           
           const unpayMembersFiltered = [];
           const chunkSize = 50; // Puedes ajustar el tamaño del lote según tus pruebas
@@ -580,110 +577,6 @@ async getHtmlRowMembers(member, lineNumber) {
     //ListsManager.hideLoading();
   }
 
-  setupMemberSorting(members) {
-    // Es importante remover los listeners antes de añadir nuevos para evitar duplicados
-    const sortByNameBtn = document.getElementById('sortByName');
-    const sortByMemberNumberBtn = document.getElementById('sortByMemberNumber');
-
-    if (sortByNameBtn) {
-      sortByNameBtn.replaceWith(sortByNameBtn.cloneNode(true)); // Clonar para remover listeners
-      document.getElementById('sortByName').addEventListener('click', async () => {
-        const sortedByName = [...members].sort((a, b) => a.name.localeCompare(b.name));
-        this.renderList(sortedByName, document.body.getAttribute('data-page-selection') === 'button1');
-        this.updateExportDataAfterSorting(sortedByName, document.body.getAttribute('data-page-selection'));
-      });
-    }
-    if (sortByMemberNumberBtn) {
-      sortByMemberNumberBtn.replaceWith(sortByMemberNumberBtn.cloneNode(true));
-      document.getElementById('sortByMemberNumber').addEventListener('click', async () => {
-        const sortedByMemberNumber = [...members].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
-        this.renderList(sortedByMemberNumber, document.body.getAttribute('data-page-selection') === 'button1');
-        this.updateExportDataAfterSorting(sortedByMemberNumber, document.body.getAttribute('data-page-selection'));
-      });
-    }
-  }
-
-  setupPaySorting(members) {
-    const sortByNamePayListBtn = document.getElementById('sortByNamePayList');
-    const sortByMemberNumberPayListBtn = document.getElementById('sortByMemberNumberPayList');
-
-    if (sortByNamePayListBtn) {
-      sortByNamePayListBtn.replaceWith(sortByNamePayListBtn.cloneNode(true));
-      document.getElementById('sortByNamePayList').addEventListener('click', async () => {
-        const sortedByName = [...members].sort((a, b) => a.name.localeCompare(b.name));
-        this.renderPayList(sortedByName);
-        this.updateExportDataAfterSorting(sortedByName, 'button5');
-      });
-    }
-    if (sortByMemberNumberPayListBtn) {
-      sortByMemberNumberPayListBtn.replaceWith(sortByMemberNumberPayListBtn.cloneNode(true));
-      document.getElementById('sortByMemberNumberPayList').addEventListener('click', async () => {
-        const sortedByMemberNumber = [...members].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
-        this.renderPayList(sortedByMemberNumber);
-        this.updateExportDataAfterSorting(sortedByMemberNumber, 'button5');
-      });
-    }
-  }
-
-  setupUnpaySorting(members) {
-    const sortByNamePayListBtn = document.getElementById('sortByNamePayList'); // Comparten el mismo ID con la lista de pagos
-    const sortByMemberNumberPayListBtn = document.getElementById('sortByMemberNumberPayList');
-
-    if (sortByNamePayListBtn) {
-      sortByNamePayListBtn.replaceWith(sortByNamePayListBtn.cloneNode(true));
-      document.getElementById('sortByNamePayList').addEventListener('click', async () => {
-        const sortedByName = [...members].sort((a, b) => a.name.localeCompare(b.name));
-        this.renderUnpayList(sortedByName);
-        this.updateExportDataAfterSorting(sortedByName, 'button6');
-      });
-    }
-    if (sortByMemberNumberPayListBtn) {
-      sortByMemberNumberPayListBtn.replaceWith(sortByMemberNumberPayListBtn.cloneNode(true));
-      document.getElementById('sortByMemberNumberPayList').addEventListener('click', async () => {
-        const sortedByMemberNumber = [...members].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
-        this.renderUnpayList(sortedByMemberNumber);
-        this.updateExportDataAfterSorting(sortedByMemberNumber, 'button6');
-      });
-    }
-  }
-
-  async updateExportDataAfterSorting(sortedMembers, pageSelection) {
-    let updatedData = [];
-
-    switch (pageSelection) {
-      case 'button1':
-      case 'button2':
-        updatedData = await Promise.all(sortedMembers.map(async m => [m.name, m.lastName1, m.lastName2, m.memberNumber, m.active ? '✓' : 'X', await this.getFirstActiveDate(m.id), await this.getLastPaidYear(m.id)]));
-        break;
-      case 'button5':
-        updatedData = await Promise.all(sortedMembers.map(async (member) => {
-          const paidYears = await this.getPaidYears(member.id);
-          return [
-            member.name,
-            `${member.lastName1} ${member.lastName2}`,
-            member.memberNumber,
-            paidYears.join(', ')
-          ];
-        }));
-        break;
-      case 'button6':
-        for (const member of sortedMembers) {
-          const paidYears = await this.getPaidYears(member.id);
-          const hasPaidThisYear = paidYears.includes(this.currentYear);
-          if (!hasPaidThisYear) {
-            const lastPaidYear = await this.getLastPaidYear(member.id);
-            updatedData.push([
-              member.name,
-              `${member.lastName1} ${member.lastName2}`,
-              member.memberNumber,
-              lastPaidYear
-            ]);
-          }
-        }
-        break;
-    }
-    this.currentListData = updatedData;
-  }
 
   async getHtmlUnpayRowMembers(member, lineNumber) {
     const lastPaidYear = await this.getLastPaidYear(member.id);
