@@ -15,7 +15,6 @@ export class SignedManager {
         this.documentListContainer = null;
         this.documentListElement = null;
         this.messageBox = null;
-        this.pdfFileInput = null;
         
     }
 
@@ -79,7 +78,6 @@ export class SignedManager {
 
             this.documentListElement.appendChild(documentItem);
 
-            // Importante: Añadir el listener de eventos aquí, después de crear el elemento.
             const deleteButton = documentItem.querySelector('.delete-doc-btn');
             deleteButton.addEventListener('click', (e) => {
                 e.preventDefault(); // Evita que el enlace recargue la página
@@ -101,15 +99,25 @@ export class SignedManager {
         this.documentListContainer = document.getElementById('document-list-container');
         this.documentListElement = document.getElementById('document-list');
         this.messageBox = document.getElementById('message-box');
-        this.pdfFileInput = document.getElementById('word-file-input');
+        const fileInput = document.getElementById('word-file-input');
 
         this.signaturePad = new SignaturePad(signatureCanvas, {
             backgroundColor: 'rgba(255, 255, 255, 0)',
+        });
+
+               
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+
+            if (file) {
+                this.saveButton.disabled = false;
+            }
         });
     
         this.searchButton.addEventListener('click', () => this.handleSearch());
         this.clearButton.addEventListener('click', () => this.handleClear());
         this.saveButton.addEventListener('click', () => this.handleSave());
+        this.saveButton.disabled = true;
         
         this.resizeCanvas();
         window.addEventListener('resize', () => this.resizeCanvas());
@@ -124,9 +132,11 @@ export class SignedManager {
 
     }
 
+
     async handleSearch() {
     
     const memberNumber = this.memberNumberInput.value.trim();
+    
     
     
     if (!memberNumber) {
@@ -169,11 +179,13 @@ export class SignedManager {
 
     async handleSave() {
         
+    const fileInput = document.getElementById('word-file-input');    
     this.saveButton = document.getElementById('save-btn');
     this.saveButton.disabled = true;
+    this.showLoading();
 
     const memberNumber = this.memberNumberInput.value.trim();
-    const wordFile = this.pdfFileInput.files[0];  // Es Word, no PDF
+    const wordFile = fileInput.files[0];  // Es Word, no PDF
 
     const registries = await RequestGet.getRegistryByMemberId(memberNumber);
     const fechaAlta = registries.length > 0 ? registries[0].startData : new Date();
@@ -186,12 +198,14 @@ export class SignedManager {
     if (this.signaturePad.isEmpty()) {
         this.showMessage('Por favor, primero firma en el recuadro.', 'error');
         this.saveButton.disabled = false;
+        this.hideLoading();
         return;
     }
 
     if (!wordFile) {
         this.showMessage('Por favor, selecciona un archivo Word.', 'error');
         this.saveButton.disabled = false;
+        this.hideLoading();
         return;
     }
 
@@ -221,11 +235,13 @@ export class SignedManager {
         this.showMessage('¡Documento firmado y guardado con éxito!', 'success');
         this.handleSearch();
         this.saveButton.disabled = false;
+        this.hideLoading();
 
     } catch (error) {
         console.error("Error al guardar el documento: ", error);
         this.showMessage('Error al guardar la firma: ' + error.message, 'error');
         this.saveButton.disabled = false;
+        this.hideLoading();
     } finally {
 
     }
@@ -259,6 +275,16 @@ export class SignedManager {
             console.error('Error al borrar el documento:', error);
             alert('Error al borrar el documento. Por favor, inténtalo de nuevo.');
         }
+    }
+
+     showLoading() {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) overlay.style.display = 'flex';
+    }
+
+     hideLoading() {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) overlay.style.display = 'none';
     }
 
 }
