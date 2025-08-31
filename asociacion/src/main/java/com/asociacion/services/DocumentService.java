@@ -7,29 +7,28 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public interface DocumentService {
 
 
-    byte[] agregarFirmaAPdf(Member member, String pdfBase64, String firmaBase64) throws IOException;
-
-    public SignedDocument guardarDocumentoFirmado(Long memberNumber, byte[] contenidoPdf, String originalFileName);
+    public SignedDocument guardarDocumentoFirmado(Long memberNumber, byte[] contenidoPdf, String originalFileName) throws IOException;
 
     List<SignedDocument> buscarDocumentosPorMemberNumber(Long memberNumber);
 
     SignedDocument buscarDocumentoPorId(Long id);
 
-    public byte[] generarPdfDesdePlantilla(Member member, InputStream plantillaDocxStream, Date fechaAlta) throws Exception;
-
     String generarHash(byte[] input) throws IOException;
 
     String obtenerNombreBase(String fileName);
 
-    byte[] convertirDocxApdf(byte[] docxBytes) throws IOException;
-
-    SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64, String originalFileName, Date fechaAlta) throws Exception;
+    SignedDocument crearYGuardarDocumentoFirmado(Long memberNumber, MultipartFile plantilla, String firmaBase64, String originalFileName, Date fechaAlta) throws Exception;
 
     List<MemberDTO> getFilteredMembers(String nombreArchivo, boolean incluidos);
 
     void delDocumentById(Long id);
+
+     byte[] agregarFirmaAPdf(Member member, String firmaBase64, String pdfBase64) throws IOException;
 }

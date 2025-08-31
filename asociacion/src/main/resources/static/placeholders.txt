@@ -1,25 +1,20 @@
  
-Para los documentos se tiene que utilizar Word, o LibreOffice, pero siempre guardado como docx.
+Para los documentos se tiene que utilizar Pdf y los campos configurados como Formulario.
 
 La sustitución de campos son los siguientes.
 
 
-${nombre}
-${apellido1}
-${apellido2}
-${dni}
-${numeroSocio}
-${direccion}
-${postal}
-${localidad}
-${telefono}
-${asociacion} (nombre de la asociación que hay en configuración)
-${atributoSocio} (atributo de los socios que hay en configuración)
-${fecha} (fecha de la firma)
-${alta} (fecha de alta)
+nombre
+apellido1
+apellido2
+dni
+numeroSocio
+direccion
+postal
+localidad
+telefono
+asociacion (nombre de la asociación que hay en configuración)
+atributoSocio (atributo de los socios que hay en configuración)
+fecha (fecha de la firma)
+alta (fecha de alta)
 
-
-Ejemplo.:
-
-Yo, ${nombre} ${apellido1} ${apellido2}, con número de identificación ${dni}, con
-domicilio en ${direccion}.

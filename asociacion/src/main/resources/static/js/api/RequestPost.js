@@ -103,13 +103,8 @@ export class RequestPost {
     }
   }
 
-static async signDocument(memberNumber, plantillaFile, firmaBase64, fechaAlta) {
+static async signDocument(formData) {
     try {
-        const formData = new FormData();
-        formData.append("memberNumber", memberNumber);
-        formData.append("plantilla", plantillaFile); // archivo
-        formData.append("firmaBase64", firmaBase64);
-        formData.append("fechaAlta", fechaAlta);
 
         const response = await fetch(`/api/documentos/firmar`, {
             method: 'POST',

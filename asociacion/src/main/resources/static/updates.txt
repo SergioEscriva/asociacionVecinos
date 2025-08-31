@@ -1,3 +1,4 @@
+**[19 agosto 2025]**: Añadida "fecha de alta" y "correo electrónico" en documentos nuevos.
 **[18 agosto 2025]**: NUEVO: Añadido borrar pdf mediante un pin de seguridad.
 **[18 agosto 2025]**: Eliminado número de índice en listados para no confundir con el número de socio.
 **[18 agosto 2025]**: NUEVO: Carga de listas al vuelo, no hay que esperar la carga total.

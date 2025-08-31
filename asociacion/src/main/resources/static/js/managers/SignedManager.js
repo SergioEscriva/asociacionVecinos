@@ -99,7 +99,7 @@ export class SignedManager {
         this.documentListContainer = document.getElementById('document-list-container');
         this.documentListElement = document.getElementById('document-list');
         this.messageBox = document.getElementById('message-box');
-        const fileInput = document.getElementById('word-file-input');
+        const fileInput = document.getElementById('pdf-file-input');
 
         this.signaturePad = new SignaturePad(signatureCanvas, {
             backgroundColor: 'rgba(255, 255, 255, 0)',
@@ -177,21 +177,24 @@ export class SignedManager {
 
     
 
-    async handleSave() {
-        
-    const fileInput = document.getElementById('word-file-input');    
+   async handleSave() {
+    
+    const fileInput = document.getElementById('pdf-file-input');    
     this.saveButton = document.getElementById('save-btn');
     this.saveButton.disabled = true;
     this.showLoading();
 
     const memberNumber = this.memberNumberInput.value.trim();
-    const wordFile = fileInput.files[0];  // Es Word, no PDF
+
+    const pdfFile = fileInput.files[0];
 
     const registries = await RequestGet.getRegistryByMemberId(memberNumber);
     const fechaAlta = registries.length > 0 ? registries[0].startData : new Date();
 
     if (!memberNumber || memberNumber === '0') {
          this.showMessage('Por favor, introduce un ID de socio válido.', 'error');
+         this.saveButton.disabled = false;
+         this.hideLoading();
          return;
     }
 
@@ -202,29 +205,26 @@ export class SignedManager {
         return;
     }
 
-    if (!wordFile) {
-        this.showMessage('Por favor, selecciona un archivo Word.', 'error');
+    if (!pdfFile) {
+        this.showMessage('Por favor, selecciona un archivo PDF.', 'error');
         this.saveButton.disabled = false;
         this.hideLoading();
         return;
     }
 
+
     const signatureData = this.signaturePad.toDataURL('image/png');
+    const pdfArrayBuffer = await pdfFile.arrayBuffer();
+    const originalFileName = pdfFile.name;
+    const pdfBlob = new Blob([pdfArrayBuffer], { type: pdfFile.type });
 
-    let response;
     try {
-        
-        const wordArrayBuffer = await wordFile.arrayBuffer();
-
-        // Construir formData para enviar archivo y firma juntos
         const formData = new FormData();
-        formData.append('memberNumber', memberNumber);
-        formData.append('plantilla', new Blob([wordArrayBuffer], { type: wordFile.type }), wordFile.name);
-        formData.append('firmaBase64', signatureData); // Base64 PNG
-        formData.append('fechaAlta', fechaAlta);
-        
-        
-        const result = await RequestPost.signDocument(memberNumber, wordFile, signatureData, fechaAlta);
+        formData.append("memberNumber", memberNumber);
+        formData.append("plantilla", pdfBlob, originalFileName); // archivo
+        formData.append("firmaBase64", signatureData);
+        formData.append("fechaAlta", fechaAlta);
+        const result = await RequestPost.signDocument(formData);
 
         if (result.error) {
             throw new Error(result.errorMessage || "Error al guardar documento");
@@ -242,10 +242,8 @@ export class SignedManager {
         this.showMessage('Error al guardar la firma: ' + error.message, 'error');
         this.saveButton.disabled = false;
         this.hideLoading();
-    } finally {
-
     }
-    }
+}
 
     
     resizeCanvas() {

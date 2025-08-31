@@ -1,23 +1,15 @@
 package com.asociacion.services;
 
-
+import com.asociacion.Utils.PdfManager;
 import com.asociacion.dto.MemberDTO;
-import com.asociacion.models.Registry;
 import com.asociacion.models.Config;
 import com.asociacion.models.Member;
 import com.asociacion.models.SignedDocument;
 import com.asociacion.repositories.MemberRepository;
 import com.asociacion.repositories.SignedDocumentRepository;
-
-import org.docx4j.XmlUtils;
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.docx4j.wml.R;
-import org.docx4j.wml.Tbl;
-import org.docx4j.wml.Tc;
-import org.docx4j.wml.Tr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -27,27 +19,24 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.io.IOException;
+import java.util.ArrayList;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
+import java.io.InputStream;
+
+import java.util.Base64;
+// Importaciones de PDFBox, etc.
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
-import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Base64;
-import org.docx4j.wml.P;
-import org.docx4j.wml.Text;
-
 
 
 @Service
@@ -59,193 +48,73 @@ public class DocumentServiceImp implements DocumentService {
     @Autowired
     private ConfigServiceImp configServiceImp;
 
-     @Autowired
+    @Autowired
     private MemberRepository memberRepository;
 
-
-    public SignedDocument crearYGuardarDocumentoFirmado(Member member, InputStream plantillaDocxStream, String firmaBase64, String originalFileName, Date fechaAlta) throws Exception {
-        byte[] pdfBytes = generarPdfDesdePlantilla(member, plantillaDocxStream, fechaAlta);
-        byte[] pdfFirmado = agregarFirmaAPdf(member, firmaBase64, Base64.getEncoder().encodeToString(pdfBytes));
-        return guardarDocumentoFirmado(member.getMemberNumber(), pdfFirmado, originalFileName);
-    }
-
-    // Método para generar un PDF desde una plantilla DOCX
     @Override
-    public byte[] generarPdfDesdePlantilla(Member member, InputStream plantillaDocxStream, Date fechaAlta) throws Exception {
+    public SignedDocument crearYGuardarDocumentoFirmado(Long memberNumber, MultipartFile plantilla, String firmaBase64, String originalFileName, Date fechaAlta) throws Exception {
         Optional<Config> attributoVecinal =  configServiceImp.findById(1L);
         Optional<Config> attributoSocio = configServiceImp.findById(3L);
+        Member member = memberRepository.findById(memberNumber).orElseThrow(() -> new Exception("Member not found"));
         String fechaActual = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es", "ES")).format(new Date());
         String fechaAltaString = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es", "ES")).format(fechaAlta);
         System.out.println("fechaActual: " + fechaActual);
         System.out.println("fechaAlta: " + fechaAltaString);
 
-        // 1. Cargar la plantilla DOCX
-        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(plantillaDocxStream);
+        byte[] plantillaBytes = plantilla.getBytes();
+        
+        Map<String, String> datos = new HashMap<>();
+        datos.put("memberNumber", String.valueOf(memberNumber));
+        datos.put("fechaAlta", new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es", "ES")).format(fechaAlta));
+        datos.put("nombre", member.getName());
+        datos.put("apellido1", member.getLastName1());
+        datos.put("apellido2", member.getLastName2());
+        datos.put("dni", member.getDni());
+        datos.put("numeroSocio", member.getMemberNumber().toString());
+        datos.put("direccion", member.getAddress() + ", " + member.getAddressNumber() + ", " + member.getAddressDoor());
+        datos.put("asociacion", attributoVecinal.get().getAttribute());
+        datos.put("atributoSocio", attributoSocio.get().getAttribute());
+        datos.put("fecha", fechaActual);
+        datos.put("postal", member.getPostal().toString());
+        datos.put("localidad", member.getLocation());
+        datos.put("telefono", member.getPhone().toString());
+        datos.put("email", member.getEmail());
+        datos.put("alta", fechaAltaString);
 
-        // 2. Definir los placeholders a reemplazar con datos del miembro
-        Map<String, String> placeholders = new HashMap<>();
-        placeholders.put("${nombre}", member.getName());
-        placeholders.put("${apellido1}", member.getLastName1());
-        placeholders.put("${apellido2}", member.getLastName2());
-        placeholders.put("${dni}", member.getDni());
-        placeholders.put("${numeroSocio}", member.getMemberNumber().toString());
-        placeholders.put("${direccion}", member.getAddress() + ", " + member.getAddressNumber() + ", " + member.getAddressDoor());
-        placeholders.put("${asociacion}", attributoVecinal.get().getAttribute());
-        placeholders.put("${atributoSocio}", attributoSocio.get().getAttribute());
-        placeholders.put("${fecha}", fechaActual);
-        placeholders.put("${postal}", member.getPostal().toString());
-        placeholders.put("${localidad}", member.getLocation());
-        placeholders.put("${telefono}", member.getPhone().toString());
-        placeholders.put("${email}", member.getEmail());
-        placeholders.put("${alta}", fechaAltaString);
-        System.out.println("Placeholders: " + placeholders);
+        PdfManager pdfManager = new PdfManager();
+        byte[] documentoRellenadoBytes = pdfManager.firmarPdf(plantillaBytes, datos, firmaBase64);
+        
+        String documentoRellenadoBase64 = Base64.getEncoder().encodeToString(documentoRellenadoBytes);
 
-        // 3. Reemplazar el texto en el documento   
-        this.reemplazarTexto(wordMLPackage, placeholders);
+        byte[] documentoFinalBytes = agregarFirmaAPdf(null, firmaBase64, documentoRellenadoBase64);
+        
+        SignedDocument documentoGuardado = guardarDocumentoFirmado(memberNumber, documentoFinalBytes, originalFileName);
 
-        // 4. Guardar el documento modificado en un flujo de bytes
-        ByteArrayOutputStream docxOut = new ByteArrayOutputStream();
-        wordMLPackage.save(docxOut);
-
-        // 5. Convertir el DOCX a PDF usando la librería iText
-        byte[] pdfBytes = convertirDocxApdf(docxOut.toByteArray());
-
-        return pdfBytes;
-    }
-
-            // Método principal para reemplazar texto 
-    public void reemplazarTexto(WordprocessingMLPackage wordMLPackage, Map<String, String> replacements) {
-        // Obtiene el contenido principal del documento
-        List<Object> content = wordMLPackage.getMainDocumentPart().getContent();
-        reemplazarTextoRecursivo(content, replacements);
-    }
-
-    private void reemplazarTextoRecursivo(List<Object> content, Map<String, String> replacements) {
-        if (content == null) {
-            return;
-        }
-
-        // Itera sobre todos los elementos del contenido (párrafos, tablas, etc.)
-        for (Object o : content) {
-            Object resolvedObject = XmlUtils.unwrap(o);
-
-            // Si es un párrafo, procesa su contenido para reemplazar el texto
-            if (resolvedObject instanceof P) {
-                P paragraph = (P) resolvedObject;
-                
-                // Unimos todos los fragmentos de texto del párrafo en una sola cadena
-                List<Text> textFragments = new ArrayList<>();
-                StringBuilder combinedText = new StringBuilder();
-
-                for (Object pContent : paragraph.getContent()) {
-                    Object unwrapped = XmlUtils.unwrap(pContent);
-                    if (unwrapped instanceof R) {
-                        R r = (R) unwrapped;
-                        for (Object rContent : r.getContent()) {
-                            Object unwrappedRContent = XmlUtils.unwrap(rContent);
-                            if (unwrappedRContent instanceof Text) {
-                                Text text = (Text) unwrappedRContent;
-                                textFragments.add(text);
-                                combinedText.append(text.getValue());
-                            }
-                        }
-                    }
-                }
-                
-                String fullText = combinedText.toString();
-                boolean replaced = false;
-
-                // Ahora, buscamos y reemplazamos los placeholders en la cadena completa
-                for (Map.Entry<String, String> entry : replacements.entrySet()) {
-                    String placeholder = entry.getKey();
-                    String replacementValue = entry.getValue() != null ? entry.getValue() : "";
-                    
-                    if (fullText.contains(placeholder)) {
-                        String newFullText = fullText.replace(placeholder, replacementValue);
-                        
-                        // Actualizamos el valor del primer fragmento de texto
-                        if (!textFragments.isEmpty()) {
-                            textFragments.get(0).setValue(newFullText);
-                            // Borramos el valor del resto de fragmentos para evitar duplicados
-                            for (int i = 1; i < textFragments.size(); i++) {
-                                textFragments.get(i).setValue("");
-                            }
-                        }
-                        
-                        fullText = newFullText; 
-                        replaced = true;
-                    }
-                }
-                
-
-            } else if (resolvedObject instanceof Tbl) {
-                // Si es una tabla, procesa su contenido de forma recursiva
-                reemplazarTextoRecursivo(((Tbl) resolvedObject).getContent(), replacements);
-            } else if (resolvedObject instanceof Tr) {
-                // Si es una fila de tabla, procesa su contenido de forma recursiva
-                reemplazarTextoRecursivo(((Tr) resolvedObject).getContent(), replacements);
-            } else if (resolvedObject instanceof Tc) {
-                // Si es una celda de tabla, procesa su contenido de forma recursiva
-                reemplazarTextoRecursivo(((Tc) resolvedObject).getContent(), replacements);
-            }
-        }
+        return documentoGuardado;
     }
 
 
-
-    // Método para convertir docx (en byte[]) a PDF (byte[])
-    public byte[] convertirDocxApdf(byte[] docxBytes) throws IOException {
-        ByteArrayOutputStream pdfOut = new ByteArrayOutputStream();
-
-        try (
-            InputStream docxIn = new ByteArrayInputStream(docxBytes);
-            XWPFDocument docx = new XWPFDocument(docxIn);
-            XWPFWordExtractor extractor = new XWPFWordExtractor(docx);
-            PDDocument pdfDocument = new PDDocument()
-        ) {
-            String text = extractor.getText();
-
-            PDPage page = new PDPage();
-            pdfDocument.addPage(page);
-
-            try (PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, page)) {
-                contentStream.setFont(PDType1Font.HELVETICA, 12);
-                contentStream.beginText();
-                contentStream.setLeading(14.5f); // Espaciado entre líneas
-                contentStream.newLineAtOffset(50, 750); // Posición inicial del texto
-
-                // Divide el texto en líneas para ajustarlo a la página
-                String[] lines = text.split("\\r?\\n");
-                for (String line : lines) {
-                    contentStream.showText(line);
-                    contentStream.newLine();
-                }
-                contentStream.endText();
-            }
-
-            pdfDocument.save(pdfOut);
-            return pdfOut.toByteArray();
-
-        }
-    }
-    
-    public SignedDocument guardarDocumentoFirmado(Long memberNumber, byte[] contenidoPdf, String originalFileName)
- {
+    @Override
+    public SignedDocument guardarDocumentoFirmado(Long memberNumber, byte[] contenidoPdf, String originalFileName) {
         SignedDocument documento = new SignedDocument();
-        //String originalFileName = "Documento_Firmado_Socio";
         documento.setMemberNumber(memberNumber);
         String nombreArchivoFirmado = memberNumber + "_" + obtenerNombreBase(originalFileName) + ".pdf";
         documento.setNombreArchivo(nombreArchivoFirmado);
         documento.setSignedDate(new Date());
-        documento.setContenidoPdf(contenidoPdf);
-
-        try {
-            documento.setDocumentoHash(generarHash(contenidoPdf));
-        } catch (IOException e) {
-            e.printStackTrace();
+        
+        // El hash se genera a partir del contenido del PDF para asegurar su integridad
+        if (contenidoPdf != null && contenidoPdf.length > 0) {
+            documento.setContenidoPdf(contenidoPdf);
+            try {
+                documento.setDocumentoHash(generarHash(contenidoPdf));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        
         return signedDocumentRepository.save(documento);
     }
+
 
     public String generarHash(byte[] input) throws IOException {
         try {
@@ -275,8 +144,7 @@ public class DocumentServiceImp implements DocumentService {
     public byte[] agregarFirmaAPdf(Member member, String firmaBase64, String pdfBase64) throws IOException {
         String[] partes = pdfBase64.split(",");
         String pdfData;
-
-
+        
         if (partes.length > 1) {
             pdfData = partes[1];
         } else {
@@ -288,14 +156,6 @@ public class DocumentServiceImp implements DocumentService {
         try (InputStream templateInputStream = new ByteArrayInputStream(pdfBytes);
             PDDocument document = PDDocument.load(templateInputStream)) {
 
-            PDAcroForm acroForm = document.getDocumentCatalog().getAcroForm();
-
-            if (acroForm != null) {
-
-                
-                acroForm.flatten(); 
-            }
-
             // Añadir firma como imagen.
             byte[] firmaBytes = Base64.getDecoder().decode(firmaBase64.split(",")[1]);
             BufferedImage signatureImage = ImageIO.read(new ByteArrayInputStream(firmaBytes));
@@ -303,20 +163,20 @@ public class DocumentServiceImp implements DocumentService {
 
             PDPage page = document.getPage(0);
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true)) {
-                contentStream.drawImage(pdImage, 100, 75, 250, 175); // Posición de la firma
+                contentStream.drawImage(pdImage, 100, 30, 250, 155); // Posición de la firma
             }
 
             // Añadir hash de integridad
             ByteArrayOutputStream baosBeforeHash = new ByteArrayOutputStream();
             document.save(baosBeforeHash);
             byte[] pdfBytesWithSignature = baosBeforeHash.toByteArray();
-            String hash = generarHash(pdfBytesWithSignature);
-
+            String hash = generarHash(pdfBytesWithSignature); // ✅ Generar el hash aquí
+            
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true)) {
                 contentStream.beginText();
                 contentStream.setFont(PDType1Font.HELVETICA, 8);
-                contentStream.newLineAtOffset(50, 50);
-                contentStream.showText("Hash de integridad (SHA-256): " + hash);
+                contentStream.newLineAtOffset(100, 20);
+                contentStream.showText("Hash de integridad (SHA-256): " + hash); // ✅ Imprimir el hash en el PDF
                 contentStream.endText();
             }
 
@@ -326,29 +186,24 @@ public class DocumentServiceImp implements DocumentService {
         }
     }
 
-        @Override
-        public List<SignedDocument> buscarDocumentosPorMemberNumber(Long memberNumber) {
-            return signedDocumentRepository.findByMemberNumber(memberNumber);
-        }
+    @Override
+    public List<SignedDocument> buscarDocumentosPorMemberNumber(Long memberNumber) {
+        return signedDocumentRepository.findByMemberNumber(memberNumber);
+    }
 
-        @Override
-        public SignedDocument buscarDocumentoPorId(Long id) {
-            return signedDocumentRepository.findById(id).orElse(null);
-        }
-
+    @Override
+    public SignedDocument buscarDocumentoPorId(Long id) {
+        return signedDocumentRepository.findById(id).orElse(null);
+    }
 
     public List<MemberDTO> getFilteredMembers(String nombreArchivo, boolean incluidos) {
         String normalizedNombre = nombreArchivo.trim().toLowerCase();
-
         List<Member> miembrosActivos = memberRepository.findActives();
         List<MemberDTO> resultado = new ArrayList<>();
-
         for (Member miembro : miembrosActivos) {
             List<SignedDocument> documentos = signedDocumentRepository.findByMemberNumber(miembro.getMemberNumber());
-
             boolean tieneDocumento = documentos.stream().anyMatch(doc -> {
                 String nombre = doc.getNombreArchivo();
-                // Eliminar prefijo y extensión
                 String[] partes = nombre.split("_", 2);
                 if (partes.length == 2) {
                     String nombreLimpio = partes[1].replace(".pdf", "").toLowerCase();
@@ -356,12 +211,10 @@ public class DocumentServiceImp implements DocumentService {
                 }
                 return false;
             });
-
             if ((incluidos && tieneDocumento) || (!incluidos && !tieneDocumento)) {
                 resultado.add(new MemberDTO(miembro));
             }
         }
-
         return resultado;
     }
 
@@ -369,7 +222,4 @@ public class DocumentServiceImp implements DocumentService {
     public void delDocumentById(Long id) {
         signedDocumentRepository.deleteById(id);
     }
-
-
-    
 }

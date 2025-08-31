@@ -44,11 +44,10 @@ public class DocumentController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date fechaAlta
             ) {
 
-        Member member = memberService.findByMemberNumber(memberNumber)
-                .orElseThrow(() -> new RuntimeException("Miembro no encontrado con número: " + memberNumber));
+        
 
         try (InputStream plantillaStream = plantilla.getInputStream()) {
-            return documentService.crearYGuardarDocumentoFirmado(member, plantillaStream, firmaBase64, plantilla.getOriginalFilename(), fechaAlta);
+            return documentService.crearYGuardarDocumentoFirmado(memberNumber, plantilla, firmaBase64, plantilla.getOriginalFilename(), fechaAlta);
 
         } catch (Exception e) {
             throw new RuntimeException("Error al crear y guardar documento firmado", e);
